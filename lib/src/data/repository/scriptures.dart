@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/scriptures.dart';
 import '../../domain/repository/scriptures.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/scriptures.dart';
 class ScripturesRepository extends IScripturesRepository {
   ScripturesRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -27,7 +27,8 @@ class ScripturesRepository extends IScripturesRepository {
 
   @override
   List<Scripture> search(String query) {
-    final rows = database.select(IScripturesRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
+    final rows = database.select(
+        IScripturesRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
     return rows.map(Scripture.fromRow).toList();
   }
 

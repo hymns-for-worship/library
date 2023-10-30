@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/hymnal.dart';
 import '../../domain/repository/hymnals.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/hymnals.dart';
 class HymnalsRepository extends IHymnalsRepository {
   HymnalsRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -26,7 +26,8 @@ class HymnalsRepository extends IHymnalsRepository {
 
   @override
   List<Hymnal> search(String query) {
-    final rows = database.select(IHymnalsRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
+    final rows = database
+        .select(IHymnalsRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
     return rows.map(Hymnal.fromRow).toList();
   }
 

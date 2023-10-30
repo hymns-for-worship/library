@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:hfw_library/hfw_library.dart';
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 typedef LibraryRepository = ({
   AssetsRepository assetsRepository,
@@ -18,8 +18,10 @@ typedef LibraryRepository = ({
   TopicsRepository topicsRepository,
 });
 
-FutureOr<LibraryRepository> createLibrary(Database db,
-    {bool refresh = true}) async {
+FutureOr<LibraryRepository> createLibrary(
+  CommonDatabase db, {
+  bool refresh = true,
+}) async {
   final library = (
     assetsRepository: AssetsRepository(db),
     hymnHymnalsRepository: HymnHymnalsRepository(db),

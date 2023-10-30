@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/stakeholders.dart';
 import '../../domain/repository/hymn_stakeholders.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/hymn_stakeholders.dart';
 class HymnStakeholdersRepository extends IHymnStakeholdersRepository {
   HymnStakeholdersRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -40,7 +40,12 @@ class HymnStakeholdersRepository extends IHymnStakeholdersRepository {
         ids.add(row['id'] as int);
         continue;
       }
-      add.execute([hymnId, stakeholderId, relationship, DateTime.now().toIso8601String()]);
+      add.execute([
+        hymnId,
+        stakeholderId,
+        relationship,
+        DateTime.now().toIso8601String()
+      ]);
       ids.add(database.lastInsertRowId);
     }
     add.dispose();
@@ -52,7 +57,8 @@ class HymnStakeholdersRepository extends IHymnStakeholdersRepository {
   @override
   void delete(HymnStakeholderData item) {
     final (hymnId, stakeholderId, relationship) = item;
-    database.execute(IHymnStakeholdersRepository.DELETE_FIND, [hymnId, stakeholderId, relationship]);
+    database.execute(IHymnStakeholdersRepository.DELETE_FIND,
+        [hymnId, stakeholderId, relationship]);
     refresh();
   }
 
@@ -86,7 +92,8 @@ class HymnStakeholdersRepository extends IHymnStakeholdersRepository {
 
   @override
   List<int> getHymnIdsForStakeholder(int stakeholderId) {
-    final stmt = database.prepare(IHymnStakeholdersRepository.GET_HYMN_IDS_FOR_STAKEHOLDER);
+    final stmt = database
+        .prepare(IHymnStakeholdersRepository.GET_HYMN_IDS_FOR_STAKEHOLDER);
     final hymnIds = <int>{};
     for (final row in stmt.select([stakeholderId])) {
       hymnIds.add(row['hymnId'] as int);

@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/portion.dart';
 import '../../domain/repository/hymn_portions.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/hymn_portions.dart';
 class HymnPortionsRepository extends IHymnPortionsRepository {
   HymnPortionsRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -41,7 +41,8 @@ class HymnPortionsRepository extends IHymnPortionsRepository {
 
   @override
   List<int> getHymnIdsForPortion(int portionId) {
-    final rows = database.select(IHymnPortionsRepository.GET_HYMN_IDS_FOR_PORTION, [portionId]);
+    final rows = database
+        .select(IHymnPortionsRepository.GET_HYMN_IDS_FOR_PORTION, [portionId]);
     final hymnIds = <int>[];
     for (final row in rows) {
       hymnIds.add(row['hymnId'] as int);

@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/topics.dart';
 import '../../domain/repository/hymn_topics.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/hymn_topics.dart';
 class HymnTopicsRepository extends IHymnTopicsRepository {
   HymnTopicsRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -41,7 +41,8 @@ class HymnTopicsRepository extends IHymnTopicsRepository {
 
   @override
   List<int> getHymnIdsForTopic(int topicId) {
-    final rows = database.select(IHymnTopicsRepository.GET_HYMN_IDS_FOR_TOPIC, [topicId]);
+    final rows = database
+        .select(IHymnTopicsRepository.GET_HYMN_IDS_FOR_TOPIC, [topicId]);
     final hymnIds = <int>[];
     for (final row in rows) {
       hymnIds.add(row['hymnId'] as int);

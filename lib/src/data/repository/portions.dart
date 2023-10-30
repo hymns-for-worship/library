@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/portion.dart';
 import '../../domain/repository/portions.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/portions.dart';
 class PortionsRepository extends IPortionsRepository {
   PortionsRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -27,7 +27,8 @@ class PortionsRepository extends IPortionsRepository {
 
   @override
   List<Portion> search(String query) {
-    final rows = database.select(IPortionsRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
+    final rows = database
+        .select(IPortionsRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
     return rows.map(Portion.fromRow).toList();
   }
 
@@ -50,7 +51,8 @@ class PortionsRepository extends IPortionsRepository {
         ids.add(row['id'] as int);
         continue;
       }
-      add.execute([portion, lyrics, hymnPortionId, DateTime.now().toIso8601String()]);
+      add.execute(
+          [portion, lyrics, hymnPortionId, DateTime.now().toIso8601String()]);
       ids.add(database.lastInsertRowId);
     }
     add.dispose();

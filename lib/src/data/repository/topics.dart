@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/topics.dart';
 import '../../domain/repository/topics.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/topics.dart';
 class TopicsRepository extends ITopicsRepository {
   TopicsRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -27,13 +27,15 @@ class TopicsRepository extends ITopicsRepository {
 
   @override
   List<Topic> search(String query) {
-    final rows = database.select(ITopicsRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
+    final rows = database
+        .select(ITopicsRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
     return rows.map(Topic.fromRow).toList();
   }
 
   @override
   List<Topic> getTopicsForHymn(int hymnId) {
-    final rows = database.select(ITopicsRepository.GET_TOPICS_FOR_HYMN, [hymnId]);
+    final rows =
+        database.select(ITopicsRepository.GET_TOPICS_FOR_HYMN, [hymnId]);
     return rows.map(Topic.fromRow).toList();
   }
 

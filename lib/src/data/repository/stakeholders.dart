@@ -1,4 +1,4 @@
-import 'package:sqlite3/sqlite3.dart';
+import 'package:sqlite3/common.dart';
 
 import '../../domain/model/stakeholders.dart';
 import '../../domain/repository/stakeholders.dart';
@@ -6,7 +6,7 @@ import '../../domain/repository/stakeholders.dart';
 class StakeholdersRepository extends IStakeholdersRepository {
   StakeholdersRepository(this.database) : super([]);
 
-  final Database database;
+  final CommonDatabase database;
 
   @override
   void createTable() {
@@ -27,13 +27,15 @@ class StakeholdersRepository extends IStakeholdersRepository {
 
   @override
   List<Stakeholder> search(String query) {
-   final rows = database.select(IStakeholdersRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
+    final rows = database.select(
+        IStakeholdersRepository.SEARCH.replaceAll('?', "'\"$query\" * '"));
     return rows.map(Stakeholder.fromRow).toList();
   }
 
   @override
   List<Stakeholder> getStakeholdersForHymn(int hymnId) {
-    final rows = database.select(IStakeholdersRepository.GET_STAKEHOLDERS_FOR_HYMN);
+    final rows =
+        database.select(IStakeholdersRepository.GET_STAKEHOLDERS_FOR_HYMN);
     return rows.map(Stakeholder.fromRow).toList();
   }
 
@@ -99,8 +101,10 @@ class StakeholdersRepository extends IStakeholdersRepository {
   }
 
   @override
-  List<StakeholderWithRelationship> getStakeholdersWithRelationshipForHymn(int hymnId) {
-    final stmt = database.prepare(IStakeholdersRepository.GET_STAKEHOLDERS_WITH_RELATIONSHIP_FOR_HYMN);
+  List<StakeholderWithRelationship> getStakeholdersWithRelationshipForHymn(
+      int hymnId) {
+    final stmt = database.prepare(
+        IStakeholdersRepository.GET_STAKEHOLDERS_WITH_RELATIONSHIP_FOR_HYMN);
     final stakeholders = <(Stakeholder, String)>[];
     for (final row in stmt.select([hymnId])) {
       stakeholders.add((
