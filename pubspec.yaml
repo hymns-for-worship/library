@@ -1,0 +1,22 @@
+name: hfw_library
+description: Hymns for Worship Database
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  archive: ^3.4.6
+  sqlite3: ^2.1.0
+  xml: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
