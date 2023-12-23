@@ -1,5 +1,5 @@
-import '../model/bundle_file.dart';
-import '../model/hymn_archive.dart';
+import '../../../model/bundle_file.dart';
+import '../../../model/hymn_archive.dart';
 import 'get_hymn_archive.dart';
 
 class GetMusicForHymn {

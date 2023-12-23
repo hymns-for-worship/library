@@ -1,5 +1,5 @@
-import '../../data/source/database/database.dart';
-import '../model/hymn_archive.dart';
+import '../../../../data/source/database/database.dart';
+import '../../../model/hymn_archive.dart';
 import 'get_hymn_archive.dart';
 
 typedef GetHymnResult = ({

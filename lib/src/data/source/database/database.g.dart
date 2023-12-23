@@ -8008,6 +8008,26 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
     );
   }
 
+  Future<int> deleteRecordModelByCollectionIdAndId(
+      String collectionId, String id) {
+    return customUpdate(
+      'DELETE FROM records WHERE collection_id = ?1 AND id = ?2',
+      variables: [Variable<String>(collectionId), Variable<String>(id)],
+      updates: {records},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteRecordModelByCollectionNameAndId(
+      String collectionName, String id) {
+    return customUpdate(
+      'DELETE FROM records WHERE collection_name = ?1 AND id = ?2',
+      variables: [Variable<String>(collectionName), Variable<String>(id)],
+      updates: {records},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
   Future<int> deleteAllRecordModels() {
     return customUpdate(
       'DELETE FROM records',

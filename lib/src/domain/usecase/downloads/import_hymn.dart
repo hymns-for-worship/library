@@ -2,8 +2,8 @@ import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart';
 import 'package:xml/xml.dart';
 
-import '../../data/source/archive/zip.dart';
-import '../../data/source/database/database.dart';
+import '../../../data/source/archive/zip.dart';
+import '../../../data/source/database/database.dart';
 
 // <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 // <contents xmlns="http://schema.PresentationCreator.net/HymnalInformation.xsd">

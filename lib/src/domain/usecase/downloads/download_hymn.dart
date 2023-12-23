@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-import '../../data/source/database/database.dart';
-import '../../data/source/pocketbase/client.dart';
+import '../../../data/source/database/database.dart';
+import '../../../data/source/pocketbase/client.dart';
 import 'import_hymn.dart';
 
 class DownloadHymn {
   final HfwDatabase db;
-  final Client http;
   final HfwStudio client;
+  final Client http;
   late final importHymn = ImportHymn(db);
 
   DownloadHymn({

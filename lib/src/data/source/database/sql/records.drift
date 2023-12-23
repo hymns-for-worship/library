@@ -118,6 +118,16 @@ deleteRecordModelByCollectionName:
 DELETE FROM records
 WHERE collection_name = :collection_name;
 
+deleteRecordModelByCollectionIdAndId:
+DELETE FROM records
+WHERE collection_id = :collection_id
+AND id = :id;
+
+deleteRecordModelByCollectionNameAndId:
+DELETE FROM records
+WHERE collection_name = :collection_name
+AND id = :id;
+
 deleteAllRecordModels:
 DELETE FROM records;
 

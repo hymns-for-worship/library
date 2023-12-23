@@ -1,4 +1,4 @@
-import '../../data/source/database/database.dart';
+import '../../../../data/source/database/database.dart';
 
 class GetTopics {
   final HfwDatabase db;

@@ -1,4 +1,4 @@
-import '../../data/source/database/database.dart';
+import '../../../../data/source/database/database.dart';
 
 class GetStakeholders {
   final HfwDatabase db;

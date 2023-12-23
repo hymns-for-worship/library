@@ -61,11 +61,14 @@ class BundlesScreen extends StatefulWidget {
 }
 
 class _BundlesScreenState extends State<BundlesScreen> {
-  final getDownloads = GetDownloads($.get<HfwStudio>(), $.get<HfwDatabase>());
+  final getDownloads = GetDownloads(
+    client: $.get<HfwStudio>(),
+    db: $.get<HfwDatabase>(),
+  );
   final getHymns = GetHymns($.get<HfwDatabase>());
   final getBundles = GetHymnBundles($.get<HfwDatabase>());
   final removeDownload = RemoveHymnDownload($.get<HfwDatabase>());
-  late final downloads = getDownloads().toSignal();
+  late final downloads = getDownloads(null).toSignal();
   late final hymns = getHymns().toSignal();
   late final bundles = getBundles().toSignal();
 
@@ -90,6 +93,7 @@ class _BundlesScreenState extends State<BundlesScreen> {
 
   @override
   void dispose() {
+    getDownloads.dispose();
     downloads.dispose();
     hymns.dispose();
     bundles.dispose();
