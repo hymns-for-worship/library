@@ -3,6 +3,7 @@ import 'package:hfw_core/hfw_core.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../../instance.dart';
+import '../../../widgets/hymn_download.dart';
 
 class HymnDetails extends StatefulWidget {
   const HymnDetails({super.key, required this.hymn});
@@ -25,6 +26,9 @@ class _HymnDetailsState extends State<HymnDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.hymn.title),
+        actions: [
+          HymnDownloadButton(hymnId: widget.hymn.id),
+        ],
       ),
       body: Watch((context) {
         return get.value.maybeMap(

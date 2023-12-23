@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../instance.dart';
+import '../widgets/hymn_download.dart';
 import 'library/hymn/details.dart';
 
 final _progress = signal<double?>(null);
@@ -61,16 +62,17 @@ class BundlesScreen extends StatefulWidget {
 }
 
 class _BundlesScreenState extends State<BundlesScreen> {
+  final importer = $.get<ImportHymn>();
+  final removeDownload = RemoveHymnDownload($.get<HfwDatabase>());
   final getDownloads = GetDownloads(
     client: $.get<HfwStudio>(),
     db: $.get<HfwDatabase>(),
   );
   final getHymns = GetHymns($.get<HfwDatabase>());
   final getBundles = GetHymnBundles($.get<HfwDatabase>());
-  final removeDownload = RemoveHymnDownload($.get<HfwDatabase>());
   late final downloads = getDownloads(null).toSignal();
-  late final hymns = getHymns().toSignal();
   late final bundles = getBundles().toSignal();
+  late final hymns = getHymns().toSignal();
 
   late final sortedDownloads = computed<List<Download>>(() {
     final items = <Download>[];
@@ -129,7 +131,7 @@ class _BundlesScreenState extends State<BundlesScreen> {
                 if (!filepath.endsWith('.zip')) continue;
                 try {
                   final bytes = await File(filepath).readAsBytes();
-                  await $.get<ImportHymn>()(bytes);
+                  await importer(bytes);
                 } catch (e, t) {
                   _errors.add('$filepath - $e');
                   debugPrint('$filepath - $e');
@@ -210,48 +212,11 @@ class _BundlesScreenState extends State<BundlesScreen> {
                 itemBuilder: (context, index) {
                   final (download, hymn, bundle) = results[index];
                   final hasDownload = bundle != null;
-                  final needsUpdate =
-                      bundle != null && bundle.bundleHash != download.hash;
                   return ListTile(
                     title: Text(download.hymnTitle),
                     subtitle: hasDownload ? Text(bundle.bundleHash!) : null,
                     leading: Icon(hasDownload ? Icons.check : Icons.error),
-                    trailing: Watch((context) {
-                      final activeDownload = activeDownloads[download.hymnId];
-                      return IconButton(
-                        icon: hasDownload && !needsUpdate
-                            ? const Icon(Icons.delete)
-                            : activeDownload == null
-                                ? Icon(
-                                    Icons.file_download,
-                                    color: needsUpdate ? Colors.orange : null,
-                                  )
-                                : activeDownload.value.map(
-                                    data: (progress) => SizedBox.square(
-                                      dimension: 20,
-                                      child: CircularProgressIndicator(
-                                        value: progress,
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                    loading: () => const SizedBox.square(
-                                      dimension: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    ),
-                                    error: (_, __) => const Icon(Icons.error,
-                                        color: Colors.red),
-                                  ),
-                        onPressed: hasDownload
-                            ? () => removeDownload(download.hymnId)
-                            : activeDownload != null
-                                ? activeDownload.value.hasError
-                                    ? () => retryDownload(download.hymnId)
-                                    : null
-                                : () => downloadHymn(download.hymnId),
-                      );
-                    }),
+                    trailing: HymnDownloadButton(hymnId: download.hymnId),
                     onTap: hymn == null
                         ? null
                         : () => Navigator.of(context).push(
