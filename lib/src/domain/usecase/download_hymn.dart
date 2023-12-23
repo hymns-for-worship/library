@@ -18,17 +18,22 @@ class DownloadHymn {
     required this.http,
   });
 
-  Stream<double> call(String hymnId) async* {
+  Stream<double> call(
+    String hymnId, {
+    bool check = false,
+  }) async* {
     yield 0.1;
-    // Check for existing download
-    final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
-    if (bundle != null) {
-      yield 0.4;
-      if (bundle.bytes != null) {
-        await importHymn(bundle.bytes!);
+    if (check) {
+      //  Check for existing download
+      final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
+      if (bundle != null) {
+        yield 0.4;
+        if (bundle.bytes != null) {
+          await importHymn(bundle.bytes!);
+        }
+        yield 1.0;
+        return;
       }
-      yield 1.0;
-      return;
     }
     int total = 0;
     int current = 0;

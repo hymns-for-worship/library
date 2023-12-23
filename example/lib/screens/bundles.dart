@@ -44,6 +44,13 @@ void downloadHymn(String hymnId) {
   }
 }
 
+void retryDownload(String hymnId) {
+  final current = activeDownloads[hymnId];
+  if (current == null) return;
+  activeDownloads.remove(hymnId);
+  downloadHymn(hymnId);
+}
+
 typedef Download = (HymnDownload, Hymn?, GetBundlesHashesResult?);
 
 class BundlesScreen extends StatefulWidget {
@@ -199,6 +206,8 @@ class _BundlesScreenState extends State<BundlesScreen> {
                 itemBuilder: (context, index) {
                   final (download, hymn, bundle) = results[index];
                   final hasDownload = bundle != null;
+                  final needsUpdate =
+                      bundle != null && bundle.bundleHash != download.hash;
                   return ListTile(
                     title: Text(download.hymnTitle),
                     subtitle: hasDownload ? Text(bundle.bundleHash!) : null,
@@ -206,10 +215,13 @@ class _BundlesScreenState extends State<BundlesScreen> {
                     trailing: Watch((context) {
                       final activeDownload = activeDownloads[download.hymnId];
                       return IconButton(
-                        icon: hasDownload
+                        icon: hasDownload && !needsUpdate
                             ? const Icon(Icons.delete)
                             : activeDownload == null
-                                ? const Icon(Icons.file_download)
+                                ? Icon(
+                                    Icons.file_download,
+                                    color: needsUpdate ? Colors.orange : null,
+                                  )
                                 : activeDownload.value.map(
                                     data: (progress) => SizedBox.square(
                                       dimension: 20,
@@ -224,12 +236,15 @@ class _BundlesScreenState extends State<BundlesScreen> {
                                         strokeWidth: 2,
                                       ),
                                     ),
-                                    error: (_, __) => const Icon(Icons.error),
+                                    error: (_, __) => const Icon(Icons.error,
+                                        color: Colors.red),
                                   ),
                         onPressed: hasDownload
                             ? () => removeDownload(download.hymnId)
                             : activeDownload != null
-                                ? null
+                                ? activeDownload.value.hasError
+                                    ? () => retryDownload(download.hymnId)
+                                    : null
                                 : () => downloadHymn(download.hymnId),
                       );
                     }),
