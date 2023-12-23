@@ -1,0 +1,80 @@
+import 'hymns.drift';
+import 'scriptures.drift';
+
+-- Tables
+CREATE TABLE hymn_scriptures (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    scriptureId TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (scriptureId, hymnId)
+);
+
+-- Indexes
+CREATE INDEX hymn_scriptures_idx_hymnId ON hymn_scriptures (hymnId);
+CREATE INDEX hymn_scriptures_idx_scriptureId ON hymn_scriptures (scriptureId);
+
+-- Triggers
+CREATE TRIGGER hymn_scriptures_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM hymn_scriptures
+    WHERE hymnId = old.id;
+END;
+
+CREATE TRIGGER hymn_scriptures_delete_scripture
+AFTER DELETE ON scriptures
+BEGIN
+    DELETE FROM hymn_scriptures
+    WHERE scriptureId = old.id;
+END;
+
+-- Queries
+getHymnScriptures:
+SELECT * FROM hymn_scriptures;
+
+getHymnScripture:
+SELECT * FROM hymn_scriptures
+WHERE id = :id;
+
+getHymnScripturesByScriptureId:
+SELECT * FROM hymn_scriptures
+WHERE scriptureId = :scriptureId;
+
+getHymnScripturesByHymnId:
+SELECT * FROM hymn_scriptures
+WHERE hymnId = :hymnId;
+
+createHymnScripture:
+INSERT OR REPLACE INTO hymn_scriptures (scriptureId, hymnId, created, updated)
+VALUES (:scriptureId, :hymnId, :created, :updated)
+RETURNING *;
+
+updateHymnScripture:
+UPDATE hymn_scriptures
+SET scriptureId = :scriptureId, hymnId = :hymnId, updated = :updated
+WHERE id = :id;
+
+deleteHymnScripture:
+DELETE FROM hymn_scriptures
+WHERE id = :id;
+
+deleteHymnScriptures:
+DELETE FROM hymn_scriptures;
+
+getHymnsByScriptureId:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_scriptures
+    WHERE hymnId = h.id
+    AND scriptureId = :scriptureId
+);
+
+getScripturesByHymnId:
+SELECT t.* FROM scriptures AS t
+WHERE EXISTS (
+    SELECT scriptureId FROM hymn_scriptures
+    WHERE scriptureId = t.id
+    AND hymnId = :hymnId
+);

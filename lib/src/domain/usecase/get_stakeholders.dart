@@ -1,14 +1,10 @@
-import '../../data/repository/stakeholders.dart';
-import '../model/stakeholders.dart';
+import '../../data/source/database/database.dart';
 
 class GetStakeholders {
-  final StakeholdersRepository stakeholders;
+  final HfwDatabase db;
+  const GetStakeholders(this.db);
 
-  GetStakeholders({
-    required this.stakeholders,
-  });
-
-  List<Stakeholder> execute() {
-    return stakeholders.getAll();
+  Stream<List<Stakeholder>> call() async* {
+    yield* db.getStakeholders().watch();
   }
 }

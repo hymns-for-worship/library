@@ -1,0 +1,88 @@
+import 'hymns.drift';
+import 'hymnals.drift';
+
+-- Tables
+CREATE TABLE hymn_hymnals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hymnalId TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (hymnalId, hymnId)
+);
+
+-- Indexes
+CREATE INDEX hymn_hymnals_idx_hymnId ON hymn_hymnals (hymnId);
+CREATE INDEX hymn_hymnals_idx_hymnalId ON hymn_hymnals (hymnalId);
+
+-- Triggers
+CREATE TRIGGER hymn_hymnals_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM hymn_hymnals
+    WHERE hymnId = old.id;
+END;
+
+CREATE TRIGGER hymn_hymnals_delete_hymnal
+AFTER DELETE ON hymnals
+BEGIN
+    DELETE FROM hymn_hymnals
+    WHERE hymnalId = old.id;
+END;
+
+-- Queries
+getHymnHymnals:
+SELECT * FROM hymn_hymnals;
+
+getHymnHymnal:
+SELECT * FROM hymn_hymnals
+WHERE id = :id;
+
+getHymnHymnalsByHymnalId:
+SELECT * FROM hymn_hymnals
+WHERE hymnalId = :hymnalId;
+
+getHymnHymnalsByHymnId:
+SELECT * FROM hymn_hymnals
+WHERE hymnId = :hymnId;
+
+createHymnHymnal:
+INSERT OR REPLACE INTO hymn_hymnals (hymnalId, hymnId, created, updated)
+VALUES (:hymnalId, :hymnId, :created, :updated)
+RETURNING *;
+
+updateHymnHymnal:
+UPDATE hymn_hymnals
+SET hymnalId = :hymnalId, hymnId = :hymnId, updated = :updated
+WHERE id = :id;
+
+deleteHymnHymnal:
+DELETE FROM hymn_hymnals
+WHERE id = :id;
+
+deleteHymnHymnals:
+DELETE FROM hymn_hymnals;
+
+getHymnsByHymnalId:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_hymnals
+    WHERE hymnId = h.id
+    AND hymnalId = :hymnalId
+);
+
+getHymnalsByHymnId:
+SELECT t.* FROM hymnals AS t
+WHERE EXISTS (
+    SELECT hymnalId FROM hymn_hymnals
+    WHERE hymnalId = t.id
+    AND hymnId = :hymnId
+);
+
+getHymnalByHymnId:
+SELECT t.* FROM hymnals AS t
+WHERE EXISTS (
+    SELECT hymnalId FROM hymn_hymnals
+    WHERE hymnalId = t.id
+    AND hymnId = :hymnId
+);

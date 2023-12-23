@@ -11,16 +11,20 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  hfw_library:
+  hfw_core:
     path: ".."
   file_picker: ^6.0.0
-  sqlite3: ^2.1.0
-  path_provider: ^2.1.1
+  path_provider: ^2.0.0
+  signals: ^2.1.10
+  get_it: ^7.6.4
+  shared_preferences: ^2.2.2
+  pocketbase: ^0.16.0
+  http: ^1.1.2
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^2.0.0
 
 flutter:

@@ -1,4 +1,4 @@
-name: hfw_library
+name: hfw_core
 description: Hymns for Worship Database
 version: 0.0.1
 publish_to: 'none'
@@ -10,13 +10,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  archive: ^3.4.6
-  sqlite3: ^2.1.0
+  archive: ^3.3.7
   xml: ^6.3.0
+  meta: ^1.9.1
+  drift: ^2.14.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.0
+  path: ^1.8.3
+  pocketbase: ^0.16.0
+  crypto: ^3.0.3
+  shortid: ^0.1.2
+  file: ^6.1.4
+  shared_preferences: ^2.2.2
+  http: ^1.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  drift_dev: ^2.14.0
+  build_runner: ^2.4.7
 
 flutter:
+
+scripts:
+  build: dart pub run build_runner build

@@ -1,0 +1,134 @@
+-- Tables
+CREATE TABLE records (
+    id TEXT PRIMARY KEY NOT NULL,
+    collection_id TEXT NOT NULL,
+    collection_name TEXT NOT NULL,
+    data TEXT NOT NULL,
+    deleted BOOLEAN NOT NULL DEFAULT 0,
+    synced BOOLEAN NOT NULL DEFAULT 0,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (id, collection_id, collection_name)
+);
+
+CREATE TABLE records_cache (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    collection_name TEXT NOT NULL,
+    synced BOOLEAN NOT NULL DEFAULT 0,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (collection_name)
+);
+
+-- Indexes
+CREATE INDEX records_idx_data ON records (data);
+CREATE INDEX records_idx_deleted ON records (deleted);
+CREATE INDEX records_idx_synced ON records (synced);
+
+-- -- Full Text Search
+-- CREATE VIRTUAL TABLE records_fts USING fts5 (
+--     name,
+--     content=records,
+--     content_rowid=id
+-- );
+-- CREATE TRIGGER records_fts_insert
+-- AFTER INSERT ON records
+-- BEGIN
+--     INSERT INTO records_fts (rowid, name)
+--     VALUES (new.ROWID, new.name);
+-- END;
+
+-- CREATE TRIGGER records_fts_update
+-- AFTER UPDATE ON records
+-- BEGIN
+--     UPDATE records_fts
+--     SET name = new.name
+--     WHERE rowid = old.ROWID;
+-- END;
+
+-- CREATE TRIGGER records_fts_delete
+-- AFTER DELETE ON records
+-- BEGIN
+--     INSERT INTO records_fts (records_fts, rowid, name)
+--     VALUES ('delete', old.ROWID, old.name);
+-- END;
+
+-- Queries
+-- searchTopics:
+-- SELECT 
+-- 	t.id,
+-- 	highlight(records_fts, 0, '<b>', '</b>') name,
+--     t.created,
+--     t.updated
+-- FROM records_fts 
+-- INNER JOIN records AS t
+-- 	ON t.id = records_fts.ROWID
+-- WHERE records_fts MATCH :query
+-- ORDER BY rank;
+
+getRecordModels:
+SELECT * FROM records;
+
+getRecordModel:
+SELECT * FROM records
+WHERE id = :id;
+
+getRecordModelByCollectionId:
+SELECT * FROM records
+WHERE collection_id = :collection_id;
+
+getRecordModelByCollectionName:
+SELECT * FROM records
+WHERE collection_name = :collection_name;
+
+createRecordModel:
+INSERT OR REPLACE INTO records (id, collection_id, collection_name, data, deleted, synced, created, updated)
+VALUES (:id, :collection_id, :collection_name, :data, :deleted, :synced, :created, :updated);
+RETURNING *;
+
+updateRecordModel:
+UPDATE records
+SET data = :data, deleted = :deleted, synced = :synced, updated = :updated
+WHERE id = :id;
+
+deleteRecordModel:
+DELETE FROM records
+WHERE id = :id;
+
+softDeleteRecordModel:
+UPDATE records
+SET deleted = 1, updated = :updated
+WHERE id = :id;
+
+setSyncStatusRecordModel:
+UPDATE records
+SET synced = :synced, updated = :updated
+WHERE id = :id;
+
+setDeleteStatusRecordModel:
+UPDATE records
+SET deleted = :deleted, updated = :updated
+WHERE id = :id;
+
+deleteRecordModelByCollectionId:
+DELETE FROM records
+WHERE collection_id = :collection_id;
+
+deleteRecordModelByCollectionName:
+DELETE FROM records
+WHERE collection_name = :collection_name;
+
+deleteAllRecordModels:
+DELETE FROM records;
+
+deleteRecordModelsByCollectionNameBeforeDate:
+DELETE FROM records
+WHERE collection_name = :collection_name AND updated < :date;
+
+getCollectionNameSyncedStatus:
+SELECT * FROM records_cache
+WHERE collection_name = :collection_name;
+
+setCollectionSyncedStatus:
+INSERT OR REPLACE INTO records_cache (collection_name, synced, created, updated)
+VALUES (:collection_name, :synced, :created, :updated);

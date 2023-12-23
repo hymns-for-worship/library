@@ -1,0 +1,66 @@
+import 'hymns.drift';
+
+-- Tables
+CREATE TABLE bundles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    hymnId TEXT NOT NULL,
+    hymn_title TEXT,
+    hymn_number TEXT,
+    hash TEXT NOT NULL,
+    file TEXT,
+    bytes BLOB,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (hymnId, hash)
+);
+
+-- Indexes
+CREATE INDEX bundles_idx_hymnId ON bundles (hymnId);
+
+-- Triggers
+CREATE TRIGGER bundles_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM bundles
+    WHERE hymnId = old.id;
+END;
+
+-- Queries
+getBundles:
+SELECT * FROM bundles;
+
+getBundlesHashes:
+SELECT b.id AS bundle_id, b.hash AS bundle_hash, b.created AS bundle_created, b.updated AS bundle_updated, hymn.**
+FROM hymns AS hymn
+LEFT JOIN bundles AS b ON hymn.id = b.hymnId;
+
+getBundle:
+SELECT * FROM bundles
+WHERE id = :id;
+
+getBundlesByHymnId:
+SELECT * FROM bundles
+WHERE hymnId = :hymnId;
+
+getBundleByHash:
+SELECT * FROM bundles
+WHERE hash = :hash;
+
+createBundle:
+INSERT OR REPLACE INTO bundles (hymnId, hash, bytes, created, updated)
+VALUES (:hymnId, :hash, :bytes, :created, :updated)
+RETURNING *;
+
+createNamedBundle:
+INSERT OR REPLACE INTO bundles (hymnId, hash, file, hymn_title, hymn_number, bytes, created, updated)
+VALUES (:hymnId, :hash, :file, :hymn_title, :hymn_number, :bytes, :created, :updated)
+RETURNING *;
+
+updateBundle:
+UPDATE bundles
+SET hymnId = :hymnId, hash = :hash, bytes = :bytes, updated = :updated
+WHERE id = :id;
+
+deleteBundle:
+DELETE FROM bundles
+WHERE id = :id;

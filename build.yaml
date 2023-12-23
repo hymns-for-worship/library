@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          store_date_time_values_as_text: true
+          mutable_classes: true
+          sql:
+            dialect: sqlite
+            options:
+              version: "3.35"
+              modules:
+                - json1
+                - fts5
+                # - math

@@ -1,19 +1,6 @@
-import '../../data/repository/assets.dart';
-import '../../data/repository/hymn_stakeholders.dart';
-import '../../data/repository/hymnals.dart';
-import '../../data/repository/hymns.dart';
-import '../../data/repository/portions.dart';
-import '../../data/repository/scriptures.dart';
-import '../../data/repository/stakeholders.dart';
-import '../../data/repository/topics.dart';
-import '../model/assets.dart';
-import '../model/hymn.dart';
-import '../model/hymnal.dart';
-import '../model/portion.dart';
-import '../model/scriptures.dart';
-import '../model/stakeholders.dart';
-import '../model/topics.dart';
-import 'get_hymns.dart';
+import '../../data/source/database/database.dart';
+import '../model/hymn_archive.dart';
+import 'get_hymn_archive.dart';
 
 typedef GetHymnResult = ({
   Hymn? hymn,
@@ -21,52 +8,39 @@ typedef GetHymnResult = ({
   List<Topic> topics,
   List<Scripture> scriptures,
   List<Portion> portions,
-  List<(Stakeholder, String)> stakeholders,
-  List<Asset> assets,
+  List<GetStakeholdersWithRelationshipForHymnIdResult> stakeholders,
+  HymnArchive? archive,
 });
 
-extension GetHymnResultUtils on GetHymnResult {
-  GetHymnsResult? toRow() {
-    if (hymn == null) return null;
-    return (
-      hymn!,
-      hymnal,
-      topics,
-      scriptures,
-      portions,
-    );
-  }
-}
-
 class GetHymn {
-  final TopicsRepository topics;
-  final ScripturesRepository scriptures;
-  final HymnsRepository hymns;
-  final HymnalsRepository hymnals;
-  final PortionsRepository portions;
-  final StakeholdersRepository stakeholders;
-  final HymnStakeholdersRepository hymnStakeholders;
-  final AssetsRepository assets;
+  final HfwDatabase db;
+  final GetHymnArchive getHymnArchive;
 
-  GetHymn({
-    required this.topics,
-    required this.scriptures,
-    required this.hymns,
-    required this.hymnals,
-    required this.portions,
-    required this.stakeholders,
-    required this.hymnStakeholders,
-    required this.assets,
+  const GetHymn({
+    required this.db,
+    required this.getHymnArchive,
   });
 
-  GetHymnResult execute(int id) {
-    final hymn = hymns.getById(id);
-    final topics = this.topics.getTopicsForHymn(id);
-    final scriptures = this.scriptures.getScripturesForHymn(id);
-    final portions = this.portions.getPortionsForHymn(id);
-    final stakeholders = this.stakeholders.getStakeholdersWithRelationshipForHymn(id);
-    final hymnal = hymnals.getHymnalForHymn(id);
-    final assets = this.assets.getAssetForHymnId(id);
+  Future<GetHymnResult> call(String id) async {
+    final hymn = await db //
+        .getHymn(id)
+        .getSingleOrNull();
+    final hymnal = await db //
+        .getHymnalByHymnId(id)
+        .getSingleOrNull();
+    final topics = await db //
+        .getTopicsByHymnId(id)
+        .get();
+    final scriptures = await db //
+        .getScripturesByHymnId(id)
+        .get();
+    final portions = await db //
+        .getPortionsByHymnId(id)
+        .get();
+    final stakeholders = await db //
+        .getStakeholdersWithRelationshipForHymnId(id)
+        .get();
+    final archive = await getHymnArchive(id).first;
     return (
       hymn: hymn,
       hymnal: hymnal,
@@ -74,7 +48,7 @@ class GetHymn {
       scriptures: scriptures,
       portions: portions,
       stakeholders: stakeholders,
-      assets: assets,
+      archive: archive,
     );
   }
 }

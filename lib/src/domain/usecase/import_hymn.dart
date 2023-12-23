@@ -1,20 +1,9 @@
-import 'dart:typed_data';
-
-import 'package:archive/archive.dart';
+import 'package:crypto/crypto.dart';
+import 'package:drift/drift.dart';
 import 'package:xml/xml.dart';
 
-import '../../data/repository/assets.dart';
-import '../../data/repository/hymn_hymnals.dart';
-import '../../data/repository/hymn_portions.dart';
-import '../../data/repository/hymn_scriptures.dart';
-import '../../data/repository/hymn_stakeholders.dart';
-import '../../data/repository/hymn_topics.dart';
-import '../../data/repository/hymns.dart';
-import '../../data/repository/hymnals.dart';
-import '../../data/repository/portions.dart';
-import '../../data/repository/scriptures.dart';
-import '../../data/repository/stakeholders.dart';
-import '../../data/repository/topics.dart';
+import '../../data/source/archive/zip.dart';
+import '../../data/source/database/database.dart';
 
 // <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 // <contents xmlns="http://schema.PresentationCreator.net/HymnalInformation.xsd">
@@ -52,168 +41,174 @@ import '../../data/repository/topics.dart';
 //   </hymnal>
 // </contents>
 class ImportHymn {
-  final TopicsRepository topics;
-  final HymnTopicsRepository hymnTopics;
-  final ScripturesRepository scriptures;
-  final HymnScripturesRepository hymnScriptures;
-  final HymnsRepository hymns;
-  final HymnalsRepository hymnals;
-  final HymnHymnalsRepository hymnHymnals;
-  final PortionsRepository portions;
-  final StakeholdersRepository stakeholders;
-  final HymnStakeholdersRepository hymnStakeholders;
-  final HymnPortionsRepository hymnPortions;
-  final AssetsRepository assets;
+  final HfwDatabase db;
+  ImportHymn(this.db);
 
-  ImportHymn({
-    required this.topics,
-    required this.hymnTopics,
-    required this.scriptures,
-    required this.hymnScriptures,
-    required this.hymnals,
-    required this.hymnHymnals,
-    required this.portions,
-    required this.hymns,
-    required this.stakeholders,
-    required this.hymnStakeholders,
-    required this.hymnPortions,
-    required this.assets,
-  });
+  Future<void> call(Uint8List bytes) async {
+    await db.transaction(() async {
+      final archive = await extractZipAsync(bytes);
 
-  String? execute(Uint8List bytes, {bool addAssets = true}) {
-    final decoder = ZipDecoder();
-    final archive = decoder.decodeBytes(bytes);
-    String? id;
-
-    final infos = archive //
-        .files
-        .where((e) => e.name.endsWith('Information.hixml'));
-    if (infos.isEmpty) {
-      throw Exception('No information.hixml file found');
-    }
-    final infoBytes = infos.first.content as List<int>;
-    final str = String.fromCharCodes(infoBytes);
-    final (hymnId, hymnNumber) = parseInfo(str);
-    id = hymnNumber;
-
-    if (addAssets) {
-      for (final file in archive.files) {
-        if (file.isFile) {
-          final bytes = file.content as List<int>;
-          assets.add((
-            hymnId,
-            file.name,
-            Uint8List.fromList(bytes),
-          ));
-        }
+      final hash = sha256.convert(bytes).toString();
+      final bundle = await db.getBundleByHash(hash).getSingleOrNull();
+      if (bundle != null) {
+        return;
       }
-      // TODO: Need to add app PNGs for sheet music and PDFs/PPTX
-      hymns.setDownloaded(
-        hymnId,
-        true,
-        DateTime.now(),
-      );
-    }
 
-    return id;
+      final now = DateTime.now();
+
+      final infos = archive //
+          .files
+          .where((e) => e.name.endsWith('Information.hixml'));
+      if (infos.isEmpty) {
+        throw Exception('No information.hixml file found');
+      }
+      final infoBytes = infos.first.content as List<int>;
+      final str = String.fromCharCodes(infoBytes);
+
+      final (hymnId, _) = await parseHymnInformationFile(db, str);
+
+      await db.createBundle(
+        hymnId,
+        hash,
+        bytes,
+        now,
+        now,
+      );
+    });
   }
 
-  (int, String) parseInfo(String str) {
+  Future<(String, String)> parseHymnInformationFile(
+    HfwDatabase db,
+    String str,
+  ) async {
     final doc = XmlDocument.parse(str);
+    final content = doc.findAllElements('contents').first;
+    final version = int.tryParse(content.attr('version')) ?? 0;
+    if (version < 2) {
+      throw Exception('Unsupported version: $version');
+    }
+    final now = DateTime.now();
     final hymn = doc.findAllElements('hymn').first;
     final hymnal = doc.findAllElements('hymnal').first;
-    int hymnId;
-    final number = hymn.getAttribute('number')!;
+    final number = hymn.attr('number');
+    String hymnId;
 
     {
       // Hymn
       final notation = hymn.findAllElements('songLeaderInfo').first;
-      hymnId = hymns.add((
-        title: hymn.getAttribute('title')!,
-        number: number,
-        tuneName: hymn.findAllElements('tuneName').firstOrNull?.innerText ?? '',
-        startingKey: notation.getAttribute('key'),
-        beatPattern: notation.getAttribute('beatPattern'),
-        startingPitch: notation.getAttribute('startingPitch'),
-        startingBeat: notation.getAttribute('startingBeat'),
-        startingPitchDirection: notation.getAttribute('startingPitchDirection'),
-        timeSignature: notation.getAttribute('time'),
-        complexTimeSignature: notation.getAttribute('complexTime'),
-        downloaded: false,
-      ));
+      final results = await db.createHymn(
+        hymn.attr('id'),
+        hymn.attr('title'),
+        number,
+        hymn.findAllElements('tuneName').firstOrNull?.innerText ?? '',
+        notation.attr('key'),
+        notation.attr('beatPattern'),
+        notation.attr('startingPitch'),
+        notation.attr('startingBeat'),
+        notation.attr('startingPitchDirection'),
+        notation.attr('time'),
+        notation.attr('complexTime'),
+        now,
+        now,
+      );
+      hymnId = results.first.id;
     }
 
     {
       // Hymnal
-      final id = hymnals.add((
+      final results = await db.createHymnal(
+        hymnal.attr('id'),
         hymnal.findAllElements('name').first.innerText,
         hymnal.findAllElements('alias').first.innerText,
-      ));
-      hymnHymnals.add((hymnId, id));
+        now,
+        now,
+      );
+      await db.createHymnHymnal(
+        results.first.id,
+        hymnId,
+        now,
+        now,
+      );
     }
     {
       // Topics
       for (final node in doc.findAllElements('topicalIndex')) {
-        final id = topics.add(node.innerText);
-        hymnTopics.add((hymnId, id));
+        final results = await db.createTopic(
+          node.attr('id'),
+          node.innerText,
+          now,
+          now,
+        );
+        await db.createHymnTopic(
+          results.first.id,
+          hymnId,
+          now,
+          now,
+        );
       }
     }
     {
       // Scriptures
       for (final node in doc.findAllElements('scripture')) {
-        final id = scriptures.add(node.innerText);
-        hymnScriptures.add((hymnId, id));
+        final results = await db.createScripture(
+          node.attr('id'),
+          node.innerText,
+          now,
+          now,
+        );
+        await db.createHymnScripture(
+          results.first.id,
+          hymnId,
+          now,
+          now,
+        );
       }
     }
     {
       // Portions
       for (final node in doc.findAllElements('hymnPortion')) {
-        final id = portions.add((
-          node.getAttribute('portion')!,
+        final results = await db.createPortion(
+          node.attr('id'),
+          node.attr('portion'),
           node.findAllElements('text').map((e) => e.innerText).join('\n'),
-          node.getAttribute('hymnPortionId')!,
-        ));
-        hymnPortions.add((hymnId, id));
+          node.attr('hymnPortionId'),
+          now,
+          now,
+        );
+        await db.createHymnPortion(
+          results.first.id,
+          hymnId,
+          now,
+          now,
+        );
       }
     }
     {
       // Stakeholders
       for (final node in doc.findAllElements('originator')) {
-        final id = stakeholders.add(
-          node.getAttribute('name')!,
+        final results = await db.createStakeholder(
+          node.attr('stakeHolderId'),
+          node.attr('name'),
+          now,
+          now,
         );
-        hymnStakeholders.add((
+        await db.createHymnStakeholder(
+          results.first.id,
           hymnId,
-          id,
-          node.getAttribute('role')!,
-        ));
+          node.attr('role'),
+          now,
+          now,
+        );
       }
     }
 
     return (hymnId, number);
   }
+}
 
-  // void copyImages(int hymnId, String number) {
-  //   final related = assets.getAssetForHymnId(hymnId);
-  //   for (final file in related.where((e) => e.path.contains('PresentationCreator') && !e.path.endsWith('Information.hixml'))) {
-  //     if (file.path.contains('- Print ')) {
-  //       final size = file.path.contains('Print Large') ? 'large' : 'small';
-  //       final id = sheetMusic.addSheetMusic(file.path, size, 0, file.id);
-  //       sheetMusic.addHymnSheetMusic(hymnId, id);
-  //     } else {
-  //       final parts = file.path.split('.');
-  //       final title = file.path.endsWith('Title.png');
-  //       int order = title ? 0 : int.parse(parts[parts.length - 2]);
-  //       String target = title ? 'Title' : parts[parts.length - 3].toLowerCase();
-  //       final idx = target.lastIndexOf('-');
-  //       if (idx != -1) {
-  //         target = target.substring(idx + 1, target.length).trim();
-  //       }
-
-  //       final id = slides.addSlides(file.path, target.toLowerCase(), order, file.id);
-  //       final hymnPortions = portions.getPortionsForHymn(hymnId);
-  //       final matchIdx = hymnPortions.indexWhere((e) => e.portion.toLowerCase() == target);
-  //       final match = matchIdx == -1 ? null : hymnPortions[matchIdx];
-  //       slides.addHymnSlides(hymnId, id, match?.id);
-  //     }
+extension on XmlElement {
+  String attr(String key) {
+    final value = getAttribute(key) ?? '';
+    return value.trim();
+  }
 }

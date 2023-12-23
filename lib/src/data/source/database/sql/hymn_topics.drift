@@ -1,0 +1,80 @@
+import 'hymns.drift';
+import 'topics.drift';
+
+-- Tables
+CREATE TABLE hymn_topics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    topicId TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (topicId, hymnId)
+);
+
+-- Indexes
+CREATE INDEX hymn_topics_idx_hymnId ON hymn_topics (hymnId);
+CREATE INDEX hymn_topics_idx_topicId ON hymn_topics (topicId);
+
+-- Triggers
+CREATE TRIGGER hymn_topics_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM hymn_topics
+    WHERE hymnId = old.id;
+END;
+
+CREATE TRIGGER hymn_topics_delete_topic
+AFTER DELETE ON topics
+BEGIN
+    DELETE FROM hymn_topics
+    WHERE topicId = old.id;
+END;
+
+-- Queries
+getHymnTopics:
+SELECT * FROM hymn_topics;
+
+getHymnTopic:
+SELECT * FROM hymn_topics
+WHERE id = :id;
+
+getHymnTopicsByTopicId:
+SELECT * FROM hymn_topics
+WHERE topicId = :topicId;
+
+getHymnTopicsByHymnId:
+SELECT * FROM hymn_topics
+WHERE hymnId = :hymnId;
+
+createHymnTopic:
+INSERT OR REPLACE INTO hymn_topics (topicId, hymnId, created, updated)
+VALUES (:topicId, :hymnId, :created, :updated)
+RETURNING *;
+
+updateHymnTopic:
+UPDATE hymn_topics
+SET topicId = :topicId, hymnId = :hymnId, updated = :updated
+WHERE id = :id;
+
+deleteHymnTopic:
+DELETE FROM hymn_topics
+WHERE id = :id;
+
+deleteHymnTopics:
+DELETE FROM hymn_topics;
+
+getHymnsByTopicId:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_topics
+    WHERE hymnId = h.id
+    AND topicId = :topicId
+);
+
+getTopicsByHymnId:
+SELECT t.* FROM topics AS t
+WHERE EXISTS (
+    SELECT topicId FROM hymn_topics
+    WHERE topicId = t.id
+    AND hymnId = :hymnId
+);

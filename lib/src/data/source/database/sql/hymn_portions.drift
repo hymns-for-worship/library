@@ -1,0 +1,80 @@
+import 'hymns.drift';
+import 'portions.drift';
+
+-- Tables
+CREATE TABLE hymn_portions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    portionId TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (portionId, hymnId)
+);
+
+-- Indexes
+CREATE INDEX hymn_portions_idx_hymnId ON hymn_portions (hymnId);
+CREATE INDEX hymn_portions_idx_portionId ON hymn_portions (portionId);
+
+-- Triggers
+CREATE TRIGGER hymn_portions_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM hymn_portions
+    WHERE hymnId = old.id;
+END;
+
+CREATE TRIGGER hymn_portions_delete_portion
+AFTER DELETE ON portions
+BEGIN
+    DELETE FROM hymn_portions
+    WHERE portionId = old.id;
+END;
+
+-- Queries
+getHymnPortions:
+SELECT * FROM hymn_portions;
+
+getHymnPortion:
+SELECT * FROM hymn_portions
+WHERE id = :id;
+
+getHymnPortionsByPortionId:
+SELECT * FROM hymn_portions
+WHERE portionId = :portionId;
+
+getHymnPortionsByHymnId:
+SELECT * FROM hymn_portions
+WHERE hymnId = :hymnId;
+
+createHymnPortion:
+INSERT OR REPLACE INTO hymn_portions (portionId, hymnId, created, updated)
+VALUES (:portionId, :hymnId, :created, :updated)
+RETURNING *;
+
+updateHymnPortion:
+UPDATE hymn_portions
+SET portionId = :portionId, hymnId = :hymnId, updated = :updated
+WHERE id = :id;
+
+deleteHymnPortion:
+DELETE FROM hymn_portions
+WHERE id = :id;
+
+deleteHymnPortions:
+DELETE FROM hymn_portions;
+
+getHymnsByPortionId:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_portions
+    WHERE hymnId = h.id
+    AND portionId = :portionId
+);
+
+getPortionsByHymnId:
+SELECT t.* FROM portions AS t
+WHERE EXISTS (
+    SELECT portionId FROM hymn_portions
+    WHERE portionId = t.id
+    AND hymnId = :hymnId
+);

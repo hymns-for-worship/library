@@ -1,14 +1,10 @@
-import '../../data/repository/topics.dart';
-import '../model/topics.dart';
+import '../../data/source/database/database.dart';
 
 class GetTopics {
-  final TopicsRepository topics;
+  final HfwDatabase db;
+  const GetTopics(this.db);
 
-  GetTopics({
-    required this.topics,
-  });
-
-  List<Topic> execute() {
-    return topics.getAll();
+  Stream<List<Topic>> call() async* {
+    yield* db.getTopics().watch();
   }
 }

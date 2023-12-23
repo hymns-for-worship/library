@@ -1,14 +1,10 @@
-import '../../data/repository/hymnals.dart';
-import '../model/hymnal.dart';
+import '../../data/source/database/database.dart';
 
 class GetHymnals {
-  final HymnalsRepository hymnals;
+  final HfwDatabase db;
+  const GetHymnals(this.db);
 
-  GetHymnals({
-    required this.hymnals,
-  });
-
-  List<Hymnal> execute() {
-    return hymnals.getAll();
+  Stream<List<Hymnal>> call() async* {
+    yield* db.getHymnals().watch();
   }
 }

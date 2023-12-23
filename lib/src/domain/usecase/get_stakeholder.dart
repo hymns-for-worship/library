@@ -1,8 +1,4 @@
-import '../../data/repository/hymn_stakeholders.dart';
-import '../../data/repository/hymns.dart';
-import '../../data/repository/stakeholders.dart';
-import '../model/hymn.dart';
-import '../model/stakeholders.dart';
+import '../../data/source/database/database.dart';
 
 typedef GetStakeholderResult = ({
   Stakeholder? stakeholder,
@@ -10,24 +6,12 @@ typedef GetStakeholderResult = ({
 });
 
 class GetStakeholder {
-  final StakeholdersRepository stakeholders;
-  final HymnStakeholdersRepository hymnStakeholders;
-  final HymnsRepository hymns;
+  final HfwDatabase db;
+  const GetStakeholder(this.db);
 
-  GetStakeholder({
-    required this.stakeholders,
-    required this.hymnStakeholders,
-    required this.hymns,
-  });
-
-  GetStakeholderResult execute(int id) {
-    final stakeholder = stakeholders.getById(id);
-    final hymnIds = hymnStakeholders.getHymnIdsForStakeholder(id);
-    final hymns = <Hymn>[];
-    for (final hymnId in hymnIds) {
-      final hymn = this.hymns.getById(hymnId);
-      if (hymn != null) hymns.add(hymn);
-    }
+  Future<GetStakeholderResult> call(String id) async {
+    final stakeholder = await db.getStakeholder(id).getSingleOrNull();
+    final hymns = await db.getHymnsByStakeholderId(id).get();
     return (
       stakeholder: stakeholder,
       hymns: hymns,

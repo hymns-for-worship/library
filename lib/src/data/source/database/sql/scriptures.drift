@@ -1,0 +1,85 @@
+-- Tables
+CREATE TABLE scriptures (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (name)
+);
+
+-- Indexes
+CREATE INDEX scriptures_idx_name ON scriptures (name);
+
+-- Full Text Search
+CREATE VIRTUAL TABLE scriptures_fts USING fts5 (
+    name,
+    content=scriptures,
+    content_rowid=id
+);
+CREATE TRIGGER scriptures_fts_insert
+AFTER INSERT ON scriptures
+BEGIN
+    INSERT INTO scriptures_fts (rowid, name)
+    VALUES (new.ROWID, new.name);
+END;
+
+CREATE TRIGGER scriptures_fts_update
+AFTER UPDATE ON scriptures
+BEGIN
+    UPDATE scriptures_fts
+    SET name = new.name
+    WHERE rowid = old.ROWID;
+END;
+
+CREATE TRIGGER scriptures_fts_delete
+AFTER DELETE ON scriptures
+BEGIN
+    INSERT INTO scriptures_fts (scriptures_fts, rowid, name)
+    VALUES ('delete', old.ROWID, old.name);
+END;
+
+-- Queries
+searchScriptures:
+SELECT 
+	t.id,
+	highlight(scriptures_fts, 0, '<b>', '</b>') name,
+    t.created,
+    t.updated
+FROM scriptures_fts 
+INNER JOIN scriptures AS t
+	ON t.id = scriptures_fts.ROWID
+WHERE scriptures_fts MATCH :query
+ORDER BY rank;
+
+getScriptures:
+SELECT * FROM scriptures
+ORDER BY name ASC;
+
+getScripture:
+SELECT * FROM scriptures
+WHERE id = :id;
+
+getScriptureByName:
+SELECT * FROM scriptures
+WHERE name = :name;
+
+createScripture:
+INSERT OR REPLACE INTO scriptures (id, name, created, updated)
+VALUES (:id, :name, :created, :updated)
+RETURNING *;
+
+updateScripture:
+UPDATE scriptures
+SET name = :name, updated = :updated
+WHERE id = :id;
+
+deleteScripture:
+DELETE FROM scriptures
+WHERE id = :id;
+
+deleteScriptureByName:
+DELETE FROM scriptures
+WHERE name = :name;
+
+deleteScriptures:
+DELETE FROM scriptures;

@@ -1,0 +1,85 @@
+-- Tables
+CREATE TABLE stakeholders (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (name)
+);
+
+-- Indexes
+CREATE INDEX stakeholders_idx_name ON stakeholders (name);
+
+-- Full Text Search
+CREATE VIRTUAL TABLE stakeholders_fts USING fts5 (
+    name,
+    content=stakeholders,
+    content_rowid=id
+);
+CREATE TRIGGER stakeholders_fts_insert
+AFTER INSERT ON stakeholders
+BEGIN
+    INSERT INTO stakeholders_fts (rowid, name)
+    VALUES (new.ROWID, new.name);
+END;
+
+CREATE TRIGGER stakeholders_fts_update
+AFTER UPDATE ON stakeholders
+BEGIN
+    UPDATE stakeholders_fts
+    SET name = new.name
+    WHERE rowid = old.ROWID;
+END;
+
+CREATE TRIGGER stakeholders_fts_delete
+AFTER DELETE ON stakeholders
+BEGIN
+    INSERT INTO stakeholders_fts (stakeholders_fts, rowid, name)
+    VALUES ('delete', old.ROWID, old.name);
+END;
+
+-- Queries
+searchStakeholders:
+SELECT 
+	t.id,
+	highlight(stakeholders_fts, 0, '<b>', '</b>') name,
+    t.created,
+    t.updated
+FROM stakeholders_fts 
+INNER JOIN stakeholders AS t
+	ON t.id = stakeholders_fts.ROWID
+WHERE stakeholders_fts MATCH :query
+ORDER BY rank;
+
+getStakeholders:
+SELECT * FROM stakeholders
+ORDER BY name ASC;
+
+getStakeholder:
+SELECT * FROM stakeholders
+WHERE id = :id;
+
+getStakeholderByName:
+SELECT * FROM stakeholders
+WHERE name = :name;
+
+createStakeholder:
+INSERT OR REPLACE INTO stakeholders (id, name, created, updated)
+VALUES (:id, :name, :created, :updated)
+RETURNING *;
+
+updateStakeholder:
+UPDATE stakeholders
+SET name = :name, updated = :updated
+WHERE id = :id;
+
+deleteStakeholder:
+DELETE FROM stakeholders
+WHERE id = :id;
+
+deleteStakeholderByName:
+DELETE FROM stakeholders
+WHERE name = :name;
+
+deleteStakeholders:
+DELETE FROM stakeholders;

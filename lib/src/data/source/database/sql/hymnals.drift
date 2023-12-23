@@ -1,0 +1,99 @@
+-- Tables
+CREATE TABLE hymnals (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    alias TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (name, alias)
+);
+
+-- Indexes
+CREATE INDEX hymnals_idx_name ON hymnals (name);
+CREATE INDEX hymnals_idx_alias ON hymnals (alias);
+
+-- Full Text Search
+CREATE VIRTUAL TABLE hymnals_fts USING fts5 (
+    name,
+    alias,
+    content=hymnals,
+    content_rowid=id
+);
+CREATE TRIGGER hymnals_fts_insert
+AFTER INSERT ON hymnals
+BEGIN
+    INSERT INTO hymnals_fts (rowid, name, alias)
+    VALUES (new.ROWID, new.name, new.alias);
+END;
+
+CREATE TRIGGER hymnals_fts_update
+AFTER UPDATE ON hymnals
+BEGIN
+    UPDATE hymnals_fts
+    SET 
+        name = new.name, 
+        alias = new.alias
+    WHERE rowid = old.ROWID;
+END;
+
+CREATE TRIGGER hymnals_fts_delete
+AFTER DELETE ON hymnals
+BEGIN
+    INSERT INTO hymnals_fts (hymnals_fts, rowid, name, alias)
+    VALUES ('delete', old.ROWID, old.name, old.alias);
+END;
+
+-- Queries
+searchHymnals:
+SELECT 
+	t.id,
+	highlight(hymnals_fts, 0, '<b>', '</b>') name,
+	highlight(hymnals_fts, 1, '<b>', '</b>') alias,
+    t.created,
+    t.updated
+FROM hymnals_fts 
+INNER JOIN hymnals AS t
+	ON t.id = hymnals_fts.ROWID
+WHERE hymnals_fts MATCH :query
+ORDER BY rank;
+
+getHymnals:
+SELECT * FROM hymnals
+ORDER BY name ASC;
+
+getHymnal:
+SELECT * FROM hymnals
+WHERE id = :id;
+
+getHymnalByName:
+SELECT * FROM hymnals
+WHERE name = :name;
+
+getHymnalByAlias:
+SELECT * FROM hymnals
+WHERE alias = :alias;
+
+createHymnal:
+INSERT OR REPLACE INTO hymnals (id, name, alias, created, updated)
+VALUES (:id, :name, :alias, :created, :updated)
+RETURNING *;
+
+updateHymnal:
+UPDATE hymnals
+SET name = :name, alias = :alias, updated = :updated
+WHERE id = :id;
+
+deleteHymnal:
+DELETE FROM hymnals
+WHERE id = :id;
+
+deleteHymnalByName:
+DELETE FROM hymnals
+WHERE name = :name;
+
+deleteHymnalByAlias:
+DELETE FROM hymnals
+WHERE alias = :alias;
+
+deleteHymnals:
+DELETE FROM hymnals;

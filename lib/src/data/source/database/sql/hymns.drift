@@ -1,0 +1,264 @@
+import 'hymn_hymnals.drift';
+import 'hymnals.drift';
+import 'hymn_topics.drift';
+import 'topics.drift';
+import 'hymn_scriptures.drift';
+import 'scriptures.drift';
+import 'hymn_stakeholders.drift';
+import 'stakeholders.drift';
+import 'hymn_portions.drift';
+import 'portions.drift';
+
+-- Tables
+CREATE TABLE hymns (
+    id TEXT PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    number TEXT NOT NULL,
+    tuneName TEXT,
+    startingKey TEXT,
+    beatPattern TEXT,
+    startingPitch TEXT,
+    startingBeat TEXT,
+    startingPitchDirection TEXT,
+    timeSignature TEXT,
+    complexTimeSignature TEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (title, number)
+);
+
+-- Indexes
+CREATE INDEX hymns_idx_title ON hymns (title);
+CREATE INDEX hymns_idx_number ON hymns (number);
+
+-- Full Text Search
+CREATE VIRTUAL TABLE hymns_fts USING fts5 (
+    title,
+    number,
+    tuneName,
+    startingKey,
+    beatPattern,
+    startingPitch,
+    startingBeat,
+    startingPitchDirection,
+    timeSignature,
+    complexTimeSignature,
+    content=hymns,
+    content_rowid=id
+);
+CREATE TRIGGER hymns_fts_insert
+AFTER INSERT ON hymns
+BEGIN
+    INSERT INTO hymns_fts (rowid, title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature)
+    VALUES (new.ROWID, new.title, new.number, new.tuneName, new.startingKey, new.beatPattern, new.startingPitch, new.startingBeat, new.startingPitchDirection, new.timeSignature, new.complexTimeSignature);
+END;
+
+CREATE TRIGGER hymns_fts_update
+AFTER UPDATE ON hymns
+BEGIN
+    UPDATE hymns_fts
+    SET title = new.title, 
+        number = new.number, 
+        tuneName = new.tuneName, 
+        startingKey = new.startingKey, 
+        beatPattern = new.beatPattern, 
+        startingPitch = new.startingPitch, 
+        startingBeat = new.startingBeat, 
+        startingPitchDirection = new.startingPitchDirection, 
+        timeSignature = new.timeSignature, 
+        complexTimeSignature = new.complexTimeSignature
+    WHERE rowid = old.ROWID;
+END;
+
+CREATE TRIGGER hymns_fts_delete
+AFTER DELETE ON hymns
+BEGIN
+    INSERT INTO hymns_fts (hymns_fts, rowid, title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature)
+    VALUES ('delete', old.ROWID, old.title, old.number, old.tuneName, old.startingKey, old.beatPattern, old.startingPitch, old.startingBeat, old.startingPitchDirection, old.timeSignature, old.complexTimeSignature);
+END;
+
+-- Queries
+searchHymns:
+SELECT 
+	t.id,
+	highlight(hymns_fts, 0, '<b>', '</b>') title,
+    highlight(hymns_fts, 1, '<b>', '</b>') number,
+    highlight(hymns_fts, 2, '<b>', '</b>') tuneName,
+    highlight(hymns_fts, 3, '<b>', '</b>') startingKey,
+    highlight(hymns_fts, 4, '<b>', '</b>') beatPattern,
+    highlight(hymns_fts, 5, '<b>', '</b>') startingPitch,
+    highlight(hymns_fts, 6, '<b>', '</b>') startingBeat,
+    highlight(hymns_fts, 7, '<b>', '</b>') startingPitchDirection,
+    highlight(hymns_fts, 8, '<b>', '</b>') timeSignature,
+    highlight(hymns_fts, 9, '<b>', '</b>') complexTimeSignature,
+    t.created,
+    t.updated
+FROM hymns_fts 
+INNER JOIN hymns AS t
+	ON t.id = hymns_fts.ROWID
+WHERE hymns_fts MATCH :query
+ORDER BY rank;
+
+getHymns:
+SELECT * FROM hymns
+ORDER BY number ASC;
+
+getHymn:
+SELECT * FROM hymns
+WHERE id = :id;
+
+getHymnByTitle:
+SELECT * FROM hymns
+WHERE title = :title;
+
+getHymnByNumber:
+SELECT * FROM hymns
+WHERE number = :number;
+
+getHymnByTitleAndNumber:
+SELECT * FROM hymns
+WHERE title = :title
+AND number = :number;
+
+createHymn:
+INSERT OR REPLACE INTO hymns (id, title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature, created, updated)
+VALUES (:id, :title, :number, :tuneName, :startingKey, :beatPattern, :startingPitch, :startingBeat, :startingPitchDirection, :timeSignature, :complexTimeSignature, :created, :updated)
+RETURNING *;
+
+updateHymn:
+UPDATE hymns
+SET title = :title, 
+    number = :number, 
+    tuneName = :tuneName, 
+    startingKey = :startingKey, 
+    beatPattern = :beatPattern, 
+    startingPitch = :startingPitch, 
+    startingBeat = :startingBeat, 
+    startingPitchDirection = :startingPitchDirection, 
+    timeSignature = :timeSignature, 
+    complexTimeSignature = :complexTimeSignature, 
+    updated = :updated
+WHERE id = :id;
+
+deleteHymn:
+DELETE FROM hymns
+WHERE id = :id;
+
+deleteHymns:
+DELETE FROM hymns;
+
+searchHymnRows:
+SELECT h.*,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT t.name
+				FROM topics AS t
+				WHERE EXISTS (
+					SELECT ht.hymnId 
+					FROM hymn_topics AS ht
+					WHERE ht.topicId = t.id
+					AND ht.hymnId = h.id
+				)
+		)
+	) AS topics,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT s.name
+				FROM scriptures AS s
+				WHERE EXISTS (
+					SELECT hs.hymnId 
+					FROM hymn_scriptures AS hs
+					WHERE hs.scriptureId = s.id
+					AND hs.hymnId = h.id
+				)
+		)
+	) AS scriptures,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT p.name
+				FROM portions AS p
+				WHERE EXISTS (
+					SELECT hp.hymnId 
+					FROM hymn_portions AS hp
+					WHERE hp.portionId = p.id
+					AND hp.hymnId = h.id
+				)
+		)
+	) AS portions,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT hy.name
+				FROM hymnals AS hy
+				WHERE EXISTS (
+					SELECT hh.hymnId 
+					FROM hymn_hymnals AS hh
+					WHERE hh.hymnalId = hy.id
+					AND hh.hymnId = h.id
+				)
+		)
+	) AS hymnals
+FROM hymns as h
+INNER JOIN hymns_fts
+ON h.id = hymns_fts.rowid
+WHERE hymns_fts MATCH :query
+ORDER BY rank;
+
+getHymnRows:
+SELECT h.*,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT t.name
+				FROM topics AS t
+				WHERE EXISTS (
+					SELECT ht.hymnId 
+					FROM hymn_topics AS ht
+					WHERE ht.topicId = t.id
+					AND ht.hymnId = h.id
+				)
+		)
+	) AS topics,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT s.name
+				FROM scriptures AS s
+				WHERE EXISTS (
+					SELECT hs.hymnId 
+					FROM hymn_scriptures AS hs
+					WHERE hs.scriptureId = s.id
+					AND hs.hymnId = h.id
+				)
+		)
+	) AS scriptures,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT p.name
+				FROM portions AS p
+				WHERE EXISTS (
+					SELECT hp.hymnId 
+					FROM hymn_portions AS hp
+					WHERE hp.portionId = p.id
+					AND hp.hymnId = h.id
+				)
+		)
+	) AS portions,
+	(
+		SELECT GROUP_CONCAT(name, ',')
+		FROM (
+				SELECT DISTINCT hy.name
+				FROM hymnals AS hy
+				WHERE EXISTS (
+					SELECT hh.hymnId 
+					FROM hymn_hymnals AS hh
+					WHERE hh.hymnalId = hy.id
+					AND hh.hymnId = h.id
+				)
+		)
+	) AS hymnals
+FROM hymns as h;

@@ -1,0 +1,85 @@
+-- Tables
+CREATE TABLE topics (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (name)
+);
+
+-- Indexes
+CREATE INDEX topics_idx_name ON topics (name);
+
+-- Full Text Search
+CREATE VIRTUAL TABLE topics_fts USING fts5 (
+    name,
+    content=topics,
+    content_rowid=id
+);
+CREATE TRIGGER topics_fts_insert
+AFTER INSERT ON topics
+BEGIN
+    INSERT INTO topics_fts (rowid, name)
+    VALUES (new.ROWID, new.name);
+END;
+
+CREATE TRIGGER topics_fts_update
+AFTER UPDATE ON topics
+BEGIN
+    UPDATE topics_fts
+    SET name = new.name
+    WHERE rowid = old.ROWID;
+END;
+
+CREATE TRIGGER topics_fts_delete
+AFTER DELETE ON topics
+BEGIN
+    INSERT INTO topics_fts (topics_fts, rowid, name)
+    VALUES ('delete', old.ROWID, old.name);
+END;
+
+-- Queries
+searchTopics:
+SELECT 
+	t.id,
+	highlight(topics_fts, 0, '<b>', '</b>') name,
+    t.created,
+    t.updated
+FROM topics_fts 
+INNER JOIN topics AS t
+	ON t.id = topics_fts.ROWID
+WHERE topics_fts MATCH :query
+ORDER BY rank;
+
+getTopics:
+SELECT * FROM topics
+ORDER BY name ASC;
+
+getTopic:
+SELECT * FROM topics
+WHERE id = :id;
+
+getTopicByName:
+SELECT * FROM topics
+WHERE name = :name;
+
+createTopic:
+INSERT OR REPLACE INTO topics (id, name, created, updated)
+VALUES (:id, :name, :created, :updated)
+RETURNING *;
+
+updateTopic:
+UPDATE topics
+SET name = :name, updated = :updated
+WHERE id = :id;
+
+deleteTopic:
+DELETE FROM topics
+WHERE id = :id;
+
+deleteTopicByName:
+DELETE FROM topics
+WHERE name = :name;
+
+deleteTopics:
+DELETE FROM topics;

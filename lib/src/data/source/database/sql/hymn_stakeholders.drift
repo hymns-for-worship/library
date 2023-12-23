@@ -1,0 +1,99 @@
+import 'hymns.drift';
+import 'stakeholders.drift';
+
+-- Tables
+CREATE TABLE hymn_stakeholders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    stakeholderId TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    relationship TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (stakeholderId, hymnId, relationship)
+);
+
+-- Indexes
+CREATE INDEX hymn_stakeholders_idx_hymnId ON hymn_stakeholders (hymnId);
+CREATE INDEX hymn_stakeholders_idx_stakeholderId ON hymn_stakeholders (stakeholderId);
+CREATE INDEX hymn_stakeholders_idx_relationship ON hymn_stakeholders (relationship);
+
+-- Triggers
+CREATE TRIGGER hymn_stakeholders_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM hymn_stakeholders
+    WHERE hymnId = old.id;
+END;
+
+CREATE TRIGGER hymn_stakeholders_delete_stakeholder
+AFTER DELETE ON stakeholders
+BEGIN
+    DELETE FROM hymn_stakeholders
+    WHERE stakeholderId = old.id;
+END;
+
+-- Queries
+getHymnStakeholders:
+SELECT * FROM hymn_stakeholders;
+
+getHymnStakeholder:
+SELECT * FROM hymn_stakeholders
+WHERE id = :id;
+
+getHymnStakeholdersByStakeholderId:
+SELECT * FROM hymn_stakeholders
+WHERE stakeholderId = :stakeholderId;
+
+getHymnStakeholdersByHymnId:
+SELECT * FROM hymn_stakeholders
+WHERE hymnId = :hymnId;
+
+createHymnStakeholder:
+INSERT OR REPLACE INTO hymn_stakeholders (stakeholderId, hymnId, relationship, created, updated)
+VALUES (:stakeholderId, :hymnId, :relationship, :created, :updated)
+RETURNING *;
+
+updateHymnStakeholder:
+UPDATE hymn_stakeholders
+SET stakeholderId = :stakeholderId, hymnId = :hymnId, relationship = :relationship, updated = :updated
+WHERE id = :id;
+
+deleteHymnStakeholder:
+DELETE FROM hymn_stakeholders
+WHERE id = :id;
+
+deleteHymnStakeholders:
+DELETE FROM hymn_stakeholders;
+
+getHymnsByStakeholderId:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_stakeholders
+    WHERE hymnId = h.id
+    AND stakeholderId = :stakeholderId
+);
+
+getStakeholdersByHymnId:
+SELECT t.* FROM stakeholders AS t
+WHERE EXISTS (
+    SELECT stakeholderId FROM hymn_stakeholders
+    WHERE stakeholderId = t.id
+    AND hymnId = :hymnId
+);
+
+getStakeholdersWithRelationshipForHymnId:
+SELECT s.*, ht.relationship FROM stakeholders AS s
+INNER JOIN hymn_stakeholders AS ht
+	ON ht.stakeholderId = s.id
+WHERE hymnId = :hymnId;
+
+getHymnsStakeholdersForStakeholder:
+SELECT * FROM hymn_stakeholders
+WHERE stakeholderId = :stakeholderId;
+
+getStakeholdersByRelationship:
+SELECT s.* FROM stakeholders AS s
+INNER JOIN hymn_stakeholders AS ht
+    ON ht.stakeholderId = s.id
+WHERE relationship = :relationship;
+
