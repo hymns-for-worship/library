@@ -1,0 +1,40 @@
+import 'records.drift';
+
+-- Tables
+CREATE VIEW local_playlist_items AS
+SELECT 
+    *,
+    json_extract(data, '$.playlist_id') AS playlist_id,
+    CASE WHEN json_extract(data, '$.image') IS NOT NULL THEN CAST(json_extract(data, '$.image') AS TEXT) ELSE NULL END AS image,
+    CASE WHEN json_extract(data, '$.parts') IS NOT NULL THEN CAST(json_extract(data, '$.parts') AS TEXT) ELSE NULL END AS parts,
+    CASE WHEN json_extract(data, '$.color') IS NOT NULL THEN CAST(json_extract(data, '$.color') AS TEXT) ELSE NULL END AS color,
+    CASE WHEN json_extract(data, '$.notes') IS NOT NULL THEN CAST(json_extract(data, '$.notes') AS TEXT) ELSE NULL END AS notes,
+    CASE WHEN json_extract(data, '$.text') IS NOT NULL THEN CAST(json_extract(data, '$.text') AS TEXT) ELSE NULL END AS [text],
+    CASE WHEN json_extract(data, '$.order') IS NOT NULL THEN CAST(json_extract(data, '$.order') AS REAL) ELSE NULL END AS [order]
+FROM user_records
+WHERE collection_name = 'playlist_items'
+OR collection_name = 'public_playlist_items';
+
+CREATE VIEW playlist_items AS
+SELECT * FROM local_playlist_items
+WHERE collection_name = 'playlist_items';
+
+CREATE VIEW public_playlist_items AS
+SELECT * FROM local_playlist_items
+WHERE collection_name = 'public_playlist_items'
+OR (collection_name = 'playlist_items' AND playlist.public = 1)
+AND EXISTS (
+    SELECT * FROM playlists AS playlist
+    WHERE playlist.id = playlist_id
+    AND playlist.public = 1
+);
+
+-- Queries
+getItemsForPlaylist:
+SELECT * FROM playlist_items
+WHERE (user = :user OR uid = :uid)
+AND playlist_id = :playlist_id;
+
+getItemsForPublicPlaylist:
+SELECT * FROM public_playlist_items
+WHERE playlist_id = :playlist_id;

@@ -1,0 +1,97 @@
+import 'records.drift';
+
+-- Tables
+CREATE VIEW user_library AS
+SELECT 
+    *,
+    CASE WHEN json_extract(data, '$.hymn_id') IS NOT NULL THEN CAST(json_extract(data, '$.hymn_id') AS TEXT) ELSE NULL END AS hymn_id,
+    CASE WHEN json_extract(data, '$.playlist_id') IS NOT NULL THEN CAST(json_extract(data, '$.playlist_id') AS TEXT) ELSE NULL END AS playlist_id,
+    CASE WHEN json_extract(data, '$.topic_id') IS NOT NULL THEN CAST(json_extract(data, '$.topic_id') AS TEXT) ELSE NULL END AS topic_id,
+    CASE WHEN json_extract(data, '$.stakeholder_id') IS NOT NULL THEN CAST(json_extract(data, '$.stakeholder_id') AS TEXT) ELSE NULL END AS stakeholder_id
+FROM user_records
+WHERE collection_name = 'user_library';
+
+CREATE VIEW user_hymn_library AS
+SELECT *, CAST(json_extract(data, '$.hymn_id') AS TEXT) AS hymn_id
+FROM user_records
+WHERE collection_name = 'user_library'
+AND json_extract(data, '$.hymn_id') IS NOT NULL;
+
+CREATE VIEW user_stakeholder_library AS
+SELECT *, CAST(json_extract(data, '$.stakeholder_id') AS TEXT) AS stakeholder_id
+FROM user_records
+WHERE collection_name = 'user_library'
+AND json_extract(data, '$.stakeholder_id') IS NOT NULL;
+
+CREATE VIEW user_topic_library AS
+SELECT *, CAST(json_extract(data, '$.topic_id') AS TEXT) AS topic_id
+FROM user_records
+WHERE collection_name = 'user_library'
+AND json_extract(data, '$.topic_id') IS NOT NULL;
+
+CREATE VIEW user_playlist_library AS
+SELECT *, CAST(json_extract(data, '$.playlist_id') AS TEXT) AS playlist_id
+FROM user_records
+WHERE collection_name = 'user_library'
+AND json_extract(data, '$.playlist_id') IS NOT NULL;
+
+-- Queries
+getUserLibrary:
+SELECT * FROM user_library
+WHERE user = :user
+OR uid = :uid;
+
+getUserLibraryMatch:
+SELECT * FROM user_library
+WHERE (user = :user OR uid = :uid)
+AND (
+    hymn_id = :hymn_id
+    AND playlist_id = :playlist_id
+    AND topic_id = :topic_id
+    AND stakeholder_id = :stakeholder_id
+);
+
+getUserLibraryById:
+SELECT * FROM user_library
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+
+getUserHymnLibrary:
+SELECT * FROM user_hymn_library
+WHERE user = :user
+OR uid = :uid;
+
+getUserHymnLibraryById:
+SELECT * FROM user_hymn_library
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+
+getUserStakeholderLibrary:
+SELECT * FROM user_stakeholder_library
+WHERE user = :user
+OR uid = :uid;
+
+getUserStakeholderLibraryById:
+SELECT * FROM user_stakeholder_library
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+
+getUserTopicLibrary:
+SELECT * FROM user_topic_library
+WHERE user = :user
+OR uid = :uid;
+
+getUserTopicLibraryById:
+SELECT * FROM user_topic_library
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+
+getUserPlaylistLibrary:
+SELECT * FROM user_playlist_library
+WHERE user = :user
+OR uid = :uid;
+
+getUserPlaylistLibraryById:
+SELECT * FROM user_playlist_library
+WHERE (user = :user OR uid = :uid)
+AND id = :id;

@@ -13,7 +13,7 @@ class GetDownloads extends GetRecords<HymnDownload, void> {
           itemFromRecordModel: (record) => _map(client, record),
           itemFromRecord: (record) =>
               _map(client, RecordModel.fromJson(jsonDecode(record.data))),
-          getRecords: (args) => db.getRecordModelByCollectionName('bundles'),
+          getRecords: (user) => db.getRecordModelsByCollectionName('bundles'),
           fields:
               'id,created,updated,hash,file,hymn_id,expand.hymn_id.title,expand.hymn_id.number',
         );

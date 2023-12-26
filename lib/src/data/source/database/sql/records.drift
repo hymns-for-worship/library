@@ -1,3 +1,5 @@
+import 'users.drift';
+
 -- Tables
 CREATE TABLE records (
     id TEXT PRIMARY KEY NOT NULL,
@@ -11,6 +13,28 @@ CREATE TABLE records (
     UNIQUE (id, collection_id, collection_name)
 );
 
+CREATE VIEW user_records AS
+SELECT 
+    id,
+    collection_id,
+    collection_name, 
+    synced,
+    deleted,
+    created,
+    modified,
+    data,
+    CASE WHEN json_extract(data, '$.user') IS NOT NULL THEN CAST(json_extract(data, '$.user') AS TEXT) ELSE NULL END AS user,
+    CASE WHEN json_extract(data, '$.uid') IS NOT NULL THEN CAST(json_extract(data, '$.uid') AS TEXT) ELSE NULL END AS uid
+FROM records;
+
+CREATE TRIGGER user_records_users_delete_trigger
+AFTER DELETE ON users
+FOR EACH ROW
+BEGIN
+    DELETE FROM user_records
+    WHERE user = OLD.id;
+END;
+
 CREATE TABLE records_cache (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     collection_name TEXT NOT NULL,
@@ -21,50 +45,10 @@ CREATE TABLE records_cache (
 );
 
 -- Indexes
+CREATE INDEX records_idx_collection ON records (collection_id, collection_name);
 CREATE INDEX records_idx_data ON records (data);
-CREATE INDEX records_idx_deleted ON records (deleted);
-CREATE INDEX records_idx_synced ON records (synced);
-
--- -- Full Text Search
--- CREATE VIRTUAL TABLE records_fts USING fts5 (
---     name,
---     content=records,
---     content_rowid=id
--- );
--- CREATE TRIGGER records_fts_insert
--- AFTER INSERT ON records
--- BEGIN
---     INSERT INTO records_fts (rowid, name)
---     VALUES (new.ROWID, new.name);
--- END;
-
--- CREATE TRIGGER records_fts_update
--- AFTER UPDATE ON records
--- BEGIN
---     UPDATE records_fts
---     SET name = new.name
---     WHERE rowid = old.ROWID;
--- END;
-
--- CREATE TRIGGER records_fts_delete
--- AFTER DELETE ON records
--- BEGIN
---     INSERT INTO records_fts (records_fts, rowid, name)
---     VALUES ('delete', old.ROWID, old.name);
--- END;
-
--- Queries
--- searchTopics:
--- SELECT 
--- 	t.id,
--- 	highlight(records_fts, 0, '<b>', '</b>') name,
---     t.created,
---     t.updated
--- FROM records_fts 
--- INNER JOIN records AS t
--- 	ON t.id = records_fts.ROWID
--- WHERE records_fts MATCH :query
--- ORDER BY rank;
+CREATE INDEX records_idx_status ON records (deleted, synced);
+CREATE INDEX records_idx_date ON records (created, updated);
 
 getRecordModels:
 SELECT * FROM records;
@@ -73,13 +57,23 @@ getRecordModel:
 SELECT * FROM records
 WHERE id = :id;
 
-getRecordModelByCollectionId:
+getRecordModelsByCollectionId:
 SELECT * FROM records
 WHERE collection_id = :collection_id;
 
-getRecordModelByCollectionName:
+getRecordModelByCollectionId:
+SELECT * FROM records
+WHERE collection_id = :collection_id
+AND id = :id;
+
+getRecordModelsByCollectionName:
 SELECT * FROM records
 WHERE collection_name = :collection_name;
+
+getRecordModelByCollectionName:
+SELECT * FROM records
+WHERE collection_name = :collection_name
+AND id = :id;
 
 createRecordModel:
 INSERT OR REPLACE INTO records (id, collection_id, collection_name, data, deleted, synced, created, updated)

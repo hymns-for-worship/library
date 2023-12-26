@@ -3,6 +3,6303 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+class Users extends Table with TableInfo<Users, User> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Users(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _usernameMeta =
+      const VerificationMeta('username');
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+      'username', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _emailMeta = const VerificationMeta('email');
+  late final GeneratedColumn<String> email = GeneratedColumn<String>(
+      'email', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _avatarMeta = const VerificationMeta('avatar');
+  late final GeneratedColumn<String> avatar = GeneratedColumn<String>(
+      'avatar', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _uidMeta = const VerificationMeta('uid');
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, username, email, avatar, uid, created, updated];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'users';
+  @override
+  VerificationContext validateIntegrity(Insertable<User> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('username')) {
+      context.handle(_usernameMeta,
+          username.isAcceptableOrUnknown(data['username']!, _usernameMeta));
+    }
+    if (data.containsKey('email')) {
+      context.handle(
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
+    }
+    if (data.containsKey('avatar')) {
+      context.handle(_avatarMeta,
+          avatar.isAcceptableOrUnknown(data['avatar']!, _avatarMeta));
+    }
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return User(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      username: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}username']),
+      email: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}email']),
+      avatar: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}avatar']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  Users createAlias(String alias) {
+    return Users(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class User extends DataClass implements Insertable<User> {
+  String id;
+  String name;
+  String? username;
+  String? email;
+  String? avatar;
+  String? uid;
+  DateTime created;
+  DateTime updated;
+  User(
+      {required this.id,
+      required this.name,
+      this.username,
+      this.email,
+      this.avatar,
+      this.uid,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || username != null) {
+      map['username'] = Variable<String>(username);
+    }
+    if (!nullToAbsent || email != null) {
+      map['email'] = Variable<String>(email);
+    }
+    if (!nullToAbsent || avatar != null) {
+      map['avatar'] = Variable<String>(avatar);
+    }
+    if (!nullToAbsent || uid != null) {
+      map['uid'] = Variable<String>(uid);
+    }
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  UsersCompanion toCompanion(bool nullToAbsent) {
+    return UsersCompanion(
+      id: Value(id),
+      name: Value(name),
+      username: username == null && nullToAbsent
+          ? const Value.absent()
+          : Value(username),
+      email:
+          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      avatar:
+          avatar == null && nullToAbsent ? const Value.absent() : Value(avatar),
+      uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory User.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return User(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      username: serializer.fromJson<String?>(json['username']),
+      email: serializer.fromJson<String?>(json['email']),
+      avatar: serializer.fromJson<String?>(json['avatar']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'username': serializer.toJson<String?>(username),
+      'email': serializer.toJson<String?>(email),
+      'avatar': serializer.toJson<String?>(avatar),
+      'uid': serializer.toJson<String?>(uid),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  User copyWith(
+          {String? id,
+          String? name,
+          Value<String?> username = const Value.absent(),
+          Value<String?> email = const Value.absent(),
+          Value<String?> avatar = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          DateTime? created,
+          DateTime? updated}) =>
+      User(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        username: username.present ? username.value : this.username,
+        email: email.present ? email.value : this.email,
+        avatar: avatar.present ? avatar.value : this.avatar,
+        uid: uid.present ? uid.value : this.uid,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('username: $username, ')
+          ..write('email: $email, ')
+          ..write('avatar: $avatar, ')
+          ..write('uid: $uid, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, name, username, email, avatar, uid, created, updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.username == this.username &&
+          other.email == this.email &&
+          other.avatar == this.avatar &&
+          other.uid == this.uid &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  Value<String> id;
+  Value<String> name;
+  Value<String?> username;
+  Value<String?> email;
+  Value<String?> avatar;
+  Value<String?> uid;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  Value<int> rowid;
+  UsersCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.username = const Value.absent(),
+    this.email = const Value.absent(),
+    this.avatar = const Value.absent(),
+    this.uid = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UsersCompanion.insert({
+    required String id,
+    required String name,
+    this.username = const Value.absent(),
+    this.email = const Value.absent(),
+    this.avatar = const Value.absent(),
+    this.uid = const Value.absent(),
+    required DateTime created,
+    required DateTime updated,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<User> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? username,
+    Expression<String>? email,
+    Expression<String>? avatar,
+    Expression<String>? uid,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (username != null) 'username': username,
+      if (email != null) 'email': email,
+      if (avatar != null) 'avatar': avatar,
+      if (uid != null) 'uid': uid,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UsersCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String?>? username,
+      Value<String?>? email,
+      Value<String?>? avatar,
+      Value<String?>? uid,
+      Value<DateTime>? created,
+      Value<DateTime>? updated,
+      Value<int>? rowid}) {
+    return UsersCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      avatar: avatar ?? this.avatar,
+      uid: uid ?? this.uid,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (username.present) {
+      map['username'] = Variable<String>(username.value);
+    }
+    if (email.present) {
+      map['email'] = Variable<String>(email.value);
+    }
+    if (avatar.present) {
+      map['avatar'] = Variable<String>(avatar.value);
+    }
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UsersCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('username: $username, ')
+          ..write('email: $email, ')
+          ..write('avatar: $avatar, ')
+          ..write('uid: $uid, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class RequestCache extends Table
+    with TableInfo<RequestCache, RequestCacheData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  RequestCache(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY AUTOINCREMENT NOT NULL');
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+      'url', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _headersMeta =
+      const VerificationMeta('headers');
+  late final GeneratedColumn<String> headers = GeneratedColumn<String>(
+      'headers', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  late final GeneratedColumn<Uint8List> body = GeneratedColumn<Uint8List>(
+      'body', aliasedName, false,
+      type: DriftSqlType.blob,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, url, headers, body, created, updated];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'request_cache';
+  @override
+  VerificationContext validateIntegrity(Insertable<RequestCacheData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('headers')) {
+      context.handle(_headersMeta,
+          headers.isAcceptableOrUnknown(data['headers']!, _headersMeta));
+    } else if (isInserting) {
+      context.missing(_headersMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+          _bodyMeta, body.isAcceptableOrUnknown(data['body']!, _bodyMeta));
+    } else if (isInserting) {
+      context.missing(_bodyMeta);
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {url, headers},
+      ];
+  @override
+  RequestCacheData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RequestCacheData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      url: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}url'])!,
+      headers: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}headers'])!,
+      body: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}body'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  RequestCache createAlias(String alias) {
+    return RequestCache(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['UNIQUE(url, headers)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class RequestCacheData extends DataClass
+    implements Insertable<RequestCacheData> {
+  int id;
+  String url;
+  String headers;
+  Uint8List body;
+  DateTime created;
+  DateTime updated;
+  RequestCacheData(
+      {required this.id,
+      required this.url,
+      required this.headers,
+      required this.body,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['url'] = Variable<String>(url);
+    map['headers'] = Variable<String>(headers);
+    map['body'] = Variable<Uint8List>(body);
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  RequestCacheCompanion toCompanion(bool nullToAbsent) {
+    return RequestCacheCompanion(
+      id: Value(id),
+      url: Value(url),
+      headers: Value(headers),
+      body: Value(body),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory RequestCacheData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RequestCacheData(
+      id: serializer.fromJson<int>(json['id']),
+      url: serializer.fromJson<String>(json['url']),
+      headers: serializer.fromJson<String>(json['headers']),
+      body: serializer.fromJson<Uint8List>(json['body']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'url': serializer.toJson<String>(url),
+      'headers': serializer.toJson<String>(headers),
+      'body': serializer.toJson<Uint8List>(body),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  RequestCacheData copyWith(
+          {int? id,
+          String? url,
+          String? headers,
+          Uint8List? body,
+          DateTime? created,
+          DateTime? updated}) =>
+      RequestCacheData(
+        id: id ?? this.id,
+        url: url ?? this.url,
+        headers: headers ?? this.headers,
+        body: body ?? this.body,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RequestCacheData(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('headers: $headers, ')
+          ..write('body: $body, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, url, headers, $driftBlobEquality.hash(body), created, updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RequestCacheData &&
+          other.id == this.id &&
+          other.url == this.url &&
+          other.headers == this.headers &&
+          $driftBlobEquality.equals(other.body, this.body) &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class RequestCacheCompanion extends UpdateCompanion<RequestCacheData> {
+  Value<int> id;
+  Value<String> url;
+  Value<String> headers;
+  Value<Uint8List> body;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  RequestCacheCompanion({
+    this.id = const Value.absent(),
+    this.url = const Value.absent(),
+    this.headers = const Value.absent(),
+    this.body = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+  });
+  RequestCacheCompanion.insert({
+    this.id = const Value.absent(),
+    required String url,
+    required String headers,
+    required Uint8List body,
+    required DateTime created,
+    required DateTime updated,
+  })  : url = Value(url),
+        headers = Value(headers),
+        body = Value(body),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<RequestCacheData> custom({
+    Expression<int>? id,
+    Expression<String>? url,
+    Expression<String>? headers,
+    Expression<Uint8List>? body,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (url != null) 'url': url,
+      if (headers != null) 'headers': headers,
+      if (body != null) 'body': body,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+    });
+  }
+
+  RequestCacheCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? url,
+      Value<String>? headers,
+      Value<Uint8List>? body,
+      Value<DateTime>? created,
+      Value<DateTime>? updated}) {
+    return RequestCacheCompanion(
+      id: id ?? this.id,
+      url: url ?? this.url,
+      headers: headers ?? this.headers,
+      body: body ?? this.body,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (headers.present) {
+      map['headers'] = Variable<String>(headers.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<Uint8List>(body.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RequestCacheCompanion(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('headers: $headers, ')
+          ..write('body: $body, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class OfflineQueue extends Table
+    with TableInfo<OfflineQueue, OfflineQueueData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  OfflineQueue(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+      'url', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _methodMeta = const VerificationMeta('method');
+  late final GeneratedColumn<String> method = GeneratedColumn<String>(
+      'method', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  late final GeneratedColumn<Uint8List> body = GeneratedColumn<Uint8List>(
+      'body', aliasedName, true,
+      type: DriftSqlType.blob,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _headersMeta =
+      const VerificationMeta('headers');
+  late final GeneratedColumn<String> headers = GeneratedColumn<String>(
+      'headers', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _retryCountMeta =
+      const VerificationMeta('retryCount');
+  late final GeneratedColumn<int> retryCount = GeneratedColumn<int>(
+      'retry_count', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _userMeta = const VerificationMeta('user');
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        url,
+        method,
+        body,
+        headers,
+        retryCount,
+        description,
+        user,
+        created,
+        updated
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'offline_queue';
+  @override
+  VerificationContext validateIntegrity(Insertable<OfflineQueueData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('method')) {
+      context.handle(_methodMeta,
+          method.isAcceptableOrUnknown(data['method']!, _methodMeta));
+    } else if (isInserting) {
+      context.missing(_methodMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+          _bodyMeta, body.isAcceptableOrUnknown(data['body']!, _bodyMeta));
+    }
+    if (data.containsKey('headers')) {
+      context.handle(_headersMeta,
+          headers.isAcceptableOrUnknown(data['headers']!, _headersMeta));
+    } else if (isInserting) {
+      context.missing(_headersMeta);
+    }
+    if (data.containsKey('retry_count')) {
+      context.handle(
+          _retryCountMeta,
+          retryCount.isAcceptableOrUnknown(
+              data['retry_count']!, _retryCountMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('user')) {
+      context.handle(
+          _userMeta, user.isAcceptableOrUnknown(data['user']!, _userMeta));
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OfflineQueueData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OfflineQueueData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      url: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}url'])!,
+      method: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}method'])!,
+      body: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}body']),
+      headers: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}headers'])!,
+      retryCount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}retry_count'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  OfflineQueue createAlias(String alias) {
+    return OfflineQueue(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class OfflineQueueData extends DataClass
+    implements Insertable<OfflineQueueData> {
+  int id;
+  String url;
+  String method;
+  Uint8List? body;
+  String headers;
+  int retryCount;
+  String? description;
+  String? user;
+  DateTime created;
+  DateTime updated;
+  OfflineQueueData(
+      {required this.id,
+      required this.url,
+      required this.method,
+      this.body,
+      required this.headers,
+      required this.retryCount,
+      this.description,
+      this.user,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['url'] = Variable<String>(url);
+    map['method'] = Variable<String>(method);
+    if (!nullToAbsent || body != null) {
+      map['body'] = Variable<Uint8List>(body);
+    }
+    map['headers'] = Variable<String>(headers);
+    map['retry_count'] = Variable<int>(retryCount);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || user != null) {
+      map['user'] = Variable<String>(user);
+    }
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  OfflineQueueCompanion toCompanion(bool nullToAbsent) {
+    return OfflineQueueCompanion(
+      id: Value(id),
+      url: Value(url),
+      method: Value(method),
+      body: body == null && nullToAbsent ? const Value.absent() : Value(body),
+      headers: Value(headers),
+      retryCount: Value(retryCount),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      user: user == null && nullToAbsent ? const Value.absent() : Value(user),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory OfflineQueueData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OfflineQueueData(
+      id: serializer.fromJson<int>(json['id']),
+      url: serializer.fromJson<String>(json['url']),
+      method: serializer.fromJson<String>(json['method']),
+      body: serializer.fromJson<Uint8List?>(json['body']),
+      headers: serializer.fromJson<String>(json['headers']),
+      retryCount: serializer.fromJson<int>(json['retry_count']),
+      description: serializer.fromJson<String?>(json['description']),
+      user: serializer.fromJson<String?>(json['user']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'url': serializer.toJson<String>(url),
+      'method': serializer.toJson<String>(method),
+      'body': serializer.toJson<Uint8List?>(body),
+      'headers': serializer.toJson<String>(headers),
+      'retry_count': serializer.toJson<int>(retryCount),
+      'description': serializer.toJson<String?>(description),
+      'user': serializer.toJson<String?>(user),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  OfflineQueueData copyWith(
+          {int? id,
+          String? url,
+          String? method,
+          Value<Uint8List?> body = const Value.absent(),
+          String? headers,
+          int? retryCount,
+          Value<String?> description = const Value.absent(),
+          Value<String?> user = const Value.absent(),
+          DateTime? created,
+          DateTime? updated}) =>
+      OfflineQueueData(
+        id: id ?? this.id,
+        url: url ?? this.url,
+        method: method ?? this.method,
+        body: body.present ? body.value : this.body,
+        headers: headers ?? this.headers,
+        retryCount: retryCount ?? this.retryCount,
+        description: description.present ? description.value : this.description,
+        user: user.present ? user.value : this.user,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('OfflineQueueData(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('method: $method, ')
+          ..write('body: $body, ')
+          ..write('headers: $headers, ')
+          ..write('retryCount: $retryCount, ')
+          ..write('description: $description, ')
+          ..write('user: $user, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      url,
+      method,
+      $driftBlobEquality.hash(body),
+      headers,
+      retryCount,
+      description,
+      user,
+      created,
+      updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OfflineQueueData &&
+          other.id == this.id &&
+          other.url == this.url &&
+          other.method == this.method &&
+          $driftBlobEquality.equals(other.body, this.body) &&
+          other.headers == this.headers &&
+          other.retryCount == this.retryCount &&
+          other.description == this.description &&
+          other.user == this.user &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class OfflineQueueCompanion extends UpdateCompanion<OfflineQueueData> {
+  Value<int> id;
+  Value<String> url;
+  Value<String> method;
+  Value<Uint8List?> body;
+  Value<String> headers;
+  Value<int> retryCount;
+  Value<String?> description;
+  Value<String?> user;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  OfflineQueueCompanion({
+    this.id = const Value.absent(),
+    this.url = const Value.absent(),
+    this.method = const Value.absent(),
+    this.body = const Value.absent(),
+    this.headers = const Value.absent(),
+    this.retryCount = const Value.absent(),
+    this.description = const Value.absent(),
+    this.user = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+  });
+  OfflineQueueCompanion.insert({
+    this.id = const Value.absent(),
+    required String url,
+    required String method,
+    this.body = const Value.absent(),
+    required String headers,
+    this.retryCount = const Value.absent(),
+    this.description = const Value.absent(),
+    this.user = const Value.absent(),
+    required DateTime created,
+    required DateTime updated,
+  })  : url = Value(url),
+        method = Value(method),
+        headers = Value(headers),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<OfflineQueueData> custom({
+    Expression<int>? id,
+    Expression<String>? url,
+    Expression<String>? method,
+    Expression<Uint8List>? body,
+    Expression<String>? headers,
+    Expression<int>? retryCount,
+    Expression<String>? description,
+    Expression<String>? user,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (url != null) 'url': url,
+      if (method != null) 'method': method,
+      if (body != null) 'body': body,
+      if (headers != null) 'headers': headers,
+      if (retryCount != null) 'retry_count': retryCount,
+      if (description != null) 'description': description,
+      if (user != null) 'user': user,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+    });
+  }
+
+  OfflineQueueCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? url,
+      Value<String>? method,
+      Value<Uint8List?>? body,
+      Value<String>? headers,
+      Value<int>? retryCount,
+      Value<String?>? description,
+      Value<String?>? user,
+      Value<DateTime>? created,
+      Value<DateTime>? updated}) {
+    return OfflineQueueCompanion(
+      id: id ?? this.id,
+      url: url ?? this.url,
+      method: method ?? this.method,
+      body: body ?? this.body,
+      headers: headers ?? this.headers,
+      retryCount: retryCount ?? this.retryCount,
+      description: description ?? this.description,
+      user: user ?? this.user,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (method.present) {
+      map['method'] = Variable<String>(method.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<Uint8List>(body.value);
+    }
+    if (headers.present) {
+      map['headers'] = Variable<String>(headers.value);
+    }
+    if (retryCount.present) {
+      map['retry_count'] = Variable<int>(retryCount.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (user.present) {
+      map['user'] = Variable<String>(user.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineQueueCompanion(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('method: $method, ')
+          ..write('body: $body, ')
+          ..write('headers: $headers, ')
+          ..write('retryCount: $retryCount, ')
+          ..write('description: $description, ')
+          ..write('user: $user, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class OfflineQueueFiles extends Table
+    with TableInfo<OfflineQueueFiles, OfflineQueueFile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  OfflineQueueFiles(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  static const VerificationMeta _offlineQueueIdMeta =
+      const VerificationMeta('offlineQueueId');
+  late final GeneratedColumn<int> offlineQueueId = GeneratedColumn<int>(
+      'offline_queue_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _fieldMeta = const VerificationMeta('field');
+  late final GeneratedColumn<String> field = GeneratedColumn<String>(
+      'field', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  late final GeneratedColumn<Uint8List> value = GeneratedColumn<Uint8List>(
+      'value', aliasedName, false,
+      type: DriftSqlType.blob,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [id, offlineQueueId, field, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'offline_queue_files';
+  @override
+  VerificationContext validateIntegrity(Insertable<OfflineQueueFile> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('offline_queue_id')) {
+      context.handle(
+          _offlineQueueIdMeta,
+          offlineQueueId.isAcceptableOrUnknown(
+              data['offline_queue_id']!, _offlineQueueIdMeta));
+    } else if (isInserting) {
+      context.missing(_offlineQueueIdMeta);
+    }
+    if (data.containsKey('field')) {
+      context.handle(
+          _fieldMeta, field.isAcceptableOrUnknown(data['field']!, _fieldMeta));
+    } else if (isInserting) {
+      context.missing(_fieldMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  OfflineQueueFile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return OfflineQueueFile(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      offlineQueueId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}offline_queue_id'])!,
+      field: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}field'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.blob, data['${effectivePrefix}value'])!,
+    );
+  }
+
+  @override
+  OfflineQueueFiles createAlias(String alias) {
+    return OfflineQueueFiles(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class OfflineQueueFile extends DataClass
+    implements Insertable<OfflineQueueFile> {
+  int id;
+  int offlineQueueId;
+  String field;
+  Uint8List value;
+  OfflineQueueFile(
+      {required this.id,
+      required this.offlineQueueId,
+      required this.field,
+      required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['offline_queue_id'] = Variable<int>(offlineQueueId);
+    map['field'] = Variable<String>(field);
+    map['value'] = Variable<Uint8List>(value);
+    return map;
+  }
+
+  OfflineQueueFilesCompanion toCompanion(bool nullToAbsent) {
+    return OfflineQueueFilesCompanion(
+      id: Value(id),
+      offlineQueueId: Value(offlineQueueId),
+      field: Value(field),
+      value: Value(value),
+    );
+  }
+
+  factory OfflineQueueFile.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return OfflineQueueFile(
+      id: serializer.fromJson<int>(json['id']),
+      offlineQueueId: serializer.fromJson<int>(json['offline_queue_id']),
+      field: serializer.fromJson<String>(json['field']),
+      value: serializer.fromJson<Uint8List>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'offline_queue_id': serializer.toJson<int>(offlineQueueId),
+      'field': serializer.toJson<String>(field),
+      'value': serializer.toJson<Uint8List>(value),
+    };
+  }
+
+  OfflineQueueFile copyWith(
+          {int? id, int? offlineQueueId, String? field, Uint8List? value}) =>
+      OfflineQueueFile(
+        id: id ?? this.id,
+        offlineQueueId: offlineQueueId ?? this.offlineQueueId,
+        field: field ?? this.field,
+        value: value ?? this.value,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('OfflineQueueFile(')
+          ..write('id: $id, ')
+          ..write('offlineQueueId: $offlineQueueId, ')
+          ..write('field: $field, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, offlineQueueId, field, $driftBlobEquality.hash(value));
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is OfflineQueueFile &&
+          other.id == this.id &&
+          other.offlineQueueId == this.offlineQueueId &&
+          other.field == this.field &&
+          $driftBlobEquality.equals(other.value, this.value));
+}
+
+class OfflineQueueFilesCompanion extends UpdateCompanion<OfflineQueueFile> {
+  Value<int> id;
+  Value<int> offlineQueueId;
+  Value<String> field;
+  Value<Uint8List> value;
+  OfflineQueueFilesCompanion({
+    this.id = const Value.absent(),
+    this.offlineQueueId = const Value.absent(),
+    this.field = const Value.absent(),
+    this.value = const Value.absent(),
+  });
+  OfflineQueueFilesCompanion.insert({
+    this.id = const Value.absent(),
+    required int offlineQueueId,
+    required String field,
+    required Uint8List value,
+  })  : offlineQueueId = Value(offlineQueueId),
+        field = Value(field),
+        value = Value(value);
+  static Insertable<OfflineQueueFile> custom({
+    Expression<int>? id,
+    Expression<int>? offlineQueueId,
+    Expression<String>? field,
+    Expression<Uint8List>? value,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (offlineQueueId != null) 'offline_queue_id': offlineQueueId,
+      if (field != null) 'field': field,
+      if (value != null) 'value': value,
+    });
+  }
+
+  OfflineQueueFilesCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? offlineQueueId,
+      Value<String>? field,
+      Value<Uint8List>? value}) {
+    return OfflineQueueFilesCompanion(
+      id: id ?? this.id,
+      offlineQueueId: offlineQueueId ?? this.offlineQueueId,
+      field: field ?? this.field,
+      value: value ?? this.value,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (offlineQueueId.present) {
+      map['offline_queue_id'] = Variable<int>(offlineQueueId.value);
+    }
+    if (field.present) {
+      map['field'] = Variable<String>(field.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<Uint8List>(value.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('OfflineQueueFilesCompanion(')
+          ..write('id: $id, ')
+          ..write('offlineQueueId: $offlineQueueId, ')
+          ..write('field: $field, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Records extends Table with TableInfo<Records, Record> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Records(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _collectionIdMeta =
+      const VerificationMeta('collectionId');
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _collectionNameMeta =
+      const VerificationMeta('collectionName');
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _deletedMeta =
+      const VerificationMeta('deleted');
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
+  static const VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        data,
+        deleted,
+        synced,
+        created,
+        updated
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'records';
+  @override
+  VerificationContext validateIntegrity(Insertable<Record> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('collection_id')) {
+      context.handle(
+          _collectionIdMeta,
+          collectionId.isAcceptableOrUnknown(
+              data['collection_id']!, _collectionIdMeta));
+    } else if (isInserting) {
+      context.missing(_collectionIdMeta);
+    }
+    if (data.containsKey('collection_name')) {
+      context.handle(
+          _collectionNameMeta,
+          collectionName.isAcceptableOrUnknown(
+              data['collection_name']!, _collectionNameMeta));
+    } else if (isInserting) {
+      context.missing(_collectionNameMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
+    } else if (isInserting) {
+      context.missing(_dataMeta);
+    }
+    if (data.containsKey('deleted')) {
+      context.handle(_deletedMeta,
+          deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta));
+    }
+    if (data.containsKey('synced')) {
+      context.handle(_syncedMeta,
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {id, collectionId, collectionName},
+      ];
+  @override
+  Record map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Record(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  Records createAlias(String alias) {
+    return Records(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints =>
+      const ['UNIQUE(id, collection_id, collection_name)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Record extends DataClass implements Insertable<Record> {
+  String id;
+  String collectionId;
+  String collectionName;
+  String data;
+  bool deleted;
+  bool synced;
+  DateTime created;
+  DateTime updated;
+  Record(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.data,
+      required this.deleted,
+      required this.synced,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['collection_id'] = Variable<String>(collectionId);
+    map['collection_name'] = Variable<String>(collectionName);
+    map['data'] = Variable<String>(data);
+    map['deleted'] = Variable<bool>(deleted);
+    map['synced'] = Variable<bool>(synced);
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  RecordsCompanion toCompanion(bool nullToAbsent) {
+    return RecordsCompanion(
+      id: Value(id),
+      collectionId: Value(collectionId),
+      collectionName: Value(collectionName),
+      data: Value(data),
+      deleted: Value(deleted),
+      synced: Value(synced),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory Record.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Record(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      data: serializer.fromJson<String>(json['data']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'data': serializer.toJson<String>(data),
+      'deleted': serializer.toJson<bool>(deleted),
+      'synced': serializer.toJson<bool>(synced),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  Record copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          String? data,
+          bool? deleted,
+          bool? synced,
+          DateTime? created,
+          DateTime? updated}) =>
+      Record(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        data: data ?? this.data,
+        deleted: deleted ?? this.deleted,
+        synced: synced ?? this.synced,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Record(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('data: $data, ')
+          ..write('deleted: $deleted, ')
+          ..write('synced: $synced, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, collectionId, collectionName, data,
+      deleted, synced, created, updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Record &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.data == this.data &&
+          other.deleted == this.deleted &&
+          other.synced == this.synced &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class RecordsCompanion extends UpdateCompanion<Record> {
+  Value<String> id;
+  Value<String> collectionId;
+  Value<String> collectionName;
+  Value<String> data;
+  Value<bool> deleted;
+  Value<bool> synced;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  Value<int> rowid;
+  RecordsCompanion({
+    this.id = const Value.absent(),
+    this.collectionId = const Value.absent(),
+    this.collectionName = const Value.absent(),
+    this.data = const Value.absent(),
+    this.deleted = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RecordsCompanion.insert({
+    required String id,
+    required String collectionId,
+    required String collectionName,
+    required String data,
+    this.deleted = const Value.absent(),
+    this.synced = const Value.absent(),
+    required DateTime created,
+    required DateTime updated,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        collectionId = Value(collectionId),
+        collectionName = Value(collectionName),
+        data = Value(data),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<Record> custom({
+    Expression<String>? id,
+    Expression<String>? collectionId,
+    Expression<String>? collectionName,
+    Expression<String>? data,
+    Expression<bool>? deleted,
+    Expression<bool>? synced,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (collectionId != null) 'collection_id': collectionId,
+      if (collectionName != null) 'collection_name': collectionName,
+      if (data != null) 'data': data,
+      if (deleted != null) 'deleted': deleted,
+      if (synced != null) 'synced': synced,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RecordsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? collectionId,
+      Value<String>? collectionName,
+      Value<String>? data,
+      Value<bool>? deleted,
+      Value<bool>? synced,
+      Value<DateTime>? created,
+      Value<DateTime>? updated,
+      Value<int>? rowid}) {
+    return RecordsCompanion(
+      id: id ?? this.id,
+      collectionId: collectionId ?? this.collectionId,
+      collectionName: collectionName ?? this.collectionName,
+      data: data ?? this.data,
+      deleted: deleted ?? this.deleted,
+      synced: synced ?? this.synced,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (collectionId.present) {
+      map['collection_id'] = Variable<String>(collectionId.value);
+    }
+    if (collectionName.present) {
+      map['collection_name'] = Variable<String>(collectionName.value);
+    }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
+    if (deleted.present) {
+      map['deleted'] = Variable<bool>(deleted.value);
+    }
+    if (synced.present) {
+      map['synced'] = Variable<bool>(synced.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RecordsCompanion(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('data: $data, ')
+          ..write('deleted: $deleted, ')
+          ..write('synced: $synced, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class UserRecord extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  UserRecord(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid});
+  factory UserRecord.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserRecord(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+    };
+  }
+
+  UserRecord copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent()}) =>
+      UserRecord(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserRecord(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, collectionId, collectionName, synced,
+      deleted, created, modified, data, user, uid);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserRecord &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid);
+}
+
+class UserRecords extends ViewInfo<UserRecords, UserRecord>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserRecords(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_records';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_records AS SELECT id, collection_id, collection_name, synced, deleted, created, modified, data, CASE WHEN json_extract(data, \'\$.user\') IS NOT NULL THEN CAST(json_extract(data, \'\$.user\') AS TEXT) ELSE NULL END AS user, CASE WHEN json_extract(data, \'\$.uid\') IS NOT NULL THEN CAST(json_extract(data, \'\$.uid\') AS TEXT) ELSE NULL END AS uid FROM records',
+      };
+  @override
+  UserRecords get asDslTable => this;
+  @override
+  UserRecord map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserRecord(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  @override
+  UserRecords createAlias(String alias) {
+    return UserRecords(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class Analytic extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String type;
+  String? metadata;
+  String? version;
+  String? platform;
+  Analytic(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      required this.type,
+      this.metadata,
+      this.version,
+      this.platform});
+  factory Analytic.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Analytic(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      type: serializer.fromJson<String>(json['type']),
+      metadata: serializer.fromJson<String?>(json['metadata']),
+      version: serializer.fromJson<String?>(json['version']),
+      platform: serializer.fromJson<String?>(json['platform']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'type': serializer.toJson<String>(type),
+      'metadata': serializer.toJson<String?>(metadata),
+      'version': serializer.toJson<String?>(version),
+      'platform': serializer.toJson<String?>(platform),
+    };
+  }
+
+  Analytic copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          String? type,
+          Value<String?> metadata = const Value.absent(),
+          Value<String?> version = const Value.absent(),
+          Value<String?> platform = const Value.absent()}) =>
+      Analytic(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        type: type ?? this.type,
+        metadata: metadata.present ? metadata.value : this.metadata,
+        version: version.present ? version.value : this.version,
+        platform: platform.present ? platform.value : this.platform,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Analytic(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('type: $type, ')
+          ..write('metadata: $metadata, ')
+          ..write('version: $version, ')
+          ..write('platform: $platform')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      type,
+      metadata,
+      version,
+      platform);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Analytic &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.type == this.type &&
+          other.metadata == this.metadata &&
+          other.version == this.version &&
+          other.platform == this.platform);
+}
+
+class Analytics extends ViewInfo<Analytics, Analytic> implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  Analytics(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        type,
+        metadata,
+        version,
+        platform
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'analytics';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW analytics AS SELECT *, CAST(json_extract(data, \'\$.type\') AS TEXT) AS type, CASE WHEN json_extract(data, \'\$.metadata\') IS NOT NULL THEN CAST(json_extract(data, \'\$.metadata\') AS TEXT) ELSE NULL END AS metadata, CASE WHEN json_extract(data, \'\$.version\') IS NOT NULL THEN CAST(json_extract(data, \'\$.version\') AS TEXT) ELSE NULL END AS version, CASE WHEN json_extract(data, \'\$.platform\') IS NOT NULL THEN CAST(json_extract(data, \'\$.platform\') AS TEXT) ELSE NULL END AS platform FROM user_records WHERE collection_name = \'analytics\'',
+      };
+  @override
+  Analytics get asDslTable => this;
+  @override
+  Analytic map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Analytic(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!,
+      metadata: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}metadata']),
+      version: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}version']),
+      platform: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}platform']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> metadata = GeneratedColumn<String>(
+      'metadata', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> version = GeneratedColumn<String>(
+      'version', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> platform = GeneratedColumn<String>(
+      'platform', aliasedName, true,
+      type: DriftSqlType.string);
+  @override
+  Analytics createAlias(String alias) {
+    return Analytics(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class UserPurchase extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String productId;
+  String? platform;
+  double? amount;
+  String? purchaseId;
+  UserPurchase(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      required this.productId,
+      this.platform,
+      this.amount,
+      this.purchaseId});
+  factory UserPurchase.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserPurchase(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      productId: serializer.fromJson<String>(json['product_id']),
+      platform: serializer.fromJson<String?>(json['platform']),
+      amount: serializer.fromJson<double?>(json['amount']),
+      purchaseId: serializer.fromJson<String?>(json['purchase_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'product_id': serializer.toJson<String>(productId),
+      'platform': serializer.toJson<String?>(platform),
+      'amount': serializer.toJson<double?>(amount),
+      'purchase_id': serializer.toJson<String?>(purchaseId),
+    };
+  }
+
+  UserPurchase copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          String? productId,
+          Value<String?> platform = const Value.absent(),
+          Value<double?> amount = const Value.absent(),
+          Value<String?> purchaseId = const Value.absent()}) =>
+      UserPurchase(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        productId: productId ?? this.productId,
+        platform: platform.present ? platform.value : this.platform,
+        amount: amount.present ? amount.value : this.amount,
+        purchaseId: purchaseId.present ? purchaseId.value : this.purchaseId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserPurchase(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('productId: $productId, ')
+          ..write('platform: $platform, ')
+          ..write('amount: $amount, ')
+          ..write('purchaseId: $purchaseId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      productId,
+      platform,
+      amount,
+      purchaseId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserPurchase &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.productId == this.productId &&
+          other.platform == this.platform &&
+          other.amount == this.amount &&
+          other.purchaseId == this.purchaseId);
+}
+
+class UserPurchases extends ViewInfo<UserPurchases, UserPurchase>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserPurchases(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        productId,
+        platform,
+        amount,
+        purchaseId
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_purchases';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_purchases AS SELECT *, CAST(json_extract(data, \'\$.product_id\') AS TEXT) AS product_id, CASE WHEN json_extract(data, \'\$.platform\') IS NOT NULL THEN CAST(json_extract(data, \'\$.platform\') AS TEXT) ELSE NULL END AS platform, CASE WHEN json_extract(data, \'\$.amount\') IS NOT NULL THEN CAST(json_extract(data, \'\$.amount\') AS REAL) ELSE NULL END AS amount, CASE WHEN json_extract(data, \'\$.purchase_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.purchase_id\') AS TEXT) ELSE NULL END AS purchase_id FROM user_records WHERE collection_name = \'user_purchases\'',
+      };
+  @override
+  UserPurchases get asDslTable => this;
+  @override
+  UserPurchase map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserPurchase(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_id'])!,
+      platform: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}platform']),
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}amount']),
+      purchaseId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}purchase_id']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> productId = GeneratedColumn<String>(
+      'product_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> platform = GeneratedColumn<String>(
+      'platform', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+      'amount', aliasedName, true,
+      type: DriftSqlType.double);
+  late final GeneratedColumn<String> purchaseId = GeneratedColumn<String>(
+      'purchase_id', aliasedName, true,
+      type: DriftSqlType.string);
+  @override
+  UserPurchases createAlias(String alias) {
+    return UserPurchases(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class UserLibraryData extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? hymnId;
+  String? playlistId;
+  String? topicId;
+  String? stakeholderId;
+  UserLibraryData(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.hymnId,
+      this.playlistId,
+      this.topicId,
+      this.stakeholderId});
+  factory UserLibraryData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserLibraryData(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      hymnId: serializer.fromJson<String?>(json['hymn_id']),
+      playlistId: serializer.fromJson<String?>(json['playlist_id']),
+      topicId: serializer.fromJson<String?>(json['topic_id']),
+      stakeholderId: serializer.fromJson<String?>(json['stakeholder_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'hymn_id': serializer.toJson<String?>(hymnId),
+      'playlist_id': serializer.toJson<String?>(playlistId),
+      'topic_id': serializer.toJson<String?>(topicId),
+      'stakeholder_id': serializer.toJson<String?>(stakeholderId),
+    };
+  }
+
+  UserLibraryData copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> hymnId = const Value.absent(),
+          Value<String?> playlistId = const Value.absent(),
+          Value<String?> topicId = const Value.absent(),
+          Value<String?> stakeholderId = const Value.absent()}) =>
+      UserLibraryData(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        hymnId: hymnId.present ? hymnId.value : this.hymnId,
+        playlistId: playlistId.present ? playlistId.value : this.playlistId,
+        topicId: topicId.present ? topicId.value : this.topicId,
+        stakeholderId:
+            stakeholderId.present ? stakeholderId.value : this.stakeholderId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserLibraryData(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('hymnId: $hymnId, ')
+          ..write('playlistId: $playlistId, ')
+          ..write('topicId: $topicId, ')
+          ..write('stakeholderId: $stakeholderId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      hymnId,
+      playlistId,
+      topicId,
+      stakeholderId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserLibraryData &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.hymnId == this.hymnId &&
+          other.playlistId == this.playlistId &&
+          other.topicId == this.topicId &&
+          other.stakeholderId == this.stakeholderId);
+}
+
+class UserLibrary extends ViewInfo<UserLibrary, UserLibraryData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserLibrary(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        hymnId,
+        playlistId,
+        topicId,
+        stakeholderId
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_library';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_library AS SELECT *, CASE WHEN json_extract(data, \'\$.hymn_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.hymn_id\') AS TEXT) ELSE NULL END AS hymn_id, CASE WHEN json_extract(data, \'\$.playlist_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.playlist_id\') AS TEXT) ELSE NULL END AS playlist_id, CASE WHEN json_extract(data, \'\$.topic_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.topic_id\') AS TEXT) ELSE NULL END AS topic_id, CASE WHEN json_extract(data, \'\$.stakeholder_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.stakeholder_id\') AS TEXT) ELSE NULL END AS stakeholder_id FROM user_records WHERE collection_name = \'user_library\'',
+      };
+  @override
+  UserLibrary get asDslTable => this;
+  @override
+  UserLibraryData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserLibraryData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      hymnId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}hymn_id']),
+      playlistId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}playlist_id']),
+      topicId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}topic_id']),
+      stakeholderId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}stakeholder_id']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> hymnId = GeneratedColumn<String>(
+      'hymn_id', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> playlistId = GeneratedColumn<String>(
+      'playlist_id', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> topicId = GeneratedColumn<String>(
+      'topic_id', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> stakeholderId = GeneratedColumn<String>(
+      'stakeholder_id', aliasedName, true,
+      type: DriftSqlType.string);
+  @override
+  UserLibrary createAlias(String alias) {
+    return UserLibrary(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class UserHymnLibraryData extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String hymnId;
+  UserHymnLibraryData(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      required this.hymnId});
+  factory UserHymnLibraryData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserHymnLibraryData(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      hymnId: serializer.fromJson<String>(json['hymn_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'hymn_id': serializer.toJson<String>(hymnId),
+    };
+  }
+
+  UserHymnLibraryData copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          String? hymnId}) =>
+      UserHymnLibraryData(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        hymnId: hymnId ?? this.hymnId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserHymnLibraryData(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('hymnId: $hymnId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, collectionId, collectionName, synced,
+      deleted, created, modified, data, user, uid, hymnId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserHymnLibraryData &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.hymnId == this.hymnId);
+}
+
+class UserHymnLibrary extends ViewInfo<UserHymnLibrary, UserHymnLibraryData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserHymnLibrary(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        hymnId
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_hymn_library';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_hymn_library AS SELECT *, CAST(json_extract(data, \'\$.hymn_id\') AS TEXT) AS hymn_id FROM user_records WHERE collection_name = \'user_library\' AND json_extract(data, \'\$.hymn_id\') IS NOT NULL',
+      };
+  @override
+  UserHymnLibrary get asDslTable => this;
+  @override
+  UserHymnLibraryData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserHymnLibraryData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      hymnId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}hymn_id'])!,
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> hymnId = GeneratedColumn<String>(
+      'hymn_id', aliasedName, false,
+      type: DriftSqlType.string);
+  @override
+  UserHymnLibrary createAlias(String alias) {
+    return UserHymnLibrary(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class UserStakeholderLibraryData extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String stakeholderId;
+  UserStakeholderLibraryData(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      required this.stakeholderId});
+  factory UserStakeholderLibraryData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserStakeholderLibraryData(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      stakeholderId: serializer.fromJson<String>(json['stakeholder_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'stakeholder_id': serializer.toJson<String>(stakeholderId),
+    };
+  }
+
+  UserStakeholderLibraryData copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          String? stakeholderId}) =>
+      UserStakeholderLibraryData(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        stakeholderId: stakeholderId ?? this.stakeholderId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserStakeholderLibraryData(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('stakeholderId: $stakeholderId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, collectionId, collectionName, synced,
+      deleted, created, modified, data, user, uid, stakeholderId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserStakeholderLibraryData &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.stakeholderId == this.stakeholderId);
+}
+
+class UserStakeholderLibrary
+    extends ViewInfo<UserStakeholderLibrary, UserStakeholderLibraryData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserStakeholderLibrary(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        stakeholderId
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_stakeholder_library';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_stakeholder_library AS SELECT *, CAST(json_extract(data, \'\$.stakeholder_id\') AS TEXT) AS stakeholder_id FROM user_records WHERE collection_name = \'user_library\' AND json_extract(data, \'\$.stakeholder_id\') IS NOT NULL',
+      };
+  @override
+  UserStakeholderLibrary get asDslTable => this;
+  @override
+  UserStakeholderLibraryData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserStakeholderLibraryData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      stakeholderId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}stakeholder_id'])!,
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> stakeholderId = GeneratedColumn<String>(
+      'stakeholder_id', aliasedName, false,
+      type: DriftSqlType.string);
+  @override
+  UserStakeholderLibrary createAlias(String alias) {
+    return UserStakeholderLibrary(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class UserTopicLibraryData extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String topicId;
+  UserTopicLibraryData(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      required this.topicId});
+  factory UserTopicLibraryData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserTopicLibraryData(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      topicId: serializer.fromJson<String>(json['topic_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'topic_id': serializer.toJson<String>(topicId),
+    };
+  }
+
+  UserTopicLibraryData copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          String? topicId}) =>
+      UserTopicLibraryData(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        topicId: topicId ?? this.topicId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserTopicLibraryData(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('topicId: $topicId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, collectionId, collectionName, synced,
+      deleted, created, modified, data, user, uid, topicId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserTopicLibraryData &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.topicId == this.topicId);
+}
+
+class UserTopicLibrary extends ViewInfo<UserTopicLibrary, UserTopicLibraryData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserTopicLibrary(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        topicId
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_topic_library';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_topic_library AS SELECT *, CAST(json_extract(data, \'\$.topic_id\') AS TEXT) AS topic_id FROM user_records WHERE collection_name = \'user_library\' AND json_extract(data, \'\$.topic_id\') IS NOT NULL',
+      };
+  @override
+  UserTopicLibrary get asDslTable => this;
+  @override
+  UserTopicLibraryData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserTopicLibraryData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      topicId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}topic_id'])!,
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> topicId = GeneratedColumn<String>(
+      'topic_id', aliasedName, false,
+      type: DriftSqlType.string);
+  @override
+  UserTopicLibrary createAlias(String alias) {
+    return UserTopicLibrary(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class UserPlaylistLibraryData extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String playlistId;
+  UserPlaylistLibraryData(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      required this.playlistId});
+  factory UserPlaylistLibraryData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserPlaylistLibraryData(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      playlistId: serializer.fromJson<String>(json['playlist_id']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'playlist_id': serializer.toJson<String>(playlistId),
+    };
+  }
+
+  UserPlaylistLibraryData copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          String? playlistId}) =>
+      UserPlaylistLibraryData(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        playlistId: playlistId ?? this.playlistId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserPlaylistLibraryData(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('playlistId: $playlistId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, collectionId, collectionName, synced,
+      deleted, created, modified, data, user, uid, playlistId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserPlaylistLibraryData &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.playlistId == this.playlistId);
+}
+
+class UserPlaylistLibrary
+    extends ViewInfo<UserPlaylistLibrary, UserPlaylistLibraryData>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  UserPlaylistLibrary(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        playlistId
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'user_playlist_library';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW user_playlist_library AS SELECT *, CAST(json_extract(data, \'\$.playlist_id\') AS TEXT) AS playlist_id FROM user_records WHERE collection_name = \'user_library\' AND json_extract(data, \'\$.playlist_id\') IS NOT NULL',
+      };
+  @override
+  UserPlaylistLibrary get asDslTable => this;
+  @override
+  UserPlaylistLibraryData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserPlaylistLibraryData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      playlistId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}playlist_id'])!,
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> playlistId = GeneratedColumn<String>(
+      'playlist_id', aliasedName, false,
+      type: DriftSqlType.string);
+  @override
+  UserPlaylistLibrary createAlias(String alias) {
+    return UserPlaylistLibrary(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class LocalPlaylistItem extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? playlistId;
+  String? image;
+  String? parts;
+  String? color;
+  String? notes;
+  String? text;
+  double? order;
+  LocalPlaylistItem(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.playlistId,
+      this.image,
+      this.parts,
+      this.color,
+      this.notes,
+      this.text,
+      this.order});
+  factory LocalPlaylistItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalPlaylistItem(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      playlistId: serializer.fromJson<String?>(json['playlist_id']),
+      image: serializer.fromJson<String?>(json['image']),
+      parts: serializer.fromJson<String?>(json['parts']),
+      color: serializer.fromJson<String?>(json['color']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      text: serializer.fromJson<String?>(json['text']),
+      order: serializer.fromJson<double?>(json['order']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'playlist_id': serializer.toJson<String?>(playlistId),
+      'image': serializer.toJson<String?>(image),
+      'parts': serializer.toJson<String?>(parts),
+      'color': serializer.toJson<String?>(color),
+      'notes': serializer.toJson<String?>(notes),
+      'text': serializer.toJson<String?>(text),
+      'order': serializer.toJson<double?>(order),
+    };
+  }
+
+  LocalPlaylistItem copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> playlistId = const Value.absent(),
+          Value<String?> image = const Value.absent(),
+          Value<String?> parts = const Value.absent(),
+          Value<String?> color = const Value.absent(),
+          Value<String?> notes = const Value.absent(),
+          Value<String?> text = const Value.absent(),
+          Value<double?> order = const Value.absent()}) =>
+      LocalPlaylistItem(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        playlistId: playlistId.present ? playlistId.value : this.playlistId,
+        image: image.present ? image.value : this.image,
+        parts: parts.present ? parts.value : this.parts,
+        color: color.present ? color.value : this.color,
+        notes: notes.present ? notes.value : this.notes,
+        text: text.present ? text.value : this.text,
+        order: order.present ? order.value : this.order,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('LocalPlaylistItem(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('playlistId: $playlistId, ')
+          ..write('image: $image, ')
+          ..write('parts: $parts, ')
+          ..write('color: $color, ')
+          ..write('notes: $notes, ')
+          ..write('text: $text, ')
+          ..write('order: $order')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      playlistId,
+      image,
+      parts,
+      color,
+      notes,
+      text,
+      order);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalPlaylistItem &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.playlistId == this.playlistId &&
+          other.image == this.image &&
+          other.parts == this.parts &&
+          other.color == this.color &&
+          other.notes == this.notes &&
+          other.text == this.text &&
+          other.order == this.order);
+}
+
+class LocalPlaylistItems extends ViewInfo<LocalPlaylistItems, LocalPlaylistItem>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  LocalPlaylistItems(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        playlistId,
+        image,
+        parts,
+        color,
+        notes,
+        text,
+        order
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'local_playlist_items';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW local_playlist_items AS SELECT *, json_extract(data, \'\$.playlist_id\') AS playlist_id, CASE WHEN json_extract(data, \'\$.image\') IS NOT NULL THEN CAST(json_extract(data, \'\$.image\') AS TEXT) ELSE NULL END AS image, CASE WHEN json_extract(data, \'\$.parts\') IS NOT NULL THEN CAST(json_extract(data, \'\$.parts\') AS TEXT) ELSE NULL END AS parts, CASE WHEN json_extract(data, \'\$.color\') IS NOT NULL THEN CAST(json_extract(data, \'\$.color\') AS TEXT) ELSE NULL END AS color, CASE WHEN json_extract(data, \'\$.notes\') IS NOT NULL THEN CAST(json_extract(data, \'\$.notes\') AS TEXT) ELSE NULL END AS notes, CASE WHEN json_extract(data, \'\$.text\') IS NOT NULL THEN CAST(json_extract(data, \'\$.text\') AS TEXT) ELSE NULL END AS text, CASE WHEN json_extract(data, \'\$.order\') IS NOT NULL THEN CAST(json_extract(data, \'\$.order\') AS REAL) ELSE NULL END AS "order" FROM user_records WHERE collection_name = \'playlist_items\' OR collection_name = \'public_playlist_items\'',
+      };
+  @override
+  LocalPlaylistItems get asDslTable => this;
+  @override
+  LocalPlaylistItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalPlaylistItem(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      playlistId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}playlist_id']),
+      image: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
+      parts: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}parts']),
+      color: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}color']),
+      notes: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}notes']),
+      text: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}text']),
+      order: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}order']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> playlistId = GeneratedColumn<String>(
+      'playlist_id', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> parts = GeneratedColumn<String>(
+      'parts', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+      'color', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+      'notes', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> text = GeneratedColumn<String>(
+      'text', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<double> order = GeneratedColumn<double>(
+      'order', aliasedName, true,
+      type: DriftSqlType.double);
+  @override
+  LocalPlaylistItems createAlias(String alias) {
+    return LocalPlaylistItems(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class PlaylistItem extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? playlistId;
+  String? image;
+  String? parts;
+  String? color;
+  String? notes;
+  String? text;
+  double? order;
+  PlaylistItem(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.playlistId,
+      this.image,
+      this.parts,
+      this.color,
+      this.notes,
+      this.text,
+      this.order});
+  factory PlaylistItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaylistItem(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      playlistId: serializer.fromJson<String?>(json['playlist_id']),
+      image: serializer.fromJson<String?>(json['image']),
+      parts: serializer.fromJson<String?>(json['parts']),
+      color: serializer.fromJson<String?>(json['color']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      text: serializer.fromJson<String?>(json['text']),
+      order: serializer.fromJson<double?>(json['order']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'playlist_id': serializer.toJson<String?>(playlistId),
+      'image': serializer.toJson<String?>(image),
+      'parts': serializer.toJson<String?>(parts),
+      'color': serializer.toJson<String?>(color),
+      'notes': serializer.toJson<String?>(notes),
+      'text': serializer.toJson<String?>(text),
+      'order': serializer.toJson<double?>(order),
+    };
+  }
+
+  PlaylistItem copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> playlistId = const Value.absent(),
+          Value<String?> image = const Value.absent(),
+          Value<String?> parts = const Value.absent(),
+          Value<String?> color = const Value.absent(),
+          Value<String?> notes = const Value.absent(),
+          Value<String?> text = const Value.absent(),
+          Value<double?> order = const Value.absent()}) =>
+      PlaylistItem(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        playlistId: playlistId.present ? playlistId.value : this.playlistId,
+        image: image.present ? image.value : this.image,
+        parts: parts.present ? parts.value : this.parts,
+        color: color.present ? color.value : this.color,
+        notes: notes.present ? notes.value : this.notes,
+        text: text.present ? text.value : this.text,
+        order: order.present ? order.value : this.order,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PlaylistItem(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('playlistId: $playlistId, ')
+          ..write('image: $image, ')
+          ..write('parts: $parts, ')
+          ..write('color: $color, ')
+          ..write('notes: $notes, ')
+          ..write('text: $text, ')
+          ..write('order: $order')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      playlistId,
+      image,
+      parts,
+      color,
+      notes,
+      text,
+      order);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaylistItem &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.playlistId == this.playlistId &&
+          other.image == this.image &&
+          other.parts == this.parts &&
+          other.color == this.color &&
+          other.notes == this.notes &&
+          other.text == this.text &&
+          other.order == this.order);
+}
+
+class PlaylistItems extends ViewInfo<PlaylistItems, PlaylistItem>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  PlaylistItems(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        playlistId,
+        image,
+        parts,
+        color,
+        notes,
+        text,
+        order
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'playlist_items';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW playlist_items AS SELECT * FROM local_playlist_items WHERE collection_name = \'playlist_items\'',
+      };
+  @override
+  PlaylistItems get asDslTable => this;
+  @override
+  PlaylistItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaylistItem(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      playlistId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}playlist_id']),
+      image: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
+      parts: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}parts']),
+      color: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}color']),
+      notes: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}notes']),
+      text: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}text']),
+      order: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}order']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> playlistId = GeneratedColumn<String>(
+      'playlist_id', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> parts = GeneratedColumn<String>(
+      'parts', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+      'color', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+      'notes', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> text = GeneratedColumn<String>(
+      'text', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<double> order = GeneratedColumn<double>(
+      'order', aliasedName, true,
+      type: DriftSqlType.double);
+  @override
+  PlaylistItems createAlias(String alias) {
+    return PlaylistItems(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class PublicPlaylistItem extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? playlistId;
+  String? image;
+  String? parts;
+  String? color;
+  String? notes;
+  String? text;
+  double? order;
+  PublicPlaylistItem(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.playlistId,
+      this.image,
+      this.parts,
+      this.color,
+      this.notes,
+      this.text,
+      this.order});
+  factory PublicPlaylistItem.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PublicPlaylistItem(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      playlistId: serializer.fromJson<String?>(json['playlist_id']),
+      image: serializer.fromJson<String?>(json['image']),
+      parts: serializer.fromJson<String?>(json['parts']),
+      color: serializer.fromJson<String?>(json['color']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      text: serializer.fromJson<String?>(json['text']),
+      order: serializer.fromJson<double?>(json['order']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'playlist_id': serializer.toJson<String?>(playlistId),
+      'image': serializer.toJson<String?>(image),
+      'parts': serializer.toJson<String?>(parts),
+      'color': serializer.toJson<String?>(color),
+      'notes': serializer.toJson<String?>(notes),
+      'text': serializer.toJson<String?>(text),
+      'order': serializer.toJson<double?>(order),
+    };
+  }
+
+  PublicPlaylistItem copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> playlistId = const Value.absent(),
+          Value<String?> image = const Value.absent(),
+          Value<String?> parts = const Value.absent(),
+          Value<String?> color = const Value.absent(),
+          Value<String?> notes = const Value.absent(),
+          Value<String?> text = const Value.absent(),
+          Value<double?> order = const Value.absent()}) =>
+      PublicPlaylistItem(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        playlistId: playlistId.present ? playlistId.value : this.playlistId,
+        image: image.present ? image.value : this.image,
+        parts: parts.present ? parts.value : this.parts,
+        color: color.present ? color.value : this.color,
+        notes: notes.present ? notes.value : this.notes,
+        text: text.present ? text.value : this.text,
+        order: order.present ? order.value : this.order,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PublicPlaylistItem(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('playlistId: $playlistId, ')
+          ..write('image: $image, ')
+          ..write('parts: $parts, ')
+          ..write('color: $color, ')
+          ..write('notes: $notes, ')
+          ..write('text: $text, ')
+          ..write('order: $order')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      playlistId,
+      image,
+      parts,
+      color,
+      notes,
+      text,
+      order);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PublicPlaylistItem &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.playlistId == this.playlistId &&
+          other.image == this.image &&
+          other.parts == this.parts &&
+          other.color == this.color &&
+          other.notes == this.notes &&
+          other.text == this.text &&
+          other.order == this.order);
+}
+
+class PublicPlaylistItems
+    extends ViewInfo<PublicPlaylistItems, PublicPlaylistItem>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  PublicPlaylistItems(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        playlistId,
+        image,
+        parts,
+        color,
+        notes,
+        text,
+        order
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'public_playlist_items';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW public_playlist_items AS SELECT * FROM local_playlist_items WHERE collection_name = \'public_playlist_items\' OR(collection_name = \'playlist_items\' AND playlist.public = 1)AND EXISTS (SELECT * FROM playlists AS playlist WHERE playlist.id = playlist_id AND playlist.public = 1)',
+      };
+  @override
+  PublicPlaylistItems get asDslTable => this;
+  @override
+  PublicPlaylistItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PublicPlaylistItem(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      playlistId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}playlist_id']),
+      image: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
+      parts: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}parts']),
+      color: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}color']),
+      notes: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}notes']),
+      text: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}text']),
+      order: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}order']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> playlistId = GeneratedColumn<String>(
+      'playlist_id', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> parts = GeneratedColumn<String>(
+      'parts', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> color = GeneratedColumn<String>(
+      'color', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+      'notes', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> text = GeneratedColumn<String>(
+      'text', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<double> order = GeneratedColumn<double>(
+      'order', aliasedName, true,
+      type: DriftSqlType.double);
+  @override
+  PublicPlaylistItems createAlias(String alias) {
+    return PublicPlaylistItems(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class LocalPlaylist extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? name;
+  String? description;
+  bool? public;
+  bool? medly;
+  DateTime? event;
+  LocalPlaylist(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.name,
+      this.description,
+      this.public,
+      this.medly,
+      this.event});
+  factory LocalPlaylist.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalPlaylist(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      name: serializer.fromJson<String?>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      public: serializer.fromJson<bool?>(json['public']),
+      medly: serializer.fromJson<bool?>(json['medly']),
+      event: serializer.fromJson<DateTime?>(json['event']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'name': serializer.toJson<String?>(name),
+      'description': serializer.toJson<String?>(description),
+      'public': serializer.toJson<bool?>(public),
+      'medly': serializer.toJson<bool?>(medly),
+      'event': serializer.toJson<DateTime?>(event),
+    };
+  }
+
+  LocalPlaylist copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> name = const Value.absent(),
+          Value<String?> description = const Value.absent(),
+          Value<bool?> public = const Value.absent(),
+          Value<bool?> medly = const Value.absent(),
+          Value<DateTime?> event = const Value.absent()}) =>
+      LocalPlaylist(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        name: name.present ? name.value : this.name,
+        description: description.present ? description.value : this.description,
+        public: public.present ? public.value : this.public,
+        medly: medly.present ? medly.value : this.medly,
+        event: event.present ? event.value : this.event,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('LocalPlaylist(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('public: $public, ')
+          ..write('medly: $medly, ')
+          ..write('event: $event')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      name,
+      description,
+      public,
+      medly,
+      event);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalPlaylist &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.public == this.public &&
+          other.medly == this.medly &&
+          other.event == this.event);
+}
+
+class LocalPlaylists extends ViewInfo<LocalPlaylists, LocalPlaylist>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  LocalPlaylists(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        name,
+        description,
+        public,
+        medly,
+        event
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'local_playlists';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW local_playlists AS SELECT *, json_extract(data, \'\$.name\') AS name, CASE WHEN json_extract(data, \'\$.description\') IS NOT NULL THEN CAST(json_extract(data, \'\$.description\') AS TEXT) ELSE NULL END AS description, CASE WHEN json_extract(data, \'\$.public\') IS NOT NULL THEN CAST(json_extract(data, \'\$.public\') AS INT) ELSE NULL END AS public, CASE WHEN json_extract(data, \'\$.medly\') IS NOT NULL THEN CAST(json_extract(data, \'\$.medly\') AS INT) ELSE NULL END AS medly, CASE WHEN json_extract(data, \'\$.event\') IS NOT NULL THEN CAST(json_extract(data, \'\$.event\') AS TEXT) ELSE NULL END AS event FROM user_records WHERE collection_name = \'playlists\' OR collection_name = \'public_playlists\'',
+      };
+  @override
+  LocalPlaylists get asDslTable => this;
+  @override
+  LocalPlaylist map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalPlaylist(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      public: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}public']),
+      medly: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}medly']),
+      event: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}event']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> public = GeneratedColumn<bool>(
+      'public', aliasedName, true,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("public" IN (0, 1))'));
+  late final GeneratedColumn<bool> medly = GeneratedColumn<bool>(
+      'medly', aliasedName, true,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("medly" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> event = GeneratedColumn<DateTime>(
+      'event', aliasedName, true,
+      type: DriftSqlType.dateTime);
+  @override
+  LocalPlaylists createAlias(String alias) {
+    return LocalPlaylists(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class Playlist extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? name;
+  String? description;
+  bool? public;
+  bool? medly;
+  DateTime? event;
+  Playlist(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.name,
+      this.description,
+      this.public,
+      this.medly,
+      this.event});
+  factory Playlist.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Playlist(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      name: serializer.fromJson<String?>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      public: serializer.fromJson<bool?>(json['public']),
+      medly: serializer.fromJson<bool?>(json['medly']),
+      event: serializer.fromJson<DateTime?>(json['event']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'name': serializer.toJson<String?>(name),
+      'description': serializer.toJson<String?>(description),
+      'public': serializer.toJson<bool?>(public),
+      'medly': serializer.toJson<bool?>(medly),
+      'event': serializer.toJson<DateTime?>(event),
+    };
+  }
+
+  Playlist copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> name = const Value.absent(),
+          Value<String?> description = const Value.absent(),
+          Value<bool?> public = const Value.absent(),
+          Value<bool?> medly = const Value.absent(),
+          Value<DateTime?> event = const Value.absent()}) =>
+      Playlist(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        name: name.present ? name.value : this.name,
+        description: description.present ? description.value : this.description,
+        public: public.present ? public.value : this.public,
+        medly: medly.present ? medly.value : this.medly,
+        event: event.present ? event.value : this.event,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Playlist(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('public: $public, ')
+          ..write('medly: $medly, ')
+          ..write('event: $event')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      name,
+      description,
+      public,
+      medly,
+      event);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Playlist &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.public == this.public &&
+          other.medly == this.medly &&
+          other.event == this.event);
+}
+
+class Playlists extends ViewInfo<Playlists, Playlist> implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  Playlists(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        name,
+        description,
+        public,
+        medly,
+        event
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'playlists';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW playlists AS SELECT * FROM local_playlists WHERE collection_name = \'playlists\'',
+      };
+  @override
+  Playlists get asDslTable => this;
+  @override
+  Playlist map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Playlist(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      public: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}public']),
+      medly: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}medly']),
+      event: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}event']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> public = GeneratedColumn<bool>(
+      'public', aliasedName, true,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("public" IN (0, 1))'));
+  late final GeneratedColumn<bool> medly = GeneratedColumn<bool>(
+      'medly', aliasedName, true,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("medly" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> event = GeneratedColumn<DateTime>(
+      'event', aliasedName, true,
+      type: DriftSqlType.dateTime);
+  @override
+  Playlists createAlias(String alias) {
+    return Playlists(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class PublicPlaylist extends DataClass {
+  String id;
+  String collectionId;
+  String collectionName;
+  bool synced;
+  bool deleted;
+  DateTime created;
+  String? modified;
+  String data;
+  String? user;
+  String? uid;
+  String? name;
+  String? description;
+  bool? public;
+  bool? medly;
+  DateTime? event;
+  PublicPlaylist(
+      {required this.id,
+      required this.collectionId,
+      required this.collectionName,
+      required this.synced,
+      required this.deleted,
+      required this.created,
+      this.modified,
+      required this.data,
+      this.user,
+      this.uid,
+      this.name,
+      this.description,
+      this.public,
+      this.medly,
+      this.event});
+  factory PublicPlaylist.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PublicPlaylist(
+      id: serializer.fromJson<String>(json['id']),
+      collectionId: serializer.fromJson<String>(json['collection_id']),
+      collectionName: serializer.fromJson<String>(json['collection_name']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      modified: serializer.fromJson<String?>(json['modified']),
+      data: serializer.fromJson<String>(json['data']),
+      user: serializer.fromJson<String?>(json['user']),
+      uid: serializer.fromJson<String?>(json['uid']),
+      name: serializer.fromJson<String?>(json['name']),
+      description: serializer.fromJson<String?>(json['description']),
+      public: serializer.fromJson<bool?>(json['public']),
+      medly: serializer.fromJson<bool?>(json['medly']),
+      event: serializer.fromJson<DateTime?>(json['event']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'collection_id': serializer.toJson<String>(collectionId),
+      'collection_name': serializer.toJson<String>(collectionName),
+      'synced': serializer.toJson<bool>(synced),
+      'deleted': serializer.toJson<bool>(deleted),
+      'created': serializer.toJson<DateTime>(created),
+      'modified': serializer.toJson<String?>(modified),
+      'data': serializer.toJson<String>(data),
+      'user': serializer.toJson<String?>(user),
+      'uid': serializer.toJson<String?>(uid),
+      'name': serializer.toJson<String?>(name),
+      'description': serializer.toJson<String?>(description),
+      'public': serializer.toJson<bool?>(public),
+      'medly': serializer.toJson<bool?>(medly),
+      'event': serializer.toJson<DateTime?>(event),
+    };
+  }
+
+  PublicPlaylist copyWith(
+          {String? id,
+          String? collectionId,
+          String? collectionName,
+          bool? synced,
+          bool? deleted,
+          DateTime? created,
+          Value<String?> modified = const Value.absent(),
+          String? data,
+          Value<String?> user = const Value.absent(),
+          Value<String?> uid = const Value.absent(),
+          Value<String?> name = const Value.absent(),
+          Value<String?> description = const Value.absent(),
+          Value<bool?> public = const Value.absent(),
+          Value<bool?> medly = const Value.absent(),
+          Value<DateTime?> event = const Value.absent()}) =>
+      PublicPlaylist(
+        id: id ?? this.id,
+        collectionId: collectionId ?? this.collectionId,
+        collectionName: collectionName ?? this.collectionName,
+        synced: synced ?? this.synced,
+        deleted: deleted ?? this.deleted,
+        created: created ?? this.created,
+        modified: modified.present ? modified.value : this.modified,
+        data: data ?? this.data,
+        user: user.present ? user.value : this.user,
+        uid: uid.present ? uid.value : this.uid,
+        name: name.present ? name.value : this.name,
+        description: description.present ? description.value : this.description,
+        public: public.present ? public.value : this.public,
+        medly: medly.present ? medly.value : this.medly,
+        event: event.present ? event.value : this.event,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PublicPlaylist(')
+          ..write('id: $id, ')
+          ..write('collectionId: $collectionId, ')
+          ..write('collectionName: $collectionName, ')
+          ..write('synced: $synced, ')
+          ..write('deleted: $deleted, ')
+          ..write('created: $created, ')
+          ..write('modified: $modified, ')
+          ..write('data: $data, ')
+          ..write('user: $user, ')
+          ..write('uid: $uid, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('public: $public, ')
+          ..write('medly: $medly, ')
+          ..write('event: $event')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      collectionId,
+      collectionName,
+      synced,
+      deleted,
+      created,
+      modified,
+      data,
+      user,
+      uid,
+      name,
+      description,
+      public,
+      medly,
+      event);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PublicPlaylist &&
+          other.id == this.id &&
+          other.collectionId == this.collectionId &&
+          other.collectionName == this.collectionName &&
+          other.synced == this.synced &&
+          other.deleted == this.deleted &&
+          other.created == this.created &&
+          other.modified == this.modified &&
+          other.data == this.data &&
+          other.user == this.user &&
+          other.uid == this.uid &&
+          other.name == this.name &&
+          other.description == this.description &&
+          other.public == this.public &&
+          other.medly == this.medly &&
+          other.event == this.event);
+}
+
+class PublicPlaylists extends ViewInfo<PublicPlaylists, PublicPlaylist>
+    implements HasResultSet {
+  final String? _alias;
+  @override
+  final _$HfwDatabase attachedDatabase;
+  PublicPlaylists(this.attachedDatabase, [this._alias]);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        collectionId,
+        collectionName,
+        synced,
+        deleted,
+        created,
+        modified,
+        data,
+        user,
+        uid,
+        name,
+        description,
+        public,
+        medly,
+        event
+      ];
+  @override
+  String get aliasedName => _alias ?? entityName;
+  @override
+  String get entityName => 'public_playlists';
+  @override
+  Map<SqlDialect, String> get createViewStatements => {
+        SqlDialect.sqlite:
+            'CREATE VIEW public_playlists AS SELECT * FROM local_playlists WHERE collection_name = \'public_playlists\' OR(collection_name = \'playlists\' AND public = 1)',
+      };
+  @override
+  PublicPlaylists get asDslTable => this;
+  @override
+  PublicPlaylist map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PublicPlaylist(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      collectionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
+      collectionName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
+      synced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
+      deleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      modified: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}modified']),
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      public: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}public']),
+      medly: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}medly']),
+      event: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}event']),
+    );
+  }
+
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
+      'collection_id', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
+      'collection_name', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
+      'synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("synced" IN (0, 1))'));
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+      'deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("deleted" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime);
+  late final GeneratedColumn<String> modified = GeneratedColumn<String>(
+      'modified', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string);
+  late final GeneratedColumn<bool> public = GeneratedColumn<bool>(
+      'public', aliasedName, true,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("public" IN (0, 1))'));
+  late final GeneratedColumn<bool> medly = GeneratedColumn<bool>(
+      'medly', aliasedName, true,
+      type: DriftSqlType.bool,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("medly" IN (0, 1))'));
+  late final GeneratedColumn<DateTime> event = GeneratedColumn<DateTime>(
+      'event', aliasedName, true,
+      type: DriftSqlType.dateTime);
+  @override
+  PublicPlaylists createAlias(String alias) {
+    return PublicPlaylists(attachedDatabase, alias);
+  }
+
+  @override
+  Query? get query => null;
+  @override
+  Set<String> get readTables => const {'records'};
+}
+
+class PlaylistsFts extends Table
+    with
+        TableInfo<PlaylistsFts, PlaylistsFt>,
+        VirtualTableInfo<PlaylistsFts, PlaylistsFt> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  PlaylistsFts(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
+  @override
+  List<GeneratedColumn> get $columns => [id, name, description];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'playlists_fts';
+  @override
+  VerificationContext validateIntegrity(Insertable<PlaylistsFt> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  PlaylistsFt map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlaylistsFt(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+    );
+  }
+
+  @override
+  PlaylistsFts createAlias(String alias) {
+    return PlaylistsFts(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+  @override
+  String get moduleAndArgs => 'fts5(content=playlists, id, name, description)';
+}
+
+class PlaylistsFt extends DataClass implements Insertable<PlaylistsFt> {
+  String id;
+  String name;
+  String description;
+  PlaylistsFt(
+      {required this.id, required this.name, required this.description});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['description'] = Variable<String>(description);
+    return map;
+  }
+
+  PlaylistsFtsCompanion toCompanion(bool nullToAbsent) {
+    return PlaylistsFtsCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: Value(description),
+    );
+  }
+
+  factory PlaylistsFt.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlaylistsFt(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String>(description),
+    };
+  }
+
+  PlaylistsFt copyWith({String? id, String? name, String? description}) =>
+      PlaylistsFt(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PlaylistsFt(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlaylistsFt &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description);
+}
+
+class PlaylistsFtsCompanion extends UpdateCompanion<PlaylistsFt> {
+  Value<String> id;
+  Value<String> name;
+  Value<String> description;
+  Value<int> rowid;
+  PlaylistsFtsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PlaylistsFtsCompanion.insert({
+    required String id,
+    required String name,
+    required String description,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        description = Value(description);
+  static Insertable<PlaylistsFt> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PlaylistsFtsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? description,
+      Value<int>? rowid}) {
+    return PlaylistsFtsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlaylistsFtsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class PublicPlaylistsFts extends Table
+    with
+        TableInfo<PublicPlaylistsFts, PublicPlaylistsFt>,
+        VirtualTableInfo<PublicPlaylistsFts, PublicPlaylistsFt> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  PublicPlaylistsFts(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: '');
+  @override
+  List<GeneratedColumn> get $columns => [id, name, description];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'public_playlists_fts';
+  @override
+  VerificationContext validateIntegrity(Insertable<PublicPlaylistsFt> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  PublicPlaylistsFt map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PublicPlaylistsFt(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+    );
+  }
+
+  @override
+  PublicPlaylistsFts createAlias(String alias) {
+    return PublicPlaylistsFts(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+  @override
+  String get moduleAndArgs =>
+      'fts5(content=public_playlists, id, name, description)';
+}
+
+class PublicPlaylistsFt extends DataClass
+    implements Insertable<PublicPlaylistsFt> {
+  String id;
+  String name;
+  String description;
+  PublicPlaylistsFt(
+      {required this.id, required this.name, required this.description});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['description'] = Variable<String>(description);
+    return map;
+  }
+
+  PublicPlaylistsFtsCompanion toCompanion(bool nullToAbsent) {
+    return PublicPlaylistsFtsCompanion(
+      id: Value(id),
+      name: Value(name),
+      description: Value(description),
+    );
+  }
+
+  factory PublicPlaylistsFt.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PublicPlaylistsFt(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      description: serializer.fromJson<String>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'description': serializer.toJson<String>(description),
+    };
+  }
+
+  PublicPlaylistsFt copyWith({String? id, String? name, String? description}) =>
+      PublicPlaylistsFt(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PublicPlaylistsFt(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PublicPlaylistsFt &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.description == this.description);
+}
+
+class PublicPlaylistsFtsCompanion extends UpdateCompanion<PublicPlaylistsFt> {
+  Value<String> id;
+  Value<String> name;
+  Value<String> description;
+  Value<int> rowid;
+  PublicPlaylistsFtsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PublicPlaylistsFtsCompanion.insert({
+    required String id,
+    required String name,
+    required String description,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        description = Value(description);
+  static Insertable<PublicPlaylistsFt> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? description,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (description != null) 'description': description,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PublicPlaylistsFtsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? description,
+      Value<int>? rowid}) {
+    return PublicPlaylistsFtsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PublicPlaylistsFtsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('description: $description, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class HymnPortions extends Table with TableInfo<HymnPortions, HymnPortion> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -5523,437 +11820,6 @@ class BundlesCompanion extends UpdateCompanion<Bundle> {
   }
 }
 
-class Records extends Table with TableInfo<Records, Record> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  Records(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'PRIMARY KEY NOT NULL');
-  static const VerificationMeta _collectionIdMeta =
-      const VerificationMeta('collectionId');
-  late final GeneratedColumn<String> collectionId = GeneratedColumn<String>(
-      'collection_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _collectionNameMeta =
-      const VerificationMeta('collectionName');
-  late final GeneratedColumn<String> collectionName = GeneratedColumn<String>(
-      'collection_name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _dataMeta = const VerificationMeta('data');
-  late final GeneratedColumn<String> data = GeneratedColumn<String>(
-      'data', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _deletedMeta =
-      const VerificationMeta('deleted');
-  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
-      'deleted', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT 0',
-      defaultValue: const CustomExpression('0'));
-  static const VerificationMeta _syncedMeta = const VerificationMeta('synced');
-  late final GeneratedColumn<bool> synced = GeneratedColumn<bool>(
-      'synced', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT 0',
-      defaultValue: const CustomExpression('0'));
-  static const VerificationMeta _createdMeta =
-      const VerificationMeta('created');
-  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
-      'created', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _updatedMeta =
-      const VerificationMeta('updated');
-  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
-      'updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        collectionId,
-        collectionName,
-        data,
-        deleted,
-        synced,
-        created,
-        updated
-      ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'records';
-  @override
-  VerificationContext validateIntegrity(Insertable<Record> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('collection_id')) {
-      context.handle(
-          _collectionIdMeta,
-          collectionId.isAcceptableOrUnknown(
-              data['collection_id']!, _collectionIdMeta));
-    } else if (isInserting) {
-      context.missing(_collectionIdMeta);
-    }
-    if (data.containsKey('collection_name')) {
-      context.handle(
-          _collectionNameMeta,
-          collectionName.isAcceptableOrUnknown(
-              data['collection_name']!, _collectionNameMeta));
-    } else if (isInserting) {
-      context.missing(_collectionNameMeta);
-    }
-    if (data.containsKey('data')) {
-      context.handle(
-          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
-    } else if (isInserting) {
-      context.missing(_dataMeta);
-    }
-    if (data.containsKey('deleted')) {
-      context.handle(_deletedMeta,
-          deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta));
-    }
-    if (data.containsKey('synced')) {
-      context.handle(_syncedMeta,
-          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
-    }
-    if (data.containsKey('created')) {
-      context.handle(_createdMeta,
-          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
-    } else if (isInserting) {
-      context.missing(_createdMeta);
-    }
-    if (data.containsKey('updated')) {
-      context.handle(_updatedMeta,
-          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
-    } else if (isInserting) {
-      context.missing(_updatedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {id, collectionId, collectionName},
-      ];
-  @override
-  Record map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Record(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      collectionId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}collection_id'])!,
-      collectionName: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}collection_name'])!,
-      data: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
-      deleted: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}deleted'])!,
-      synced: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}synced'])!,
-      created: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
-      updated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
-    );
-  }
-
-  @override
-  Records createAlias(String alias) {
-    return Records(attachedDatabase, alias);
-  }
-
-  @override
-  List<String> get customConstraints =>
-      const ['UNIQUE(id, collection_id, collection_name)'];
-  @override
-  bool get dontWriteConstraints => true;
-}
-
-class Record extends DataClass implements Insertable<Record> {
-  String id;
-  String collectionId;
-  String collectionName;
-  String data;
-  bool deleted;
-  bool synced;
-  DateTime created;
-  DateTime updated;
-  Record(
-      {required this.id,
-      required this.collectionId,
-      required this.collectionName,
-      required this.data,
-      required this.deleted,
-      required this.synced,
-      required this.created,
-      required this.updated});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['collection_id'] = Variable<String>(collectionId);
-    map['collection_name'] = Variable<String>(collectionName);
-    map['data'] = Variable<String>(data);
-    map['deleted'] = Variable<bool>(deleted);
-    map['synced'] = Variable<bool>(synced);
-    map['created'] = Variable<DateTime>(created);
-    map['updated'] = Variable<DateTime>(updated);
-    return map;
-  }
-
-  RecordsCompanion toCompanion(bool nullToAbsent) {
-    return RecordsCompanion(
-      id: Value(id),
-      collectionId: Value(collectionId),
-      collectionName: Value(collectionName),
-      data: Value(data),
-      deleted: Value(deleted),
-      synced: Value(synced),
-      created: Value(created),
-      updated: Value(updated),
-    );
-  }
-
-  factory Record.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Record(
-      id: serializer.fromJson<String>(json['id']),
-      collectionId: serializer.fromJson<String>(json['collection_id']),
-      collectionName: serializer.fromJson<String>(json['collection_name']),
-      data: serializer.fromJson<String>(json['data']),
-      deleted: serializer.fromJson<bool>(json['deleted']),
-      synced: serializer.fromJson<bool>(json['synced']),
-      created: serializer.fromJson<DateTime>(json['created']),
-      updated: serializer.fromJson<DateTime>(json['updated']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'collection_id': serializer.toJson<String>(collectionId),
-      'collection_name': serializer.toJson<String>(collectionName),
-      'data': serializer.toJson<String>(data),
-      'deleted': serializer.toJson<bool>(deleted),
-      'synced': serializer.toJson<bool>(synced),
-      'created': serializer.toJson<DateTime>(created),
-      'updated': serializer.toJson<DateTime>(updated),
-    };
-  }
-
-  Record copyWith(
-          {String? id,
-          String? collectionId,
-          String? collectionName,
-          String? data,
-          bool? deleted,
-          bool? synced,
-          DateTime? created,
-          DateTime? updated}) =>
-      Record(
-        id: id ?? this.id,
-        collectionId: collectionId ?? this.collectionId,
-        collectionName: collectionName ?? this.collectionName,
-        data: data ?? this.data,
-        deleted: deleted ?? this.deleted,
-        synced: synced ?? this.synced,
-        created: created ?? this.created,
-        updated: updated ?? this.updated,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Record(')
-          ..write('id: $id, ')
-          ..write('collectionId: $collectionId, ')
-          ..write('collectionName: $collectionName, ')
-          ..write('data: $data, ')
-          ..write('deleted: $deleted, ')
-          ..write('synced: $synced, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, collectionId, collectionName, data,
-      deleted, synced, created, updated);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Record &&
-          other.id == this.id &&
-          other.collectionId == this.collectionId &&
-          other.collectionName == this.collectionName &&
-          other.data == this.data &&
-          other.deleted == this.deleted &&
-          other.synced == this.synced &&
-          other.created == this.created &&
-          other.updated == this.updated);
-}
-
-class RecordsCompanion extends UpdateCompanion<Record> {
-  Value<String> id;
-  Value<String> collectionId;
-  Value<String> collectionName;
-  Value<String> data;
-  Value<bool> deleted;
-  Value<bool> synced;
-  Value<DateTime> created;
-  Value<DateTime> updated;
-  Value<int> rowid;
-  RecordsCompanion({
-    this.id = const Value.absent(),
-    this.collectionId = const Value.absent(),
-    this.collectionName = const Value.absent(),
-    this.data = const Value.absent(),
-    this.deleted = const Value.absent(),
-    this.synced = const Value.absent(),
-    this.created = const Value.absent(),
-    this.updated = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  RecordsCompanion.insert({
-    required String id,
-    required String collectionId,
-    required String collectionName,
-    required String data,
-    this.deleted = const Value.absent(),
-    this.synced = const Value.absent(),
-    required DateTime created,
-    required DateTime updated,
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        collectionId = Value(collectionId),
-        collectionName = Value(collectionName),
-        data = Value(data),
-        created = Value(created),
-        updated = Value(updated);
-  static Insertable<Record> custom({
-    Expression<String>? id,
-    Expression<String>? collectionId,
-    Expression<String>? collectionName,
-    Expression<String>? data,
-    Expression<bool>? deleted,
-    Expression<bool>? synced,
-    Expression<DateTime>? created,
-    Expression<DateTime>? updated,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (collectionId != null) 'collection_id': collectionId,
-      if (collectionName != null) 'collection_name': collectionName,
-      if (data != null) 'data': data,
-      if (deleted != null) 'deleted': deleted,
-      if (synced != null) 'synced': synced,
-      if (created != null) 'created': created,
-      if (updated != null) 'updated': updated,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  RecordsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? collectionId,
-      Value<String>? collectionName,
-      Value<String>? data,
-      Value<bool>? deleted,
-      Value<bool>? synced,
-      Value<DateTime>? created,
-      Value<DateTime>? updated,
-      Value<int>? rowid}) {
-    return RecordsCompanion(
-      id: id ?? this.id,
-      collectionId: collectionId ?? this.collectionId,
-      collectionName: collectionName ?? this.collectionName,
-      data: data ?? this.data,
-      deleted: deleted ?? this.deleted,
-      synced: synced ?? this.synced,
-      created: created ?? this.created,
-      updated: updated ?? this.updated,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (collectionId.present) {
-      map['collection_id'] = Variable<String>(collectionId.value);
-    }
-    if (collectionName.present) {
-      map['collection_name'] = Variable<String>(collectionName.value);
-    }
-    if (data.present) {
-      map['data'] = Variable<String>(data.value);
-    }
-    if (deleted.present) {
-      map['deleted'] = Variable<bool>(deleted.value);
-    }
-    if (synced.present) {
-      map['synced'] = Variable<bool>(synced.value);
-    }
-    if (created.present) {
-      map['created'] = Variable<DateTime>(created.value);
-    }
-    if (updated.present) {
-      map['updated'] = Variable<DateTime>(updated.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('RecordsCompanion(')
-          ..write('id: $id, ')
-          ..write('collectionId: $collectionId, ')
-          ..write('collectionName: $collectionName, ')
-          ..write('data: $data, ')
-          ..write('deleted: $deleted, ')
-          ..write('synced: $synced, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class RecordsCache extends Table
     with TableInfo<RecordsCache, RecordsCacheData> {
   @override
@@ -6256,6 +12122,36 @@ class RecordsCacheCompanion extends UpdateCompanion<RecordsCacheData> {
 
 abstract class _$HfwDatabase extends GeneratedDatabase {
   _$HfwDatabase(QueryExecutor e) : super(e);
+  late final Users users = Users(this);
+  late final RequestCache requestCache = RequestCache(this);
+  late final OfflineQueue offlineQueue = OfflineQueue(this);
+  late final OfflineQueueFiles offlineQueueFiles = OfflineQueueFiles(this);
+  late final Trigger offlineQueueDeleteTrigger = Trigger(
+      'CREATE TRIGGER offline_queue_delete_trigger AFTER DELETE ON offline_queue BEGIN DELETE FROM offline_queue_files WHERE offline_queue_id = OLD.id;END',
+      'offline_queue_delete_trigger');
+  late final Trigger offlineQueueUsersDeleteTrigger = Trigger(
+      'CREATE TRIGGER offline_queue_users_delete_trigger AFTER DELETE ON users BEGIN DELETE FROM offline_queue WHERE user = OLD.id;END',
+      'offline_queue_users_delete_trigger');
+  late final Records records = Records(this);
+  late final UserRecords userRecords = UserRecords(this);
+  late final Analytics analytics = Analytics(this);
+  late final UserPurchases userPurchases = UserPurchases(this);
+  late final UserLibrary userLibrary = UserLibrary(this);
+  late final UserHymnLibrary userHymnLibrary = UserHymnLibrary(this);
+  late final UserStakeholderLibrary userStakeholderLibrary =
+      UserStakeholderLibrary(this);
+  late final UserTopicLibrary userTopicLibrary = UserTopicLibrary(this);
+  late final UserPlaylistLibrary userPlaylistLibrary =
+      UserPlaylistLibrary(this);
+  late final LocalPlaylistItems localPlaylistItems = LocalPlaylistItems(this);
+  late final PlaylistItems playlistItems = PlaylistItems(this);
+  late final PublicPlaylistItems publicPlaylistItems =
+      PublicPlaylistItems(this);
+  late final LocalPlaylists localPlaylists = LocalPlaylists(this);
+  late final Playlists playlists = Playlists(this);
+  late final PublicPlaylists publicPlaylists = PublicPlaylists(this);
+  late final PlaylistsFts playlistsFts = PlaylistsFts(this);
+  late final PublicPlaylistsFts publicPlaylistsFts = PublicPlaylistsFts(this);
   late final HymnPortions hymnPortions = HymnPortions(this);
   late final Index hymnPortionsIdxHymnId = Index('hymn_portions_idx_hymnId',
       'CREATE INDEX hymn_portions_idx_hymnId ON hymn_portions (hymnId)');
@@ -6411,14 +12307,599 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final Trigger bundlesDeleteHymn = Trigger(
       'CREATE TRIGGER bundles_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM bundles WHERE hymnId = old.id;END',
       'bundles_delete_hymn');
-  late final Records records = Records(this);
+  late final Trigger userRecordsUsersDeleteTrigger = Trigger(
+      'CREATE TRIGGER user_records_users_delete_trigger AFTER DELETE ON users BEGIN DELETE FROM user_records WHERE user = OLD.id;END',
+      'user_records_users_delete_trigger');
   late final RecordsCache recordsCache = RecordsCache(this);
+  late final Index recordsIdxCollection = Index('records_idx_collection',
+      'CREATE INDEX records_idx_collection ON records (collection_id, collection_name)');
   late final Index recordsIdxData = Index(
       'records_idx_data', 'CREATE INDEX records_idx_data ON records (data)');
-  late final Index recordsIdxDeleted = Index('records_idx_deleted',
-      'CREATE INDEX records_idx_deleted ON records (deleted)');
-  late final Index recordsIdxSynced = Index('records_idx_synced',
-      'CREATE INDEX records_idx_synced ON records (synced)');
+  late final Index recordsIdxStatus = Index('records_idx_status',
+      'CREATE INDEX records_idx_status ON records (deleted, synced)');
+  late final Index recordsIdxDate = Index('records_idx_date',
+      'CREATE INDEX records_idx_date ON records (created, updated)');
+  Selectable<User> getAllUsers() {
+    return customSelect('SELECT * FROM users', variables: [], readsFrom: {
+      users,
+    }).asyncMap(users.mapFromRow);
+  }
+
+  Selectable<User> getUserById(String id) {
+    return customSelect('SELECT * FROM users WHERE id = ?1', variables: [
+      Variable<String>(id)
+    ], readsFrom: {
+      users,
+    }).asyncMap(users.mapFromRow);
+  }
+
+  Future<int> createUser(
+      String id,
+      String name,
+      String? username,
+      String? email,
+      String? avatar,
+      String? uid,
+      DateTime created,
+      DateTime updated) {
+    return customInsert(
+      'INSERT INTO users (id, name, username, email, avatar, uid, created, updated) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)',
+      variables: [
+        Variable<String>(id),
+        Variable<String>(name),
+        Variable<String>(username),
+        Variable<String>(email),
+        Variable<String>(avatar),
+        Variable<String>(uid),
+        Variable<DateTime>(created),
+        Variable<DateTime>(updated)
+      ],
+      updates: {users},
+    );
+  }
+
+  Future<int> updateUser(String name, String? username, String? email,
+      String? avatar, String? uid, DateTime updated, String id) {
+    return customUpdate(
+      'UPDATE users SET name = ?1, username = ?2, email = ?3, avatar = ?4, uid = ?5, updated = ?6 WHERE id = ?7',
+      variables: [
+        Variable<String>(name),
+        Variable<String>(username),
+        Variable<String>(email),
+        Variable<String>(avatar),
+        Variable<String>(uid),
+        Variable<DateTime>(updated),
+        Variable<String>(id)
+      ],
+      updates: {users},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> deleteUser(String id) {
+    return customUpdate(
+      'DELETE FROM users WHERE id = ?1',
+      variables: [Variable<String>(id)],
+      updates: {users},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Selectable<RequestCacheData> getRequestCache() {
+    return customSelect('SELECT * FROM request_cache',
+        variables: [],
+        readsFrom: {
+          requestCache,
+        }).asyncMap(requestCache.mapFromRow);
+  }
+
+  Selectable<RequestCacheData> getRequestCacheById(int id) {
+    return customSelect('SELECT * FROM request_cache WHERE id = ?1',
+        variables: [
+          Variable<int>(id)
+        ],
+        readsFrom: {
+          requestCache,
+        }).asyncMap(requestCache.mapFromRow);
+  }
+
+  Selectable<RequestCacheData> getRequestCacheByUrl(String url) {
+    return customSelect('SELECT * FROM request_cache WHERE url = ?1',
+        variables: [
+          Variable<String>(url)
+        ],
+        readsFrom: {
+          requestCache,
+        }).asyncMap(requestCache.mapFromRow);
+  }
+
+  Selectable<GetRequestCacheCacheControlResult> getRequestCacheCacheControl() {
+    return customSelect(
+        'SELECT id, CAST(json_extract(headers, \'\$."Cache-Control"\') AS TEXT) AS cache_control FROM request_cache WHERE json_extract(headers, \'\$."Cache-Control"\') IS NOT NULL',
+        variables: [],
+        readsFrom: {
+          requestCache,
+        }).map((QueryRow row) => GetRequestCacheCacheControlResult(
+          id: row.read<int>('id'),
+          cacheControl: row.read<String>('cache_control'),
+        ));
+  }
+
+  Future<int> createRequestCache(String url, String headers, Uint8List body,
+      DateTime created, DateTime updated) {
+    return customInsert(
+      'INSERT OR REPLACE INTO request_cache (url, headers, body, created, updated) VALUES (?1, ?2, ?3, ?4, ?5)',
+      variables: [
+        Variable<String>(url),
+        Variable<String>(headers),
+        Variable<Uint8List>(body),
+        Variable<DateTime>(created),
+        Variable<DateTime>(updated)
+      ],
+      updates: {requestCache},
+    );
+  }
+
+  Future<int> updateRequestCache(
+      String url, String headers, Uint8List body, DateTime updated, int id) {
+    return customUpdate(
+      'UPDATE request_cache SET url = ?1, headers = ?2, body = ?3, updated = ?4 WHERE id = ?5',
+      variables: [
+        Variable<String>(url),
+        Variable<String>(headers),
+        Variable<Uint8List>(body),
+        Variable<DateTime>(updated),
+        Variable<int>(id)
+      ],
+      updates: {requestCache},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> deleteRequestCache(int id) {
+    return customUpdate(
+      'DELETE FROM request_cache WHERE id = ?1',
+      variables: [Variable<int>(id)],
+      updates: {requestCache},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteAllRequestCache() {
+    return customUpdate(
+      'DELETE FROM request_cache',
+      variables: [],
+      updates: {requestCache},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Selectable<OfflineQueueData> getOfflineQueue() {
+    return customSelect('SELECT * FROM offline_queue ORDER BY created ASC',
+        variables: [],
+        readsFrom: {
+          offlineQueue,
+        }).asyncMap(offlineQueue.mapFromRow);
+  }
+
+  Selectable<OfflineQueueData> getOfflineQueueById(int id) {
+    return customSelect('SELECT * FROM offline_queue WHERE id = ?1',
+        variables: [
+          Variable<int>(id)
+        ],
+        readsFrom: {
+          offlineQueue,
+        }).asyncMap(offlineQueue.mapFromRow);
+  }
+
+  Selectable<OfflineQueueFile> getOfflineQueueFiles(int offlineQueueId) {
+    return customSelect(
+        'SELECT * FROM offline_queue_files WHERE offline_queue_id = ?1',
+        variables: [
+          Variable<int>(offlineQueueId)
+        ],
+        readsFrom: {
+          offlineQueueFiles,
+        }).asyncMap(offlineQueueFiles.mapFromRow);
+  }
+
+  Selectable<OfflineQueueFile> getOfflineQueueFile(
+      int offlineQueueId, String field) {
+    return customSelect(
+        'SELECT * FROM offline_queue_files WHERE offline_queue_id = ?1 AND field = ?2',
+        variables: [
+          Variable<int>(offlineQueueId),
+          Variable<String>(field)
+        ],
+        readsFrom: {
+          offlineQueueFiles,
+        }).asyncMap(offlineQueueFiles.mapFromRow);
+  }
+
+  Future<int> createOfflineQueue(String url, String method, Uint8List? body,
+      String headers, int retryCount, DateTime created, DateTime updated) {
+    return customInsert(
+      'INSERT INTO offline_queue (url, method, body, headers, retry_count, created, updated) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)',
+      variables: [
+        Variable<String>(url),
+        Variable<String>(method),
+        Variable<Uint8List>(body),
+        Variable<String>(headers),
+        Variable<int>(retryCount),
+        Variable<DateTime>(created),
+        Variable<DateTime>(updated)
+      ],
+      updates: {offlineQueue},
+    );
+  }
+
+  Future<int> updateOfflineQueueRetry(
+      int retryCount, DateTime updated, int id) {
+    return customUpdate(
+      'UPDATE offline_queue SET retry_count = ?1, updated = ?2 WHERE id = ?3',
+      variables: [
+        Variable<int>(retryCount),
+        Variable<DateTime>(updated),
+        Variable<int>(id)
+      ],
+      updates: {offlineQueue},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> createOfflineQueueFile(
+      int offlineQueueId, String field, Uint8List value) {
+    return customInsert(
+      'INSERT INTO offline_queue_files (offline_queue_id, field, value) VALUES (?1, ?2, ?3)',
+      variables: [
+        Variable<int>(offlineQueueId),
+        Variable<String>(field),
+        Variable<Uint8List>(value)
+      ],
+      updates: {offlineQueueFiles},
+    );
+  }
+
+  Future<int> deleteOfflineQueueItem(int id) {
+    return customUpdate(
+      'DELETE FROM offline_queue WHERE id = ?1',
+      variables: [Variable<int>(id)],
+      updates: {offlineQueue},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteOfflineQueueFiles(int offlineQueueId) {
+    return customUpdate(
+      'DELETE FROM offline_queue_files WHERE offline_queue_id = ?1',
+      variables: [Variable<int>(offlineQueueId)],
+      updates: {offlineQueueFiles},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteOfflineQueueFile(int offlineQueueId, String field) {
+    return customUpdate(
+      'DELETE FROM offline_queue_files WHERE offline_queue_id = ?1 AND field = ?2',
+      variables: [Variable<int>(offlineQueueId), Variable<String>(field)],
+      updates: {offlineQueueFiles},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteOfflineQueueById(int id) {
+    return customUpdate(
+      'DELETE FROM offline_queue WHERE id = ?1',
+      variables: [Variable<int>(id)],
+      updates: {offlineQueue},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteAllOfflineQueue() {
+    return customUpdate(
+      'DELETE FROM offline_queue',
+      variables: [],
+      updates: {offlineQueue},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Selectable<Analytic> getAnalytics(String? user, String? uid) {
+    return customSelect('SELECT * FROM analytics WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(analytics.mapFromRow);
+  }
+
+  Selectable<Analytic> getAnalyticsById(String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM analytics WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(analytics.mapFromRow);
+  }
+
+  Selectable<UserPurchase> getUserPurchases(String? user, String? uid) {
+    return customSelect(
+        'SELECT * FROM user_purchases WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userPurchases.mapFromRow);
+  }
+
+  Selectable<UserPurchase> getUserPurchasesById(
+      String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM user_purchases WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userPurchases.mapFromRow);
+  }
+
+  Selectable<UserLibraryData> getUserLibrary(String? user, String? uid) {
+    return customSelect(
+        'SELECT * FROM user_library WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userLibrary.mapFromRow);
+  }
+
+  Selectable<UserLibraryData> getUserLibraryMatch(
+      String? user,
+      String? uid,
+      String? hymnId,
+      String? playlistId,
+      String? topicId,
+      String? stakeholderId) {
+    return customSelect(
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?2)AND(hymn_id = ?3 AND playlist_id = ?4 AND topic_id = ?5 AND stakeholder_id = ?6)',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(hymnId),
+          Variable<String>(playlistId),
+          Variable<String>(topicId),
+          Variable<String>(stakeholderId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userLibrary.mapFromRow);
+  }
+
+  Selectable<UserLibraryData> getUserLibraryById(
+      String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userLibrary.mapFromRow);
+  }
+
+  Selectable<UserHymnLibraryData> getUserHymnLibrary(
+      String? user, String? uid) {
+    return customSelect(
+        'SELECT * FROM user_hymn_library WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userHymnLibrary.mapFromRow);
+  }
+
+  Selectable<UserHymnLibraryData> getUserHymnLibraryById(
+      String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM user_hymn_library WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userHymnLibrary.mapFromRow);
+  }
+
+  Selectable<UserStakeholderLibraryData> getUserStakeholderLibrary(
+      String? user, String? uid) {
+    return customSelect(
+        'SELECT * FROM user_stakeholder_library WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userStakeholderLibrary.mapFromRow);
+  }
+
+  Selectable<UserStakeholderLibraryData> getUserStakeholderLibraryById(
+      String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM user_stakeholder_library WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userStakeholderLibrary.mapFromRow);
+  }
+
+  Selectable<UserTopicLibraryData> getUserTopicLibrary(
+      String? user, String? uid) {
+    return customSelect(
+        'SELECT * FROM user_topic_library WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userTopicLibrary.mapFromRow);
+  }
+
+  Selectable<UserTopicLibraryData> getUserTopicLibraryById(
+      String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM user_topic_library WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userTopicLibrary.mapFromRow);
+  }
+
+  Selectable<UserPlaylistLibraryData> getUserPlaylistLibrary(
+      String? user, String? uid) {
+    return customSelect(
+        'SELECT * FROM user_playlist_library WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userPlaylistLibrary.mapFromRow);
+  }
+
+  Selectable<UserPlaylistLibraryData> getUserPlaylistLibraryById(
+      String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM user_playlist_library WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userPlaylistLibrary.mapFromRow);
+  }
+
+  Selectable<PlaylistItem> getItemsForPlaylist(
+      String? user, String? uid, String? playlistId) {
+    return customSelect(
+        'SELECT * FROM playlist_items WHERE(user = ?1 OR uid = ?2)AND playlist_id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(playlistId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(playlistItems.mapFromRow);
+  }
+
+  Selectable<PublicPlaylistItem> getItemsForPublicPlaylist(String? playlistId) {
+    return customSelect(
+        'SELECT * FROM public_playlist_items WHERE playlist_id = ?1',
+        variables: [
+          Variable<String>(playlistId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(publicPlaylistItems.mapFromRow);
+  }
+
+  Selectable<Playlist> getPlaylists(String? user, String? uid) {
+    return customSelect('SELECT * FROM playlists WHERE user = ?1 OR uid = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(playlists.mapFromRow);
+  }
+
+  Selectable<Playlist> getPlaylist(String? user, String? uid, String id) {
+    return customSelect(
+        'SELECT * FROM playlists WHERE(user = ?1 OR uid = ?2)AND id = ?3',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(uid),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(playlists.mapFromRow);
+  }
+
+  Selectable<PlaylistsFt> searchPlaylists(String query) {
+    return customSelect(
+        'SELECT * FROM playlists_fts WHERE playlists_fts MATCH ?1',
+        variables: [
+          Variable<String>(query)
+        ],
+        readsFrom: {
+          playlistsFts,
+        }).asyncMap(playlistsFts.mapFromRow);
+  }
+
+  Selectable<PublicPlaylist> getPublicPlaylists() {
+    return customSelect('SELECT * FROM public_playlists',
+        variables: [],
+        readsFrom: {
+          records,
+        }).asyncMap(publicPlaylists.mapFromRow);
+  }
+
+  Selectable<PublicPlaylist> getPublicPlaylist(String id) {
+    return customSelect('SELECT * FROM public_playlists WHERE id = ?1',
+        variables: [
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(publicPlaylists.mapFromRow);
+  }
+
+  Selectable<PublicPlaylistsFt> searchPublicPlaylists(String query) {
+    return customSelect(
+        'SELECT * FROM public_playlists_fts WHERE public_playlists_fts MATCH ?1',
+        variables: [
+          Variable<String>(query)
+        ],
+        readsFrom: {
+          publicPlaylistsFts,
+        }).asyncMap(publicPlaylistsFts.mapFromRow);
+  }
+
   Selectable<HymnPortion> getHymnPortions() {
     return customSelect('SELECT * FROM hymn_portions',
         variables: [],
@@ -7883,7 +14364,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
     }).asyncMap(records.mapFromRow);
   }
 
-  Selectable<Record> getRecordModelByCollectionId(String collectionId) {
+  Selectable<Record> getRecordModelsByCollectionId(String collectionId) {
     return customSelect('SELECT * FROM records WHERE collection_id = ?1',
         variables: [
           Variable<String>(collectionId)
@@ -7893,10 +14374,36 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(records.mapFromRow);
   }
 
-  Selectable<Record> getRecordModelByCollectionName(String collectionName) {
+  Selectable<Record> getRecordModelByCollectionId(
+      String collectionId, String id) {
+    return customSelect(
+        'SELECT * FROM records WHERE collection_id = ?1 AND id = ?2',
+        variables: [
+          Variable<String>(collectionId),
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(records.mapFromRow);
+  }
+
+  Selectable<Record> getRecordModelsByCollectionName(String collectionName) {
     return customSelect('SELECT * FROM records WHERE collection_name = ?1',
         variables: [
           Variable<String>(collectionName)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(records.mapFromRow);
+  }
+
+  Selectable<Record> getRecordModelByCollectionName(
+      String collectionName, String id) {
+    return customSelect(
+        'SELECT * FROM records WHERE collection_name = ?1 AND id = ?2',
+        variables: [
+          Variable<String>(collectionName),
+          Variable<String>(id)
         ],
         readsFrom: {
           records,
@@ -8078,6 +14585,29 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
+        users,
+        requestCache,
+        offlineQueue,
+        offlineQueueFiles,
+        offlineQueueDeleteTrigger,
+        offlineQueueUsersDeleteTrigger,
+        records,
+        userRecords,
+        analytics,
+        userPurchases,
+        userLibrary,
+        userHymnLibrary,
+        userStakeholderLibrary,
+        userTopicLibrary,
+        userPlaylistLibrary,
+        localPlaylistItems,
+        playlistItems,
+        publicPlaylistItems,
+        localPlaylists,
+        playlists,
+        publicPlaylists,
+        playlistsFts,
+        publicPlaylistsFts,
         hymnPortions,
         hymnPortionsIdxHymnId,
         hymnPortionsIdxPortionId,
@@ -8147,15 +14677,30 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         bundles,
         bundlesIdxHymnId,
         bundlesDeleteHymn,
-        records,
+        userRecordsUsersDeleteTrigger,
         recordsCache,
+        recordsIdxCollection,
         recordsIdxData,
-        recordsIdxDeleted,
-        recordsIdxSynced
+        recordsIdxStatus,
+        recordsIdxDate
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('offline_queue',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('offline_queue_files', kind: UpdateKind.delete),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('offline_queue', kind: UpdateKind.delete),
+            ],
+          ),
           WritePropagation(
             on: TableUpdateQuery.onTableName('hymns',
                 limitUpdateKind: UpdateKind.delete),
@@ -8359,11 +14904,25 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
               TableUpdate('bundles', kind: UpdateKind.delete),
             ],
           ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('users',
+                limitUpdateKind: UpdateKind.delete),
+            result: [],
+          ),
         ],
       );
   @override
   DriftDatabaseOptions get options =>
       const DriftDatabaseOptions(storeDateTimeAsText: true);
+}
+
+class GetRequestCacheCacheControlResult {
+  int id;
+  String cacheControl;
+  GetRequestCacheCacheControlResult({
+    required this.id,
+    required this.cacheControl,
+  });
 }
 
 class SearchPortionsResult {

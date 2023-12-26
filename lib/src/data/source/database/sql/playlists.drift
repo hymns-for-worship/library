@@ -1,0 +1,63 @@
+import 'records.drift';
+
+-- Tables
+CREATE VIEW local_playlists AS
+SELECT 
+    *,
+    json_extract(data, '$.name') AS name,
+    CASE WHEN json_extract(data, '$.description') IS NOT NULL THEN CAST(json_extract(data, '$.description') AS TEXT) ELSE NULL END AS description,
+    CASE WHEN json_extract(data, '$.public') IS NOT NULL THEN CAST(json_extract(data, '$.public') AS BOOLEAN) ELSE NULL END AS public,
+    CASE WHEN json_extract(data, '$.medly') IS NOT NULL THEN CAST(json_extract(data, '$.medly') AS BOOLEAN) ELSE NULL END AS medly,
+    CASE WHEN json_extract(data, '$.event') IS NOT NULL THEN CAST(json_extract(data, '$.event') AS DATETIME) ELSE NULL END AS event
+FROM user_records
+WHERE collection_name = 'playlists'
+OR collection_name = 'public_playlists';
+
+CREATE VIEW playlists AS
+SELECT * FROM local_playlists
+WHERE collection_name = 'playlists';
+
+CREATE VIEW public_playlists AS
+SELECT * FROM local_playlists
+WHERE collection_name = 'public_playlists'
+OR (collection_name = 'playlists' AND public = 1);
+
+CREATE VIRTUAL TABLE playlists_fts USING fts5 (
+    content=playlists,
+    id,
+    name,
+    description
+);
+
+CREATE VIRTUAL TABLE public_playlists_fts USING fts5 (
+    content=public_playlists,
+    id,
+    name,
+    description
+);
+
+-- Queries
+getPlaylists:
+SELECT * FROM playlists
+WHERE user = :user
+OR uid = :uid;
+
+getPlaylist:
+SELECT * FROM playlists
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+
+searchPlaylists:
+SELECT * FROM playlists_fts
+WHERE playlists_fts MATCH :query;
+
+getPublicPlaylists:
+SELECT * FROM public_playlists;
+
+getPublicPlaylist:
+SELECT * FROM public_playlists
+WHERE id = :id;
+
+searchPublicPlaylists:
+SELECT * FROM public_playlists_fts
+WHERE public_playlists_fts MATCH :query;

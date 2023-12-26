@@ -1,0 +1,32 @@
+-- Tables
+CREATE TABLE users (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    username TEXT,
+    email TEXT,
+    avatar TEXT,
+    uid TEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+-- Queries
+getAllUsers:
+SELECT * FROM users;
+
+getUserById:
+SELECT * FROM users
+WHERE id = :id;
+
+createUser:
+INSERT INTO users (id, name, username, email, avatar, uid, created, updated)
+VALUES (:id, :name, :username, :email, :avatar, :uid, :created, :updated);
+
+updateUser:
+UPDATE users
+SET name = :name, username = :username, email = :email, avatar = :avatar, uid = :uid, updated = :updated
+WHERE id = :id;
+
+deleteUser:
+DELETE FROM users
+WHERE id = :id;

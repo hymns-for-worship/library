@@ -1,0 +1,91 @@
+import 'users.drift';
+
+-- Tables
+CREATE TABLE offline_queue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    [url] TEXT NOT NULL,
+    [method] TEXT NOT NULL,
+    [body] BLOB,
+    [headers] TEXT NOT NULL,
+    [retry_count] INTEGER NOT NULL DEFAULT 0,
+    [description] TEXT,
+    [user] TEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL
+);
+
+CREATE TABLE offline_queue_files (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    offline_queue_id INTEGER NOT NULL,
+    [field] TEXT NOT NULL,
+    [value] BLOB NOT NULL
+);
+
+-- Triggers
+CREATE TRIGGER offline_queue_delete_trigger
+AFTER DELETE ON offline_queue
+FOR EACH ROW
+BEGIN
+    DELETE FROM offline_queue_files
+    WHERE offline_queue_id = OLD.id;
+END;
+
+CREATE TRIGGER offline_queue_users_delete_trigger
+AFTER DELETE ON users
+FOR EACH ROW
+BEGIN
+    DELETE FROM offline_queue
+    WHERE user = OLD.id;
+END;
+
+-- Queries
+getOfflineQueue:
+SELECT * FROM offline_queue
+ORDER BY created ASC;
+
+getOfflineQueueById:
+SELECT * FROM offline_queue
+WHERE id = :id;
+
+getOfflineQueueFiles:
+SELECT * FROM offline_queue_files
+WHERE offline_queue_id = :offline_queue_id;
+
+getOfflineQueueFile:
+SELECT * FROM offline_queue_files
+WHERE offline_queue_id = :offline_queue_id 
+AND [field] = :field;
+
+createOfflineQueue:
+INSERT INTO offline_queue ([url], [method], [body], [headers], retry_count, created, updated) 
+VALUES (:url, :method, :body, :headers, :retry_count, :created, :updated);
+
+updateOfflineQueueRetry:
+UPDATE offline_queue
+SET retry_count = :retry_count,
+    updated = :updated
+WHERE id = :id;
+
+createOfflineQueueFile:
+INSERT INTO offline_queue_files (offline_queue_id, [field], [value])
+VALUES (:offline_queue_id, :field, :value);
+
+deleteOfflineQueueItem:
+DELETE FROM offline_queue
+WHERE id = :id;
+
+deleteOfflineQueueFiles:
+DELETE FROM offline_queue_files
+WHERE offline_queue_id = :offline_queue_id;
+
+deleteOfflineQueueFile:
+DELETE FROM offline_queue_files
+WHERE offline_queue_id = :offline_queue_id
+AND [field] = :field;
+
+deleteOfflineQueueById:
+DELETE FROM offline_queue
+WHERE id = :id;
+
+deleteAllOfflineQueue:
+DELETE FROM offline_queue;

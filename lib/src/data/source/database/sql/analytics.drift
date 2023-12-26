@@ -1,0 +1,24 @@
+import 'records.drift';
+
+-- Tables
+CREATE VIEW analytics AS
+SELECT 
+    *,
+    CAST(json_extract(data, '$.type') AS TEXT) AS [type],
+    CASE WHEN json_extract(data, '$.metadata') IS NOT NULL THEN CAST(json_extract(data, '$.metadata') AS TEXT) ELSE NULL END AS [metadata],
+    CASE WHEN json_extract(data, '$.version') IS NOT NULL THEN CAST(json_extract(data, '$.version') AS TEXT) ELSE NULL END AS [version],
+    CASE WHEN json_extract(data, '$.platform') IS NOT NULL THEN CAST(json_extract(data, '$.platform') AS TEXT) ELSE NULL END AS [platform]
+FROM user_records
+WHERE collection_name = 'analytics';
+
+-- Queries
+getAnalytics:
+SELECT * FROM analytics
+WHERE user = :user
+OR uid = :uid;
+
+getAnalyticsById:
+SELECT * FROM analytics
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+

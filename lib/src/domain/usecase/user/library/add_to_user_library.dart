@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pocketbase/client.dart';
-import 'get_user_library.dart';
 
 class AddToUserLibrary {
   final HfwDatabase db;
@@ -15,6 +14,7 @@ class AddToUserLibrary {
 
   Future<void> call(
     String user, {
+    String? uid,
     String? hymnId,
     String? topicId,
     String? stakeholderId,
@@ -41,14 +41,16 @@ class AddToUserLibrary {
         if (stakeholderId != null) 'stakeholder_id': stakeholderId,
         if (playlistId != null) 'playlist_id': playlistId,
       });
-      final item = await GetUserLibrary.find(
-        db,
-        user,
-        hymnId: hymnId,
-        topicId: topicId,
-        stakeholderId: stakeholderId,
-        playlistId: playlistId,
-      );
+      final item = await db
+          .getUserLibraryMatch(
+            user,
+            uid,
+            hymnId,
+            playlistId,
+            topicId,
+            stakeholderId,
+          )
+          .getSingleOrNull();
       if (item == null) {
         await db.createRecordModel(
           result.id,

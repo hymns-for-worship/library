@@ -1,0 +1,48 @@
+-- Tables
+CREATE TABLE request_cache (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    [url] TEXT NOT NULL,
+    headers TEXT NOT NULL,
+    body BLOB NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE ([url], headers)
+);
+
+-- Queries
+getRequestCache:
+SELECT * FROM request_cache;
+
+getRequestCacheById:
+SELECT * FROM request_cache
+WHERE id = :id;
+
+getRequestCacheByUrl:
+SELECT * FROM request_cache
+WHERE url = :url;
+
+getRequestCacheCacheControl:
+SELECT 
+    id,
+    CAST(json_extract(headers, '$."Cache-Control"') AS TEXT) AS cache_control
+FROM request_cache
+WHERE json_extract(headers, '$."Cache-Control"') IS NOT NULL;
+
+createRequestCache:
+INSERT OR REPLACE INTO request_cache (url, headers, body, created, updated)
+VALUES (:url, :headers, :body, :created, :updated);
+
+updateRequestCache:
+UPDATE request_cache
+SET url = :url,
+    headers = :headers,
+    body = :body,
+    updated = :updated
+WHERE id = :id;
+
+deleteRequestCache:
+DELETE FROM request_cache
+WHERE id = :id;
+
+deleteAllRequestCache:
+DELETE FROM request_cache;

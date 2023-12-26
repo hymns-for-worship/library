@@ -1,6 +1,5 @@
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pocketbase/client.dart';
-import 'get_user_library.dart';
 
 class RemoveFromUserLibrary {
   final HfwDatabase db;
@@ -13,6 +12,7 @@ class RemoveFromUserLibrary {
 
   Future<void> call(
     String user, {
+    String? uid,
     String? hymnId,
     String? topicId,
     String? stakeholderId,
@@ -38,14 +38,16 @@ class RemoveFromUserLibrary {
     } catch (error, stackTrace) {
       // ignore: avoid_print
       print('error removing from user library: $error $stackTrace');
-      final item = await GetUserLibrary.find(
-        db,
-        user,
-        hymnId: hymnId,
-        topicId: topicId,
-        stakeholderId: stakeholderId,
-        playlistId: playlistId,
-      );
+      final item = await db
+          .getUserLibraryMatch(
+            user,
+            uid,
+            hymnId,
+            playlistId,
+            topicId,
+            stakeholderId,
+          )
+          .getSingleOrNull();
       if (item != null) {
         await db.updateRecordModel(
           item.data,

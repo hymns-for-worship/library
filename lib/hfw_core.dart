@@ -6,6 +6,7 @@ export 'src/data/source/database/connection/connect.dart';
 export 'src/data/source/pptx/presentation.dart';
 export 'src/data/source/pocketbase/client.dart';
 export 'src/data/source/pocketbase/auth_store.dart';
+export 'src/data/source/http/offline_client.dart';
 
 // Models
 export 'src/domain/model/bundle_file.dart';
@@ -30,6 +31,6 @@ export 'src/domain/usecase/library/hymns/get_music_for_hymn.dart';
 export 'src/domain/usecase/downloads/download_hymn.dart';
 export 'src/domain/usecase/downloads/remove_hymn_download.dart';
 export 'src/domain/usecase/downloads/get_downloads.dart';
-export 'src/domain/usecase/user/library/get_user_library.dart';
 export 'src/domain/usecase/user/library/add_to_user_library.dart';
 export 'src/domain/usecase/user/library/remove_from_user_library.dart';
+export 'src/domain/usecase/user/playlists/get_playlists.dart';

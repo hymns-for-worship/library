@@ -21,6 +21,7 @@ dependencies:
   pocketbase: ^0.16.0
   http: ^1.1.2
   collection: ^1.18.0
+  zoomable_photo_gallery: ^1.0.2+1
 
 dev_dependencies:
   flutter_test:

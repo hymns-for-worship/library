@@ -1,0 +1,24 @@
+import 'records.drift';
+
+-- Tables
+CREATE VIEW user_purchases AS
+SELECT 
+    *,
+    CAST(json_extract(data, '$.product_id') AS TEXT) AS product_id,
+    CASE WHEN json_extract(data, '$.platform') IS NOT NULL THEN CAST(json_extract(data, '$.platform') AS TEXT) ELSE NULL END AS platform,
+    CASE WHEN json_extract(data, '$.amount') IS NOT NULL THEN CAST(json_extract(data, '$.amount') AS REAL) ELSE NULL END AS amount,
+    CASE WHEN json_extract(data, '$.purchase_id') IS NOT NULL THEN CAST(json_extract(data, '$.purchase_id') AS TEXT) ELSE NULL END AS purchase_id
+FROM user_records
+WHERE collection_name = 'user_purchases';
+
+-- Queries
+getUserPurchases:
+SELECT * FROM user_purchases
+WHERE user = :user
+OR uid = :uid;
+
+getUserPurchasesById:
+SELECT * FROM user_purchases
+WHERE (user = :user OR uid = :uid)
+AND id = :id;
+
