@@ -83,3 +83,9 @@ getPortionsWithHymnId:
 SELECT p.*, hp.hymnId FROM portions AS p
 INNER JOIN hymn_portions AS hp
 	ON hp.portionId = p.id;
+
+getPortionsWithHymnIdByHymnId:
+SELECT portion.**, hp.hymnId FROM portions AS portion
+INNER JOIN hymn_portions AS hp
+    ON hp.portionId = portion.id
+WHERE hp.hymnId = :hymnId;

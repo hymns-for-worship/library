@@ -13376,6 +13376,22 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         ));
   }
 
+  Selectable<GetPortionsWithHymnIdByHymnIdResult> getPortionsWithHymnIdByHymnId(
+      String hymnId) {
+    return customSelect(
+        'SELECT"portion"."id" AS "nested_0.id", "portion"."name" AS "nested_0.name", "portion"."lyrics" AS "nested_0.lyrics", "portion"."hymnPortionId" AS "nested_0.hymnPortionId", "portion"."created" AS "nested_0.created", "portion"."updated" AS "nested_0.updated", hp.hymnId FROM portions AS portion INNER JOIN hymn_portions AS hp ON hp.portionId = portion.id WHERE hp.hymnId = ?1',
+        variables: [
+          Variable<String>(hymnId)
+        ],
+        readsFrom: {
+          hymnPortions,
+          portions,
+        }).asyncMap((QueryRow row) async => GetPortionsWithHymnIdByHymnIdResult(
+          portion: await portions.mapFromRow(row, tablePrefix: 'nested_0'),
+          hymnId: row.read<String>('hymnId'),
+        ));
+  }
+
   Selectable<SearchPortionsResult> searchPortions(String query) {
     return customSelect(
         'SELECT"portion"."id" AS "nested_0.id", "portion"."name" AS "nested_0.name", "portion"."lyrics" AS "nested_0.lyrics", "portion"."hymnPortionId" AS "nested_0.hymnPortionId", "portion"."created" AS "nested_0.created", "portion"."updated" AS "nested_0.updated","hymnPortion"."id" AS "nested_1.id", "hymnPortion"."portionId" AS "nested_1.portionId", "hymnPortion"."hymnId" AS "nested_1.hymnId", "hymnPortion"."created" AS "nested_1.created", "hymnPortion"."updated" AS "nested_1.updated" FROM hymn_portions AS hymnPortion INNER JOIN portions AS portion ON portion.id = hymnPortion.portionId WHERE portion.name LIKE ?1 OR portion.lyrics LIKE ?1 ORDER BY portion.name ASC',
@@ -15517,6 +15533,15 @@ class GetPortionsWithHymnIdResult {
     this.hymnPortionId,
     required this.created,
     required this.updated,
+    required this.hymnId,
+  });
+}
+
+class GetPortionsWithHymnIdByHymnIdResult {
+  Portion portion;
+  String hymnId;
+  GetPortionsWithHymnIdByHymnIdResult({
+    required this.portion,
     required this.hymnId,
   });
 }

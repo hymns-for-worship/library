@@ -8,10 +8,12 @@ import '../archive/archive_base.dart';
 
 typedef PresentationSlide = ({
   String name,
+  bool invertText,
   String? text,
   String? footer,
   String? notes,
   Uint8List? background,
+  Map<String, dynamic> metadata,
 });
 
 typedef AssetPair = ({
@@ -20,12 +22,9 @@ typedef AssetPair = ({
 });
 
 class Presentation extends ArchiveBase {
-  Presentation(
-    super.archive, {
-    this.fallbackImage,
-    this.slideBase,
-    this.notesSlideBase,
-  }) {
+  Presentation(super.archive);
+
+  void reset() {
     if (fallbackImage == null) findFallbackImage();
     if (slideBase == null) findSlideBase();
     if (notesSlideBase == null) findNotesSlideBase();
@@ -38,7 +37,9 @@ class Presentation extends ArchiveBase {
       final bytes = file.content as List<int>;
       files[file.name] = Uint8List.fromList(bytes);
     }
-    return Presentation(files);
+    final pres = Presentation(files);
+    pres.reset();
+    return pres;
   }
 
   Uint8List? fallbackImage;
@@ -47,11 +48,16 @@ class Presentation extends ArchiveBase {
 
   final ids = <(int, String), String>{};
 
-  static const String notesType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide";
-  static const String slideType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide";
-  static const String imageType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
-  static const String layoutType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout";
-  static const String notesLayoutType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster";
+  static const String notesType =
+      "http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesSlide";
+  static const String slideType =
+      "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide";
+  static const String imageType =
+      "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
+  static const String layoutType =
+      "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout";
+  static const String notesLayoutType =
+      "http://schemas.openxmlformats.org/officeDocument/2006/relationships/notesMaster";
 
   void findFallbackImage() {
     // Use last image as fallback
@@ -66,7 +72,8 @@ class Presentation extends ArchiveBase {
     String? xml, xmlRels;
     {
       // Use first slide as base
-      final slides = filter((file) => file.endsWith('ppt/slides/slide1.xml')).toList();
+      final slides =
+          filter((file) => file.endsWith('ppt/slides/slide1.xml')).toList();
       if (slides.isNotEmpty) {
         final bytes = slides.first.$2;
         final raw = String.fromCharCodes(bytes);
@@ -76,7 +83,9 @@ class Presentation extends ArchiveBase {
 
     {
       // Use first slide as base
-      final slides = filter((file) => file.endsWith('ppt/slides/_rels/slide1.xml.rels')).toList();
+      final slides =
+          filter((file) => file.endsWith('ppt/slides/_rels/slide1.xml.rels'))
+              .toList();
       if (slides.isNotEmpty) {
         final bytes = slides.first.$2;
         final raw = String.fromCharCodes(bytes);
@@ -93,7 +102,8 @@ class Presentation extends ArchiveBase {
     String? xml, xmlRels;
     {
       // Use first slide as base
-      final slides = filter((file) => file.contains('ppt/notesSlides/')).toList();
+      final slides =
+          filter((file) => file.contains('ppt/notesSlides/')).toList();
       if (slides.isNotEmpty) {
         final bytes = slides.first.$2;
         final raw = String.fromCharCodes(bytes);
@@ -103,7 +113,8 @@ class Presentation extends ArchiveBase {
 
     {
       // Use first slide as base
-      final slides = filter((file) => file.contains('ppt/notesSlides/_rels/notesSlide1.xml.rels')).toList();
+      final slides = filter((file) =>
+          file.contains('ppt/notesSlides/_rels/notesSlide1.xml.rels')).toList();
       if (slides.isNotEmpty) {
         final bytes = slides.first.$2;
         final raw = String.fromCharCodes(bytes);
@@ -117,13 +128,19 @@ class Presentation extends ArchiveBase {
   }
 
   void setSlides(List<PresentationSlide> items) {
-    assert(slideBase != null && notesSlideBase != null && fallbackImage != null);
+    assert(fallbackImage != null, 'Missing fallback image');
+    assert(slideBase != null, 'Missing slide base');
+    // assert(notesSlideBase != null, 'Missing notes slide base');
 
     // Remove with path ppt/slides/
-    removeAll(filter((file) => file.contains('ppt/slides/')).map((file) => file.$1).toList());
+    removeAll(filter((file) => file.contains('ppt/slides/'))
+        .map((file) => file.$1)
+        .toList());
 
     // Remove with path ppt/notesSlides/
-    removeAll(filter((file) => file.contains('ppt/notesSlides/')).map((file) => file.$1).toList());
+    removeAll(filter((file) => file.contains('ppt/notesSlides/'))
+        .map((file) => file.$1)
+        .toList());
 
     {
       // Update ppt/presentation.xml
@@ -154,7 +171,10 @@ class Presentation extends ArchiveBase {
       final content = XmlDocument.parse(raw);
       final relationships = content.findAllElements('Relationships').first;
       // Remove existing type slide
-      relationships.findAllElements('Relationship').where((e) => e.getAttribute('Type') == slideType).forEach((e) => e.remove());
+      relationships
+          .findAllElements('Relationship')
+          .where((e) => e.getAttribute('Type') == slideType)
+          .forEach((e) => e.remove());
       // Add new type slide
       var idx = 1;
       for (final _ in items) {
@@ -175,10 +195,14 @@ class Presentation extends ArchiveBase {
     // Update slides
 
     // Remove media
-    removeAll(filter((file) => file.contains('ppt/media/')).map((file) => file.$1).toList());
+    removeAll(filter((file) => file.contains('ppt/media/'))
+        .map((file) => file.$1)
+        .toList());
 
     // Remove with path ppt/slides/
-    removeAll(filter((file) => file.contains('ppt/slides/')).map((file) => file.$1).toList());
+    removeAll(filter((file) => file.contains('ppt/slides/'))
+        .map((file) => file.$1)
+        .toList());
 
     // Add slides xml
     var idx = 1;
@@ -193,14 +217,26 @@ class Presentation extends ArchiveBase {
       {
         final file = 'ppt/slides/slide$idx.xml';
         final content = XmlDocument.parse(slideBase!.xml);
-        if (item.text != null) {
-          // find last p:txBody
-          final txBody = content.findAllElements('p:txBody').last;
-          // Find a:t
-          final aT = txBody.findAllElements('a:t').first;
-          // Set text
-          aT.children.clear();
-          aT.children.add(XmlText(item.text!));
+        {
+          final textNodes = content.findAllElements('a:t');
+          // Find <a:t>Blank Message</a:t>
+          final node =
+              textNodes.firstWhere((e) => e.innerText == 'Blank Message');
+          if (item.invertText) {
+            final fill = XmlElement.tag(
+              'a:solidFill',
+              children: [
+                XmlElement.tag(
+                  'a:schemeClr',
+                  attributes: [
+                    XmlAttribute(XmlName('val'), 'bg1'),
+                  ],
+                ),
+              ],
+            );
+            node.parent!.findElements('a:rPr').first.children.add(fill);
+          }
+          node.innerText = item.text ?? '';
         }
         // Find p:blipFill
         final blipFill = content.findAllElements('p:blipFill').first;
@@ -209,7 +245,8 @@ class Presentation extends ArchiveBase {
         // Set image
         blip.attributes.clear();
         if (item.background != null) {
-          blip.attributes.add(XmlAttribute(XmlName('r:embed'), idFromInt(imgIdx)));
+          blip.attributes
+              .add(XmlAttribute(XmlName('r:embed'), idFromInt(imgIdx)));
           imgId = imgIdx;
           write('ppt/media/media$imgIdx.bin', item.background!);
           imgIdx++;
@@ -218,24 +255,18 @@ class Presentation extends ArchiveBase {
         }
 
         {
-          // Update title
-          final spTree = content.findAllElements('p:spTree').first;
-          final title = spTree.findAllElements('p:sp').first;
-          final xml = createTitle(item.name);
-          final titleNode = XmlDocument.parse(xml).findAllElements('p:sp').first;
-          title.children.clear();
-          title.children.addAll(titleNode.children.map((e) => e.copy()));
+          final textNodes = content.findAllElements('a:t');
+          // Find <a:t>Slide Title</a:t>
+          final node =
+              textNodes.firstWhere((e) => e.innerText == 'Slide Title');
+          node.innerText = item.name;
         }
 
-        if (item.footer != null) {
-          // Update footer
-          final spTree = content.findAllElements('p:spTree').first;
-          final xml = createFooter(item.footer!);
-          final textNodes = spTree.findAllElements('p:sp');
-          final footerNode = textNodes.elementAt(textNodes.length - 2);
-          final footer = XmlDocument.parse(xml).findAllElements('p:sp').first;
-          footerNode.children.clear();
-          footerNode.children.addAll(footer.children.map((e) => e.copy()));
+        {
+          final textNodes = content.findAllElements('a:t');
+          // Find <a:t>Text Value</a:t>
+          final node = textNodes.firstWhere((e) => e.innerText == 'Text Value');
+          node.innerText = item.footer ?? '';
         }
 
         final str = content.toXmlString();
@@ -248,18 +279,21 @@ class Presentation extends ArchiveBase {
 
         {
           // Set image
-          final img = rels.firstWhere((e) => e.getAttribute('Type') == imageType);
+          final img =
+              rels.firstWhere((e) => e.getAttribute('Type') == imageType);
           img.setAttribute('Id', idFromInt(imgId));
           img.setAttribute('Target', '/ppt/media/media$imgId.bin');
         }
         {
           // Set random id for slide layout
-          final layout = rels.firstWhere((e) => e.getAttribute('Type') == layoutType);
+          final layout =
+              rels.firstWhere((e) => e.getAttribute('Type') == layoutType);
           layout.setAttribute('Id', idFromInt(idx, 'l'));
         }
-        {
+        if (notesSlideBase != null) {
           // Set notes
-          final notes = rels.firstWhere((e) => e.getAttribute('Type') == notesType);
+          final notes =
+              rels.firstWhere((e) => e.getAttribute('Type') == notesType);
           notes.setAttribute('Id', idFromInt(idx, 'n'));
           notes.setAttribute('Target', '/ppt/notesSlides/notesSlide$idx.xml');
         }
@@ -267,31 +301,39 @@ class Presentation extends ArchiveBase {
         final str = content.toXmlString();
         write(file, str.codeUnits);
       }
-      {
+      if (notesSlideBase != null) {
         final file = 'ppt/notesSlides/notesSlide$idx.xml';
         final content = XmlDocument.parse(notesSlideBase!.xml);
 
         if (item.notes != null) {
           // find p:spTree
           final spTree = content.findAllElements('p:spTree').first;
-          final notes = XmlDocument.parse(createNotes(item.notes!)).findAllElements('p:sp').first;
+          final notes = XmlDocument.parse(createNotes(item.notes!))
+              .findAllElements('p:sp')
+              .first;
           spTree.children.add(notes.copy());
         }
 
         final str = content.toXmlString();
         write(file, str.codeUnits);
       }
-      {
+      if (notesSlideBase != null) {
         final file = 'ppt/notesSlides/_rels/notesSlide$idx.xml.rels';
         final content = XmlDocument.parse(notesSlideBase!.xmlRels);
 
         final relationships = content.findAllElements('Relationships').first;
-        final slide = relationships.findAllElements('Relationship').where((e) => e.getAttribute('Type') == slideType).first;
+        final slide = relationships
+            .findAllElements('Relationship')
+            .where((e) => e.getAttribute('Type') == slideType)
+            .first;
         slide.setAttribute('Id', idFromInt(idx));
         slide.setAttribute('Target', '/ppt/slides/slide$idx.xml');
 
         // Set random id for slide layout
-        final layout = relationships.findAllElements('Relationship').where((e) => e.getAttribute('Type') == notesLayoutType).first;
+        final layout = relationships
+            .findAllElements('Relationship')
+            .where((e) => e.getAttribute('Type') == notesLayoutType)
+            .first;
         layout.setAttribute('Id', idFromInt(idx, 'nl'));
 
         final str = content.toXmlString();
@@ -310,8 +352,13 @@ class Presentation extends ArchiveBase {
       final overrides = content.findAllElements('Override');
 
       // Remove existing notes and slides
-      overrides.where((e) => e.getAttribute('PartName')!.contains('ppt/notesSlides/')).forEach((e) => e.remove());
-      overrides.where((e) => e.getAttribute('PartName')!.contains('ppt/slides/')).forEach((e) => e.remove());
+      overrides
+          .where(
+              (e) => e.getAttribute('PartName')!.contains('ppt/notesSlides/'))
+          .forEach((e) => e.remove());
+      overrides
+          .where((e) => e.getAttribute('PartName')!.contains('ppt/slides/'))
+          .forEach((e) => e.remove());
 
       final types = content.findAllElements('Types').first;
 
@@ -321,15 +368,18 @@ class Presentation extends ArchiveBase {
         types.children.add(XmlElement(
           XmlName('Override'),
           [
-            XmlAttribute(XmlName('PartName'), '/ppt/notesSlides/notesSlide$idx.xml'),
-            XmlAttribute(XmlName('ContentType'), "application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"),
+            XmlAttribute(
+                XmlName('PartName'), '/ppt/notesSlides/notesSlide$idx.xml'),
+            XmlAttribute(XmlName('ContentType'),
+                "application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml"),
           ],
         ));
         types.children.add(XmlElement(
           XmlName('Override'),
           [
             XmlAttribute(XmlName('PartName'), '/ppt/slides/slide$idx.xml'),
-            XmlAttribute(XmlName('ContentType'), "application/vnd.openxmlformats-officedocument.presentationml.slide+xml"),
+            XmlAttribute(XmlName('ContentType'),
+                "application/vnd.openxmlformats-officedocument.presentationml.slide+xml"),
           ],
         ));
         idx++;
