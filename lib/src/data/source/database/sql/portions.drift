@@ -1,3 +1,5 @@
+import 'hymn_portions.drift';
+
 -- Tables
 CREATE TABLE portions (
     id TEXT PRIMARY KEY NOT NULL,
@@ -14,48 +16,14 @@ CREATE INDEX portions_idx_name ON portions (name);
 CREATE INDEX portions_idx_lyrics ON portions (lyrics);
 CREATE INDEX portions_idx_hymnPortionId ON portions (hymnPortionId);
 
--- Full Text Search
-CREATE VIRTUAL TABLE portions_fts USING fts5 (
-    name,
-    lyrics,
-    content=portions,
-    content_rowid=id
-);
-CREATE TRIGGER portions_fts_insert
-AFTER INSERT ON portions
-BEGIN
-    INSERT INTO portions_fts (rowid, name, lyrics)
-    VALUES (new.ROWID, new.name, new.lyrics);
-END;
-
-CREATE TRIGGER portions_fts_update
-AFTER UPDATE ON portions
-BEGIN
-    UPDATE portions_fts
-    SET name = new.name, lyrics = new.lyrics
-    WHERE rowid = old.ROWID;
-END;
-
-CREATE TRIGGER portions_fts_delete
-AFTER DELETE ON portions
-BEGIN
-    INSERT INTO portions_fts (portions_fts, rowid, name, lyrics)
-    VALUES ('delete', old.ROWID, old.name, old.lyrics);
-END;
-
 -- Queries
 searchPortions:
-SELECT 
-	t.id,
-	highlight(portions_fts, 0, '<b>', '</b>') name,
-	highlight(portions_fts, 1, '<b>', '</b>') lyrics,
-    t.created,
-    t.updated
-FROM portions_fts 
-INNER JOIN portions AS t
-	ON t.id = portions_fts.ROWID
-WHERE portions_fts MATCH :query
-ORDER BY rank;
+SELECT portion.**, hymnPortion.**
+FROM hymn_portions hymnPortion
+INNER JOIN portions portion ON portion.id = hymnPortion.portionId
+WHERE portion.name LIKE :query
+OR portion.lyrics LIKE :query
+ORDER BY portion.name ASC;
 
 getPortions:
 SELECT * FROM portions

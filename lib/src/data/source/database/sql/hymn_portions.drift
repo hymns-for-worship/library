@@ -78,3 +78,8 @@ WHERE EXISTS (
     WHERE portionId = t.id
     AND hymnId = :hymnId
 );
+
+getPortionsWithHymnId:
+SELECT p.*, hp.hymnId FROM portions AS p
+INNER JOIN hymn_portions AS hp
+	ON hp.portionId = p.id;

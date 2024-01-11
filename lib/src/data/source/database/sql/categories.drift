@@ -1,0 +1,49 @@
+-- Tables
+CREATE TABLE categories (
+    id TEXT PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    price TEXT,
+    limited TEXT,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (name)
+);
+
+-- Indexes
+CREATE INDEX categories_idx_name ON categories (name);
+CREATE INDEX categories_idx_description ON categories (description);
+
+-- Queries
+getCategories:
+SELECT * FROM categories
+ORDER BY name ASC;
+
+getCategory:
+SELECT * FROM categories
+WHERE id = :id;
+
+getCategoryByName:
+SELECT * FROM categories
+WHERE name = :name;
+
+createCategory:
+INSERT OR REPLACE INTO categories (id, name, description, created, updated)
+VALUES (:id, :name, :description, :created, :updated)
+RETURNING *;
+
+updateCategory:
+UPDATE categories
+SET name = :name, description = :description, updated = :updated
+WHERE id = :id;
+
+deleteCategory:
+DELETE FROM categories
+WHERE id = :id;
+
+deleteCategoryByName:
+DELETE FROM categories
+WHERE name = :name;
+
+deleteCategories:
+DELETE FROM categories;

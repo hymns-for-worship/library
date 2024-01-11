@@ -12,7 +12,6 @@ class RemoveFromUserLibrary {
 
   Future<void> call(
     String user, {
-    String? uid,
     String? hymnId,
     String? topicId,
     String? stakeholderId,
@@ -34,14 +33,13 @@ class RemoveFromUserLibrary {
       if (current.items.isEmpty) return;
       final id = current.items.first.id;
       await col.delete(id);
-      await db.deleteRecordModelByCollectionNameAndId('user_library', id);
+      await db.deleteRecordModelByCollectionAndId('user_library', id);
     } catch (error, stackTrace) {
       // ignore: avoid_print
       print('error removing from user library: $error $stackTrace');
       final item = await db
           .getUserLibraryMatch(
             user,
-            uid,
             hymnId,
             playlistId,
             topicId,
@@ -55,6 +53,7 @@ class RemoveFromUserLibrary {
           false,
           DateTime.now(),
           item.id,
+          item.collectionName,
         );
       }
     }

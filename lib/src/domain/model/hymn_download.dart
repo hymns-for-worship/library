@@ -1,5 +1,5 @@
 class HymnDownload {
-  final String hymnId, hymnTitle, hymnNumber, hash, file;
+  final String hymnId, hymnTitle, hymnNumber, hymnalName, hash, file;
   final DateTime created, updated;
 
   final Uri url;
@@ -8,6 +8,7 @@ class HymnDownload {
     required this.hymnId,
     required this.hymnTitle,
     required this.hymnNumber,
+    required this.hymnalName,
     required this.created,
     required this.updated,
     required this.hash,

@@ -5,9 +5,10 @@ CREATE TABLE records (
     id TEXT PRIMARY KEY NOT NULL,
     collection_id TEXT NOT NULL,
     collection_name TEXT NOT NULL,
-    data TEXT NOT NULL,
+    [data] TEXT NOT NULL,
     deleted BOOLEAN NOT NULL DEFAULT 0,
     synced BOOLEAN NOT NULL DEFAULT 0,
+    fresh BOOLEAN,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL,
     UNIQUE (id, collection_id, collection_name)
@@ -18,11 +19,12 @@ SELECT
     id,
     collection_id,
     collection_name, 
+    fresh,
     synced,
     deleted,
     created,
-    modified,
-    data,
+    updated,
+    [data],
     CASE WHEN json_extract(data, '$.user') IS NOT NULL THEN CAST(json_extract(data, '$.user') AS TEXT) ELSE NULL END AS user,
     CASE WHEN json_extract(data, '$.uid') IS NOT NULL THEN CAST(json_extract(data, '$.uid') AS TEXT) ELSE NULL END AS uid
 FROM records;
@@ -37,12 +39,45 @@ END;
 
 CREATE TABLE records_cache (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    collection_name TEXT NOT NULL,
+    collection TEXT NOT NULL,
     synced BOOLEAN NOT NULL DEFAULT 0,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL,
-    UNIQUE (collection_name)
+    UNIQUE (collection)
 );
+
+
+-- Full Text Search
+CREATE VIRTUAL TABLE records_fts USING fts5 (
+    collection_id,
+    collection_name,
+    data,
+    content=records,
+    content_rowid=id
+);
+CREATE TRIGGER records_fts_insert
+AFTER INSERT ON records
+BEGIN
+    INSERT INTO records_fts (rowid, collection_id, collection_name, data)
+    VALUES (new.ROWID, new.collection_id, new.collection_name, new.data);
+END;
+
+CREATE TRIGGER records_fts_update
+AFTER UPDATE ON records
+BEGIN
+    UPDATE records_fts
+    SET collection_id = new.collection_id, 
+        collection_name = new.collection_name, 
+        data = new.data
+    WHERE rowid = old.ROWID;
+END;
+
+CREATE TRIGGER records_fts_delete
+AFTER DELETE ON records
+BEGIN
+    INSERT INTO records_fts (records_fts, rowid, collection_id, collection_name, data)
+    VALUES ('delete', old.ROWID, old.collection_id, old.collection_name, old.data);
+END;
 
 -- Indexes
 CREATE INDEX records_idx_collection ON records (collection_id, collection_name);
@@ -57,82 +92,102 @@ getRecordModel:
 SELECT * FROM records
 WHERE id = :id;
 
-getRecordModelsByCollectionId:
+getRecordModelsByCollection:
 SELECT * FROM records
-WHERE collection_id = :collection_id;
+WHERE collection_id = :collection OR collection_name = :collection;
 
-getRecordModelByCollectionId:
+getRecordModelByCollection:
 SELECT * FROM records
-WHERE collection_id = :collection_id
-AND id = :id;
-
-getRecordModelsByCollectionName:
-SELECT * FROM records
-WHERE collection_name = :collection_name;
-
-getRecordModelByCollectionName:
-SELECT * FROM records
-WHERE collection_name = :collection_name
+WHERE (collection_id = :collection OR collection_name = :collection)
 AND id = :id;
 
 createRecordModel:
-INSERT OR REPLACE INTO records (id, collection_id, collection_name, data, deleted, synced, created, updated)
-VALUES (:id, :collection_id, :collection_name, :data, :deleted, :synced, :created, :updated);
+INSERT OR REPLACE INTO records (id, collection_id, collection_name, data, deleted, synced, fresh, created, updated)
+VALUES (:id, :collection_id, :collection_name, :data, :deleted, :synced, 1, :created, :updated);
 RETURNING *;
 
 updateRecordModel:
 UPDATE records
 SET data = :data, deleted = :deleted, synced = :synced, updated = :updated
-WHERE id = :id;
+WHERE id = :id
+AND (collection_id = :collection OR collection_name = :collection);
 
 deleteRecordModel:
-DELETE FROM records
-WHERE id = :id;
-
-softDeleteRecordModel:
 UPDATE records
 SET deleted = 1, updated = :updated
-WHERE id = :id;
+WHERE id = :id
+AND (collection_id = :collection OR collection_name = :collection);
+
+undoDeleteRecordModel:
+UPDATE records
+SET deleted = 0, updated = :updated
+WHERE id = :id
+AND (collection_id = :collection OR collection_name = :collection);
+
+getDeletedRecordModels:
+SELECT * FROM records
+WHERE deleted = 1;
+
+getDeletedRecordModelsByCollection:
+SELECT * FROM records
+WHERE deleted = 1
+AND (collection_id = :collection OR collection_name = :collection);
 
 setSyncStatusRecordModel:
 UPDATE records
 SET synced = :synced, updated = :updated
 WHERE id = :id;
 
-setDeleteStatusRecordModel:
-UPDATE records
-SET deleted = :deleted, updated = :updated
-WHERE id = :id;
-
-deleteRecordModelByCollectionId:
+deleteRecordModelByCollection:
 DELETE FROM records
-WHERE collection_id = :collection_id;
+WHERE collection_id = :collection OR collection_name = :collection;
 
-deleteRecordModelByCollectionName:
+deleteRecordModelByCollectionAndId:
 DELETE FROM records
-WHERE collection_name = :collection_name;
-
-deleteRecordModelByCollectionIdAndId:
-DELETE FROM records
-WHERE collection_id = :collection_id
-AND id = :id;
-
-deleteRecordModelByCollectionNameAndId:
-DELETE FROM records
-WHERE collection_name = :collection_name
+WHERE (collection_id = :collection OR collection_name = :collection)
 AND id = :id;
 
 deleteAllRecordModels:
 DELETE FROM records;
 
-deleteRecordModelsByCollectionNameBeforeDate:
+deleteRecordModelsByCollectionBeforeDate:
 DELETE FROM records
-WHERE collection_name = :collection_name AND updated < :date;
+WHERE (collection_id = :collection OR collection_name = :collection)
+AND updated < :date;
 
-getCollectionNameSyncedStatus:
+getCollectionSyncedStatus:
 SELECT * FROM records_cache
-WHERE collection_name = :collection_name;
+WHERE collection = :collection;
 
 setCollectionSyncedStatus:
-INSERT OR REPLACE INTO records_cache (collection_name, synced, created, updated)
-VALUES (:collection_name, :synced, :created, :updated);
+INSERT OR REPLACE INTO records_cache (collection, synced, created, updated)
+VALUES (:collection, :synced, :created, :updated);
+
+deleteOldRecords:
+DELETE FROM records
+WHERE deleted = 1 AND updated > :date;
+
+findLegacyRecords:
+SELECT * FROM user_records
+WHERE uid IS NOT NULL AND uid = :uid 
+AND (user IS NULL OR user = '') 
+AND (collection_name IN :collections OR collection_id IN :collections);
+
+getUnsyncedUserRecords:
+SELECT * FROM user_records
+WHERE synced = 0
+AND (collection_name IN :collections OR collection_id IN :collections);
+
+searchRecords:
+SELECT 
+	r.id,
+	highlight(records_fts, 0, '<b>', '</b>') collection_id,
+    highlight(records_fts, 1, '<b>', '</b>') collection_name,
+    highlight(records_fts, 2, '<b>', '</b>') data,
+    r.created,
+    r.updated
+FROM records_fts 
+INNER JOIN records AS r
+	ON r.id = records_fts.ROWID
+WHERE records_fts MATCH :query
+ORDER BY rank;

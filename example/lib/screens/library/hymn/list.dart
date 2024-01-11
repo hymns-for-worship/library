@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:hfw_core/hfw_core.dart';
 import 'package:signals/signals_flutter.dart';
 
 import '../../../instance.dart';
-import 'details.dart';
 
 class HymnsScreen extends StatefulWidget {
   const HymnsScreen({super.key});
@@ -60,76 +61,60 @@ class _HymnsScreenState extends State<HymnsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Hymns')),
-      body: Watch(
-        (context) => items.value.map(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stackTrace) => Text(
-            'Error loading hymns: $error\n$stackTrace',
-          ),
-          data: (results) {
-            if (results.isEmpty) {
-              return const Center(child: Text('No hymns found'));
-            }
-            return Column(
-              children: [
-                Watch(
-                  (context) => Row(
-                    children: [
-                      SizedBox(
-                        width: 200,
-                        child: DropdownButton(
-                          value: sortField.value,
-                          items: [
-                            for (final item in HymnSortField.values)
-                              DropdownMenuItem(
-                                value: item,
-                                child: Text(item.name),
-                              ),
-                          ],
-                          onChanged: (val) => sortField.value = val!,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: DropdownButton(
-                          value: sortAsc.value,
-                          items: [
-                            for (final item in [true, false])
-                              DropdownMenuItem(
-                                value: item,
-                                child: Text(item.toString()),
-                              ),
-                          ],
-                          onChanged: (val) => sortAsc.value = val!,
-                        ),
-                      ),
-                    ],
-                  ),
+    final state = items.watch(context);
+    if (state.hasValue) {
+      final value = state.requireValue;
+      return Watch.builder(builder: (context) {
+        if (value.isEmpty) {
+          return const ScaffoldPage(
+            header: PageHeader(title: Text('Hymns')),
+            content: Center(child: Text('No hymns found')),
+          );
+        }
+        return ScaffoldPage.scrollable(
+          header: PageHeader(
+            title: const Text('Hymns'),
+            commandBar: CommandBar(
+              primaryItems: [
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.archive),
+                  label: const Text('Archive'),
+                  onPressed: () {},
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: sorted.value.length,
-                    itemBuilder: (context, index) {
-                      final result = sorted.value[index];
-                      return ListTile(
-                        title: Text(result.title),
-                        subtitle: Text(result.number),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => HymnDetails(hymn: result),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                CommandBarButton(
+                  icon: const Icon(FluentIcons.move),
+                  label: const Text('Move'),
+                  onPressed: () {},
                 ),
+
+                // HymnDownloadButton(hymnId: widget.hymn.id),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+          children: List.generate(
+            sorted.value.length,
+            (index) {
+              final result = sorted.value[index];
+              return ListTile(
+                title: Text(result.title),
+                subtitle: Text(result.number),
+                // onTap: () => Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => HymnDetails(hymn: result),
+                //   ),
+                // ),
+                onPressed: () {
+                  context.push('/library/hymns/${result.id}');
+                },
+              );
+            },
+          ),
+        );
+      });
+    }
+    return const ScaffoldPage(
+      header: PageHeader(title: Text('Hymns')),
+      content: Center(child: ProgressRing()),
     );
   }
 }

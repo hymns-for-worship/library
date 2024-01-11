@@ -11,5 +11,6 @@ class HfwAuthStore extends AsyncAuthStore {
   }) : super(
           save: (data) async => prefs.setString(authKey, data),
           initial: prefs.getString(authKey),
+          clear: () => prefs.remove(authKey),
         );
 }

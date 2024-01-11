@@ -27,7 +27,7 @@ class DownloadHymn {
       //  Check for existing download
       final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
       if (bundle != null) {
-        yield 0.4;
+        yield 0.5;
         if (bundle.bytes != null) {
           await importHymn(bundle.bytes!);
         }
@@ -37,15 +37,18 @@ class DownloadHymn {
     }
     int total = 0;
     int current = 0;
-    final results = await client
-        .collection('bundles')
-        .getList(filter: "hymn_id = '$hymnId'");
-    yield 0.3;
+    final col = client.collection('bundles');
+    final results = await col.getList(filter: "hymn_id = '$hymnId'");
+    yield 0.2;
     if (results.items.isEmpty) {
       throw Exception('Bundle not found for $hymnId');
     }
     final result = results.items.first;
-    final uri = client.getFileUrl(result, result.getStringValue('file'));
+    final file = result.getStringValue('file');
+    if (file.isEmpty) {
+      throw Exception('Bundle file not found for $hymnId');
+    }
+    final uri = client.getFileUrl(result, file);
     final response = await http.send(Request('GET', uri));
     if (response.statusCode == 200) {
       total = response.contentLength ?? 0;

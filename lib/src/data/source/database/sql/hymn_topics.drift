@@ -78,3 +78,8 @@ WHERE EXISTS (
     WHERE topicId = t.id
     AND hymnId = :hymnId
 );
+
+getTopicsWithHymnId:
+SELECT t.*, ht.hymnId FROM topics AS t
+INNER JOIN hymn_topics AS ht
+	ON ht.topicId = t.id;

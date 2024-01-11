@@ -215,9 +215,9 @@ class _ExampleState extends State<Example> {
                           title: Text(item.number),
                           subtitle: Text(item.title),
                           onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => HymnDetails(hymn: item),
-                            ));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //   builder: (context) => HymnDetails(hymn: item),
+                            // ));
                           },
                         );
                       },

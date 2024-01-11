@@ -10,46 +10,11 @@ CREATE TABLE scriptures (
 -- Indexes
 CREATE INDEX scriptures_idx_name ON scriptures (name);
 
--- Full Text Search
-CREATE VIRTUAL TABLE scriptures_fts USING fts5 (
-    name,
-    content=scriptures,
-    content_rowid=id
-);
-CREATE TRIGGER scriptures_fts_insert
-AFTER INSERT ON scriptures
-BEGIN
-    INSERT INTO scriptures_fts (rowid, name)
-    VALUES (new.ROWID, new.name);
-END;
-
-CREATE TRIGGER scriptures_fts_update
-AFTER UPDATE ON scriptures
-BEGIN
-    UPDATE scriptures_fts
-    SET name = new.name
-    WHERE rowid = old.ROWID;
-END;
-
-CREATE TRIGGER scriptures_fts_delete
-AFTER DELETE ON scriptures
-BEGIN
-    INSERT INTO scriptures_fts (scriptures_fts, rowid, name)
-    VALUES ('delete', old.ROWID, old.name);
-END;
-
 -- Queries
 searchScriptures:
-SELECT 
-	t.id,
-	highlight(scriptures_fts, 0, '<b>', '</b>') name,
-    t.created,
-    t.updated
-FROM scriptures_fts 
-INNER JOIN scriptures AS t
-	ON t.id = scriptures_fts.ROWID
-WHERE scriptures_fts MATCH :query
-ORDER BY rank;
+SELECT * FROM scriptures
+WHERE name LIKE :query
+ORDER BY name ASC;
 
 getScriptures:
 SELECT * FROM scriptures

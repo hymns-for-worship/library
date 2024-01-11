@@ -43,7 +43,7 @@ OR uid = :uid;
 
 getUserLibraryMatch:
 SELECT * FROM user_library
-WHERE (user = :user OR uid = :uid)
+WHERE user = :user
 AND (
     hymn_id = :hymn_id
     AND playlist_id = :playlist_id
@@ -53,7 +53,7 @@ AND (
 
 getUserLibraryById:
 SELECT * FROM user_library
-WHERE (user = :user OR uid = :uid)
+WHERE user = :user
 AND id = :id;
 
 getUserHymnLibrary:
@@ -63,7 +63,7 @@ OR uid = :uid;
 
 getUserHymnLibraryById:
 SELECT * FROM user_hymn_library
-WHERE (user = :user OR uid = :uid)
+WHERE user = :user
 AND id = :id;
 
 getUserStakeholderLibrary:
@@ -73,7 +73,7 @@ OR uid = :uid;
 
 getUserStakeholderLibraryById:
 SELECT * FROM user_stakeholder_library
-WHERE (user = :user OR uid = :uid)
+WHERE user = :user
 AND id = :id;
 
 getUserTopicLibrary:
@@ -83,7 +83,7 @@ OR uid = :uid;
 
 getUserTopicLibraryById:
 SELECT * FROM user_topic_library
-WHERE (user = :user OR uid = :uid)
+WHERE user = :user
 AND id = :id;
 
 getUserPlaylistLibrary:
@@ -93,5 +93,5 @@ OR uid = :uid;
 
 getUserPlaylistLibraryById:
 SELECT * FROM user_playlist_library
-WHERE (user = :user OR uid = :uid)
+WHERE user = :user
 AND id = :id;

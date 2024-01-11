@@ -41,7 +41,7 @@ class _StakeholderDetailsState extends State<StakeholderDetails> {
                   subtitle: Text(hymn.number),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => HymnDetails(hymn: hymn),
+                      builder: (context) => HymnDetails(hymnId: hymn.id),
                     ),
                   ),
                 );

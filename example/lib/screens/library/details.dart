@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bundles.dart';
 import 'hymnal/list.dart';
@@ -23,6 +24,11 @@ class LibraryScreen extends StatelessWidget {
               ),
             ),
             icon: const Icon(Icons.download),
+          ),
+          IconButton(
+            tooltip: 'Go to profile',
+            onPressed: () => context.push('/profile'),
+            icon: const Icon(Icons.account_circle),
           ),
         ],
       ),

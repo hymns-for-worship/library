@@ -1,19 +1,22 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import 'screens/library/details.dart';
+import 'instance.dart';
 
 class HfwCoreApp extends StatelessWidget {
   const HfwCoreApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final router = $.get<GoRouter>();
+    return FluentApp.router(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: const LibraryScreen(),
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
+      theme: FluentThemeData.light(),
+      darkTheme: FluentThemeData.dark(),
     );
   }
 }

@@ -45,6 +45,7 @@ class ImportHymn {
   ImportHymn(this.db);
 
   Future<void> call(Uint8List bytes) async {
+    // TODO: Need to create bundle record model for database to render in list
     await db.transaction(() async {
       final archive = await extractZipAsync(bytes);
 
@@ -77,6 +78,10 @@ class ImportHymn {
     });
   }
 
+  Future<void> importInfo(String str) async {
+    await parseHymnInformationFile(db, str);
+  }
+
   Future<(String, String)> parseHymnInformationFile(
     HfwDatabase db,
     String str,
@@ -96,22 +101,29 @@ class ImportHymn {
     {
       // Hymn
       final notation = hymn.findAllElements('songLeaderInfo').first;
-      final results = await db.createHymn(
-        hymn.attr('id'),
-        hymn.attr('title'),
-        number,
-        hymn.findAllElements('tuneName').firstOrNull?.innerText ?? '',
-        notation.attr('key'),
-        notation.attr('beatPattern'),
-        notation.attr('startingPitch'),
-        notation.attr('startingBeat'),
-        notation.attr('startingPitchDirection'),
-        notation.attr('time'),
-        notation.attr('complexTime'),
-        now,
-        now,
+      final id = hymn.attr('id');
+      final target = HymnsCompanion.insert(
+        id: id,
+        title: hymn.attr('title'),
+        number: number,
+        tuneName: Value(
+            hymn.findAllElements('tuneName').firstOrNull?.innerText ?? ''),
+        translatedTitle: Value(hymn.attr('translatedTitle')),
+        status: Value(hymn.attr('status')),
+        key: Value(notation.attr('key')),
+        sku: Value(notation.attr('sku')),
+        beatPattern: Value(notation.attr('beatPattern')),
+        startingPitch: Value(notation.attr('startingPitch')),
+        startingBeat: Value(notation.attr('startingBeat')),
+        startingKey: Value(notation.attr('key')),
+        startingPitchDirection: Value(notation.attr('startingPitchDirection')),
+        timeSignature: Value(notation.attr('time')),
+        complexTimeSignature: Value(notation.attr('complexTime')),
+        created: now,
+        updated: now,
       );
-      hymnId = results.first.id;
+      await db.insertOrUpdateHymn(target);
+      hymnId = id;
     }
 
     {
@@ -136,10 +148,29 @@ class ImportHymn {
         final results = await db.createTopic(
           node.attr('id'),
           node.innerText,
+          node.attr('alias'),
           now,
           now,
         );
         await db.createHymnTopic(
+          results.first.id,
+          hymnId,
+          now,
+          now,
+        );
+      }
+    }
+    {
+      // Category
+      for (final node in doc.findAllElements('category')) {
+        final results = await db.createCategory(
+          node.attr('id'),
+          node.findElements('text').map((e) => e.innerText).join('\n'),
+          node.attr('name'),
+          now,
+          now,
+        );
+        await db.createHymnCategory(
           results.first.id,
           hymnId,
           now,

@@ -1,6 +1,7 @@
+import 'package:stream_transform/stream_transform.dart';
+
 import '../../../../data/source/database/database.dart';
 import '../../../model/hymn_archive.dart';
-import 'get_hymn_archive.dart';
 
 typedef GetHymnResult = ({
   Hymn? hymn,
@@ -9,46 +10,73 @@ typedef GetHymnResult = ({
   List<Scripture> scriptures,
   List<Portion> portions,
   List<GetStakeholdersWithRelationshipForHymnIdResult> stakeholders,
+  Category? category,
   HymnArchive? archive,
 });
 
 class GetHymn {
   final HfwDatabase db;
-  final GetHymnArchive getHymnArchive;
 
-  const GetHymn({
-    required this.db,
-    required this.getHymnArchive,
-  });
+  GetHymn(this.db);
 
-  Future<GetHymnResult> call(String id) async {
-    final hymn = await db //
+  Stream<GetHymnResult> call(String id) async* {
+    final hymn = db //
         .getHymn(id)
-        .getSingleOrNull();
-    final hymnal = await db //
+        .watchSingleOrNull();
+    final hymnal = db //
         .getHymnalByHymnId(id)
-        .getSingleOrNull();
-    final topics = await db //
+        .watchSingleOrNull();
+    final topics = db //
         .getTopicsByHymnId(id)
-        .get();
-    final scriptures = await db //
+        .watch();
+    final scriptures = db //
         .getScripturesByHymnId(id)
-        .get();
-    final portions = await db //
+        .watch();
+    final portions = db //
         .getPortionsByHymnId(id)
-        .get();
-    final stakeholders = await db //
+        .watch();
+    final stakeholders = db //
         .getStakeholdersWithRelationshipForHymnId(id)
-        .get();
-    final archive = await getHymnArchive(id).first;
-    return (
-      hymn: hymn,
-      hymnal: hymnal,
-      topics: topics,
-      scriptures: scriptures,
-      portions: portions,
-      stakeholders: stakeholders,
-      archive: archive,
-    );
+        .watch();
+    final category = db //
+        .getCategoriesByHymnId(id)
+        .watchSingleOrNull();
+    final bundle = db.getBundlesByHymnId(id).watchSingleOrNull();
+    // Combine streams of different types
+    final first = hymn.cast<Object?>();
+    final others = [
+      hymnal,
+      topics,
+      scriptures,
+      portions,
+      stakeholders,
+      category,
+      bundle,
+    ];
+    final latest = first.combineLatestAll(others);
+    // Return as object
+    await for (final stream in latest) {
+      final hymn = stream[0] as Hymn?;
+      final hymnal = stream[1] as Hymnal?;
+      final topics = stream[2] as List<Topic>;
+      final scriptures = stream[3] as List<Scripture>;
+      final portions = stream[4] as List<Portion>;
+      final stakeholders =
+          stream[5] as List<GetStakeholdersWithRelationshipForHymnIdResult>;
+      final category = stream[6] as Category?;
+      final bundle = stream[7] as Bundle?;
+      final archive = await bundle?.toArchiveAsync().then((value) =>
+          value == null ? null : HymnArchive(archive: value, hymnId: id));
+      yield (
+        hymn: hymn,
+        hymnal: hymnal,
+        topics: topics,
+        scriptures: scriptures,
+        portions: portions,
+        stakeholders: stakeholders,
+        archive: archive,
+        category: category,
+      );
+    }
   }
 }

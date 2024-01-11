@@ -14,7 +14,6 @@ class AddToUserLibrary {
 
   Future<void> call(
     String user, {
-    String? uid,
     String? hymnId,
     String? topicId,
     String? stakeholderId,
@@ -44,7 +43,6 @@ class AddToUserLibrary {
       final item = await db
           .getUserLibraryMatch(
             user,
-            uid,
             hymnId,
             playlistId,
             topicId,

@@ -1,68 +1,132 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:hfw_core/hfw_core.dart';
 import 'package:signals/signals_flutter.dart';
+import 'package:zoomable_photo_gallery/zoomable_photo_gallery.dart';
 
 import '../../../instance.dart';
-import '../../../widgets/hymn_download.dart';
 
 class HymnDetails extends StatefulWidget {
-  const HymnDetails({super.key, required this.hymn});
+  const HymnDetails({super.key, required this.hymnId});
 
-  final Hymn hymn;
+  final String hymnId;
 
   @override
   State<HymnDetails> createState() => _HymnDetailsState();
 }
 
 class _HymnDetailsState extends State<HymnDetails> {
-  final getHymn = GetHymn(
-    db: $.get<HfwDatabase>(),
-    getHymnArchive: $.get<GetHymnArchive>(),
-  );
-  late final get = getHymn(widget.hymn.id).toSignal();
+  final getHymn = GetHymn($.get<HfwDatabase>());
+  late final get = getHymn(widget.hymnId).toSignal();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.hymn.title),
-        actions: [
-          HymnDownloadButton(hymnId: widget.hymn.id),
-        ],
-      ),
-      body: Watch((context) {
-        return get.value.maybeMap(
-          data: (value) {
-            if (value.hymn == null) {
-              return const Center(
-                child: Text('Hymn not found'),
-              );
+    final state = get.watch(context);
+    if (state.hasValue) {
+      final hymn = state.requireValue.hymn;
+      if (hymn == null) {
+        return const ScaffoldPage(
+          header: PageHeader(
+            title: Text('Hymn Details'),
+          ),
+          content: Center(child: Text('Hymn not found')),
+        );
+      }
+      return ScaffoldPage(
+        header: PageHeader(
+          title: Watch((context) {
+            final hymn = get.value.value?.hymn;
+            if (hymn != null) {
+              return Text(hymn.title);
             }
-            final title = value.archive?.getTitle();
-            final music = value.archive?.getMusic();
-            return ListView(
-              children: [
-                if (title != null) ...[
-                  const ListTile(title: Text('Title')),
-                  ListTile(
-                    title: Text(title.path),
-                    subtitle: Image.memory(title.data),
-                  ),
-                ],
-                if (music != null) ...[
-                  const ListTile(title: Text('Music')),
-                  for (final item in music)
-                    ListTile(
-                      title: Text(item.path),
-                      subtitle: Image.memory(item.data),
-                    ),
-                ],
-              ],
+            return const Text('Hymn Details');
+          }),
+          // commandBar: CommandBar(
+          //   primaryItems: [
+          //     CommandBarButton(
+          //       icon: const Icon(FluentIcons.archive),
+          //       label: const Text('Archive'),
+          //       onPressed: () {},
+          //     ),
+          //     CommandBarButton(
+          //       icon: const Icon(FluentIcons.move),
+          //       label: const Text('Move'),
+          //       onPressed: () {},
+          //     ),
+
+          //     // HymnDownloadButton(hymnId: widget.hymn.id),
+          //   ],
+          // ),
+        ),
+        content: Builder(
+          builder: (context) {
+            final music = state.value?.archive?.getMusic();
+            // final title = value.archive?.getTitle();
+            final images = [
+              // if (title != null) title,
+              if (music != null) ...music,
+            ];
+            if (images.isEmpty) {
+              return const Center(child: Text('Hymn not downloaded'));
+            }
+            return ZoomablePhotoGallery(
+              backColor: FluentTheme.of(context).scaffoldBackgroundColor,
+              imageList: List.generate(
+                images.length,
+                (index) => Image.memory(images[index].data),
+              ),
             );
           },
-          orElse: () => const CircularProgressIndicator(),
-        );
-      }),
+        ),
+      );
+    }
+    return const ScaffoldPage(
+      header: PageHeader(
+        title: Text('Hymn Details'),
+      ),
+      content: Center(child: ProgressRing()),
     );
   }
 }
+
+// class MaybeHymnDetails extends StatefulWidget {
+//   const MaybeHymnDetails({super.key, required this.hymnId});
+
+//   final String hymnId;
+
+//   @override
+//   State<MaybeHymnDetails> createState() => _MaybeHymnDetailsState();
+// }
+
+// class _MaybeHymnDetailsState extends State<MaybeHymnDetails> {
+//   late final getHymn = GetHymn($.get<HfwDatabase>());
+//   late final result = getHymn(widget.hymnId).toSignal();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Watch(
+//       (context) => result.value.map(
+//         loading: () => const ScaffoldPage(
+//           header: PageHeader(title: Text('Hymn Details')),
+//           content: Center(child: ProgressRing()),
+//         ),
+//         error: (error, stackTrace) => ScaffoldPage(
+//           header: const PageHeader(title: Text('Hymn Details')),
+//           content: Center(
+//             child: Text(
+//               'Error loading hymns: $error\n$stackTrace',
+//             ),
+//           ),
+//         ),
+//         data: (results) {
+//           if (results.hymn == null) {
+//             return const ScaffoldPage(
+//               header: PageHeader(title: Text('Hymn Details')),
+//               content: Center(child: Text('Hymn not found')),
+//             );
+//           }
+//           return HymnDetails(hymn: results.hymn!);
+//         },
+//       ),
+//     );
+//   }
+// }

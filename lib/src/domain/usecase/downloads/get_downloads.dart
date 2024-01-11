@@ -11,11 +11,10 @@ class GetDownloads extends GetRecords<HymnDownload, void> {
       : super(
           collectionName: 'bundles',
           itemFromRecordModel: (record) => _map(client, record),
-          itemFromRecord: (record) =>
-              _map(client, RecordModel.fromJson(jsonDecode(record.data))),
-          getRecords: (user) => db.getRecordModelsByCollectionName('bundles'),
-          fields:
-              'id,created,updated,hash,file,hymn_id,expand.hymn_id.title,expand.hymn_id.number',
+          itemFromRecord: (record) => _map(client, RecordModel.fromJson(jsonDecode(record.data))),
+          getRecords: (user) => db.getRecordModelsByCollection('bundles'),
+          // fields: 'id,created,updated,hash,file,hymn_id,expand.hymn_id.title,expand.hymn_id.number',
+          expand: 'hymn_id',
         );
 
   static HymnDownload _map(HfwStudio client, RecordModel record) {
@@ -24,6 +23,7 @@ class GetDownloads extends GetRecords<HymnDownload, void> {
     final hash = record.getStringValue('hash');
     final url = client.getFileUrl(record, file);
     final hymnRecord = record.expand['hymn_id']!.first;
+    final hymnalName = ''; // TODO: get from expand
     final hymnTitle = hymnRecord.getStringValue('title');
     final hymnNumber = hymnRecord.getStringValue('number');
     final created = DateTime.parse(record.created);
@@ -32,6 +32,7 @@ class GetDownloads extends GetRecords<HymnDownload, void> {
       hymnId: hymnId,
       hymnTitle: hymnTitle,
       hymnNumber: hymnNumber,
+      hymnalName: hymnalName,
       created: created,
       updated: updated,
       url: url,

@@ -221,7 +221,7 @@ class _BundlesScreenState extends State<BundlesScreen> {
                         ? null
                         : () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => HymnDetails(hymn: hymn),
+                                builder: (context) => HymnDetails(hymnId: hymn.id),
                               ),
                             ),
                   );

@@ -13,8 +13,8 @@ import 'portions.drift';
 CREATE TABLE hymns (
     id TEXT PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
+    translatedTitle TEXT,
     number TEXT NOT NULL,
-    tuneName TEXT,
     startingKey TEXT,
     beatPattern TEXT,
     startingPitch TEXT,
@@ -22,6 +22,14 @@ CREATE TABLE hymns (
     startingPitchDirection TEXT,
     timeSignature TEXT,
     complexTimeSignature TEXT,
+    status TEXT,
+    [key] TEXT,
+    sku TEXT,
+    electronicVersion TEXT,
+    tuneName TEXT,
+    arrangement TEXT,
+    language TEXT,
+    copyright TEXT,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL,
     UNIQUE (title, number)
@@ -46,6 +54,7 @@ CREATE VIRTUAL TABLE hymns_fts USING fts5 (
     content=hymns,
     content_rowid=id
 );
+
 CREATE TRIGGER hymns_fts_insert
 AFTER INSERT ON hymns
 BEGIN
@@ -77,27 +86,19 @@ BEGIN
     VALUES ('delete', old.ROWID, old.title, old.number, old.tuneName, old.startingKey, old.beatPattern, old.startingPitch, old.startingBeat, old.startingPitchDirection, old.timeSignature, old.complexTimeSignature);
 END;
 
--- Queries
 searchHymns:
-SELECT 
-	t.id,
-	highlight(hymns_fts, 0, '<b>', '</b>') title,
-    highlight(hymns_fts, 1, '<b>', '</b>') number,
-    highlight(hymns_fts, 2, '<b>', '</b>') tuneName,
-    highlight(hymns_fts, 3, '<b>', '</b>') startingKey,
-    highlight(hymns_fts, 4, '<b>', '</b>') beatPattern,
-    highlight(hymns_fts, 5, '<b>', '</b>') startingPitch,
-    highlight(hymns_fts, 6, '<b>', '</b>') startingBeat,
-    highlight(hymns_fts, 7, '<b>', '</b>') startingPitchDirection,
-    highlight(hymns_fts, 8, '<b>', '</b>') timeSignature,
-    highlight(hymns_fts, 9, '<b>', '</b>') complexTimeSignature,
-    t.created,
-    t.updated
-FROM hymns_fts 
-INNER JOIN hymns AS t
-	ON t.id = hymns_fts.ROWID
-WHERE hymns_fts MATCH :query
-ORDER BY rank;
+SELECT * FROM hymns
+WHERE title LIKE :query
+OR number LIKE :query
+OR tuneName LIKE :query
+OR startingKey LIKE :query
+OR beatPattern LIKE :query
+OR startingPitch LIKE :query
+OR startingBeat LIKE :query
+OR startingPitchDirection LIKE :query
+OR timeSignature LIKE :query
+OR complexTimeSignature LIKE :query
+ORDER BY number ASC;
 
 getHymns:
 SELECT * FROM hymns

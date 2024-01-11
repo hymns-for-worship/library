@@ -1,0 +1,93 @@
+import 'hymns.drift';
+import 'categories.drift';
+
+-- Tables
+CREATE TABLE hymn_categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    categoryId TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (categoryId, hymnId)
+);
+
+-- Indexes
+CREATE INDEX hymn_categories_idx_hymnId ON hymn_categories (hymnId);
+CREATE INDEX hymn_categories_idx_categoryId ON hymn_categories (categoryId);
+
+-- Triggers
+CREATE TRIGGER hymn_categories_delete_hymn
+AFTER DELETE ON hymns
+BEGIN
+    DELETE FROM hymn_categories
+    WHERE hymnId = old.id;
+END;
+
+CREATE TRIGGER hymn_categories_delete_category
+AFTER DELETE ON categories
+BEGIN
+    DELETE FROM hymn_categories
+    WHERE categoryId = old.id;
+END;
+
+-- Queries
+getHymnCategories:
+SELECT * FROM hymn_categories;
+
+getHymnCategory:
+SELECT * FROM hymn_categories
+WHERE id = :id;
+
+getHymnCategoriesByCategoryId:
+SELECT * FROM hymn_categories
+WHERE categoryId = :categoryId;
+
+getHymnCategoriesByHymnId:
+SELECT * FROM hymn_categories
+WHERE hymnId = :hymnId;
+
+createHymnCategory:
+INSERT OR REPLACE INTO hymn_categories (categoryId, hymnId, created, updated)
+VALUES (:categoryId, :hymnId, :created, :updated)
+RETURNING *;
+
+updateHymnCategory:
+UPDATE hymn_categories
+SET categoryId = :categoryId, hymnId = :hymnId, updated = :updated
+WHERE id = :id;
+
+deleteHymnCategory:
+DELETE FROM hymn_categories
+WHERE id = :id;
+
+deleteHymnCategories:
+DELETE FROM hymn_categories;
+
+getHymnsByCategoryId:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_categories
+    WHERE hymnId = h.id
+    AND categoryId = :categoryId
+);
+
+getCategoriesByHymnId:
+SELECT t.* FROM categories AS t
+WHERE EXISTS (
+    SELECT categoryId FROM hymn_categories
+    WHERE categoryId = t.id
+    AND hymnId = :hymnId
+);
+
+getCategoriesWithHymnId:
+SELECT t.*, ht.hymnId FROM categories AS t
+INNER JOIN hymn_categories AS ht
+	ON ht.categoryId = t.id;
+
+getPublicDomainHymns:
+SELECT h.* FROM hymns AS h
+WHERE EXISTS (
+    SELECT hymnId FROM hymn_categories
+    WHERE hymnId = h.id
+    AND categoryId = 'hcdtp5ebb7c5b0f'
+);

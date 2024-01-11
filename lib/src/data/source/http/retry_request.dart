@@ -1,21 +1,18 @@
 import 'package:http/http.dart';
 
-import '../database/database.dart';
+import 'store/http_cached_request.dart';
 
 class OfflineRequest extends BaseRequest {
-  final OfflineQueueData data;
+  final HttpCachedRequest data;
 
-  OfflineRequest(this.data) : super(data.method, Uri.parse(data.url));
+  OfflineRequest(this.data) : super(data.method, data.url);
 
   @override
   ByteStream finalize() {
-    final Stream<List<int>> stream = data.body != null
-        ? Stream.fromIterable([data.body!])
-        : const Stream.empty();
     super.finalize();
-    return ByteStream(stream);
+    return ByteStream(Stream.fromIterable([data.body]));
   }
 
   @override
-  int? get contentLength => data.body?.length;
+  int? get contentLength => data.body.length;
 }

@@ -17,6 +17,8 @@ part 'database.g.dart';
   'sql/hymn_stakeholders.drift',
   'sql/scriptures.drift',
   'sql/hymn_scriptures.drift',
+  'sql/categories.drift',
+  'sql/hymn_categories.drift',
   'sql/hymnals.drift',
   'sql/hymn_hymnals.drift',
   'sql/portions.drift',
@@ -40,14 +42,24 @@ class HfwDatabase extends _$HfwDatabase {
     String collectionName,
     Map<String, String> filters,
   ) {
-    var query = records.select();
-    query.where((tbl) =>
-        tbl.data.jsonExtract('collection_name').equals(collectionName));
+    final query = records.select();
+    query.where((tbl) => tbl.collectionName.equals(collectionName));
     for (final filter in filters.entries) {
       query.where(
-          (tbl) => tbl.data.jsonExtract(filter.key).equals(filter.value));
+        (tbl) => tbl.data.jsonExtract('\$.${filter.key}').equals(filter.value),
+      );
     }
     return query;
+  }
+
+  Future<String> insertOrUpdateHymn(HymnsCompanion companion) async {
+    final current = await getHymn(companion.id.value).getSingleOrNull();
+    if (current == null) {
+      await into(hymns).insert(companion);
+    } else {
+      await update(hymns).replace(companion);
+    }
+    return companion.id.value;
   }
 }
 

@@ -78,3 +78,8 @@ WHERE EXISTS (
     WHERE scriptureId = t.id
     AND hymnId = :hymnId
 );
+
+getScripturesWithHymnId:
+SELECT s.*, hs.hymnId FROM scriptures AS s
+INNER JOIN hymn_scriptures AS hs
+	ON hs.scriptureId = s.id;

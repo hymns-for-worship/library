@@ -9,6 +9,9 @@ CREATE TABLE request_cache (
     UNIQUE ([url], headers)
 );
 
+-- Indexes
+CREATE INDEX request_cache_idx_url ON request_cache ([url]);
+
 -- Queries
 getRequestCache:
 SELECT * FROM request_cache;

@@ -40,7 +40,7 @@ class _HymnalDetailsState extends State<HymnalDetails> {
                   subtitle: Text(hymn.number),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => HymnDetails(hymn: hymn),
+                      builder: (context) => HymnDetails(hymnId: hymn.id),
                     ),
                   ),
                 );

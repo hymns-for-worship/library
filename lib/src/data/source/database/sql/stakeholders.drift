@@ -10,46 +10,11 @@ CREATE TABLE stakeholders (
 -- Indexes
 CREATE INDEX stakeholders_idx_name ON stakeholders (name);
 
--- Full Text Search
-CREATE VIRTUAL TABLE stakeholders_fts USING fts5 (
-    name,
-    content=stakeholders,
-    content_rowid=id
-);
-CREATE TRIGGER stakeholders_fts_insert
-AFTER INSERT ON stakeholders
-BEGIN
-    INSERT INTO stakeholders_fts (rowid, name)
-    VALUES (new.ROWID, new.name);
-END;
-
-CREATE TRIGGER stakeholders_fts_update
-AFTER UPDATE ON stakeholders
-BEGIN
-    UPDATE stakeholders_fts
-    SET name = new.name
-    WHERE rowid = old.ROWID;
-END;
-
-CREATE TRIGGER stakeholders_fts_delete
-AFTER DELETE ON stakeholders
-BEGIN
-    INSERT INTO stakeholders_fts (stakeholders_fts, rowid, name)
-    VALUES ('delete', old.ROWID, old.name);
-END;
-
 -- Queries
 searchStakeholders:
-SELECT 
-	t.id,
-	highlight(stakeholders_fts, 0, '<b>', '</b>') name,
-    t.created,
-    t.updated
-FROM stakeholders_fts 
-INNER JOIN stakeholders AS t
-	ON t.id = stakeholders_fts.ROWID
-WHERE stakeholders_fts MATCH :query
-ORDER BY rank;
+SELECT * FROM stakeholders
+WHERE name LIKE :query
+ORDER BY name ASC;
 
 getStakeholders:
 SELECT * FROM stakeholders

@@ -62,6 +62,7 @@ class GetRecords<T, Args> {
                 true,
                 DateTime.now(),
                 item.id,
+                item.collectionName,
               );
             }
             break;
@@ -73,6 +74,7 @@ class GetRecords<T, Args> {
                 true,
                 DateTime.now(),
                 item.id,
+                item.collectionName,
               );
             }
             break;
@@ -92,16 +94,17 @@ class GetRecords<T, Args> {
     _dispose = null;
   }
 
-  Stream<List<T>> call(Args args) async* {
+  Stream<double> checkForUpdate(Args args, {bool force = false}) async* {
     final status = await db //
-        .getCollectionNameSyncedStatus(collectionName)
+        .getCollectionSyncedStatus(collectionName)
         .getSingleOrNull();
     final now = DateTime.now();
     final target = now.subtract(staleDuration);
     final isStale = status?.updated.isAfter(target) ?? true;
-    final needsFetch = status == null || !status.synced || isStale;
-    if (status != null) {
-      yield await getRecords(args).map(itemFromRecord).get();
+    final needsFetch = status == null || !status.synced || isStale || force;
+    if (status != null && !force) {
+      yield 1;
+      return;
     }
     if (needsFetch) {
       ResultList<RecordModel>? records;
@@ -110,6 +113,7 @@ class GetRecords<T, Args> {
         int totalPages = 1;
         const pageSize = 100;
         while (page < totalPages) {
+          yield page / totalPages;
           final result = await client.collection(collectionName).getList(
                 expand: expand,
                 page: ++page,
@@ -142,11 +146,8 @@ class GetRecords<T, Args> {
               now,
             );
           }
-          if (status == null) {
-            yield records.items.map(itemFromRecordModel).toList();
-          }
         }
-        await db.deleteRecordModelsByCollectionNameBeforeDate(
+        await db.deleteRecordModelsByCollectionBeforeDate(
           collectionName,
           now,
         );
@@ -155,7 +156,12 @@ class GetRecords<T, Args> {
         // ignore: avoid_print
         print('error getting $collectionName: $e');
       }
+      yield 1;
     }
+  }
+
+  Stream<List<T>> call(Args args, {bool check = true}) async* {
+    if (check) await checkForUpdate(args).last;
     yield* getRecords(args).map(itemFromRecord).watch();
   }
 }

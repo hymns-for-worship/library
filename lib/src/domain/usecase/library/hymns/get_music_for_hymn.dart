@@ -1,22 +1,9 @@
 import '../../../model/bundle_file.dart';
 import '../../../model/hymn_archive.dart';
-import 'get_hymn_archive.dart';
 
 class GetMusicForHymn {
-  final GetHymnArchive getHymnArchive;
-
-  GetMusicForHymn({
-    required this.getHymnArchive,
-  });
-
-  Stream<List<BundleFile>> call(String hymnId) async* {
-    await for (final archive in getHymnArchive(hymnId)) {
-      if (archive == null) {
-        yield [];
-        return;
-      }
-      yield archive.getMusic();
-    }
+  List<BundleFile> call(HymnArchive archive) {
+    return archive.getMusic();
   }
 }
 
