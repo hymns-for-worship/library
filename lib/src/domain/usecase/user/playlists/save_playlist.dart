@@ -188,7 +188,6 @@ import 'package:file_saver/file_saver.dart';
 import 'package:xml/xml.dart';
 
 import 'package:hfw_core/hfw_core.dart';
-import 'export_playlist.dart';
 
 class SavePlaylist {
   final HfwDatabase db;
@@ -233,8 +232,8 @@ class SavePlaylist {
 
     var idx = 0;
     for (var item in items) {
-      if (item.parts != null) {
-        final parts = item.parts?.split(',') ?? [];
+      if (item.parts.isNotEmpty) {
+        final parts = item.parts;
         for (final part in parts) {
           var verse = '';
           if (part.startsWith('Verse ')) {

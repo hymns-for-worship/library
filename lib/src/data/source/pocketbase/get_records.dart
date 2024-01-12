@@ -43,14 +43,8 @@ class GetRecords<T, Args> {
           case 'create':
             if (item != null) {
               await db.createRecordModel(
-                item.id,
-                item.collectionId,
-                item.collectionName,
                 jsonEncode(item.toJson()),
-                false,
                 true,
-                DateTime.now(),
-                DateTime.now(),
               );
             }
             break;
@@ -58,9 +52,7 @@ class GetRecords<T, Args> {
             if (item != null) {
               await db.updateRecordModel(
                 jsonEncode(item.toJson()),
-                false,
                 true,
-                DateTime.now(),
                 item.id,
                 item.collectionName,
               );
@@ -69,10 +61,11 @@ class GetRecords<T, Args> {
           case 'delete':
             if (item != null) {
               await db.updateRecordModel(
-                jsonEncode(item.toJson()),
+                jsonEncode({
+                  ...item.toJson(),
+                  'deleted': true,
+                }),
                 true,
-                true,
-                DateTime.now(),
                 item.id,
                 item.collectionName,
               );
@@ -135,16 +128,7 @@ class GetRecords<T, Args> {
             totalPages = result.totalPages;
           }
           for (final record in result.items) {
-            await db.createRecordModel(
-              record.id,
-              record.collectionId,
-              record.collectionName,
-              jsonEncode(record.toJson()),
-              false,
-              true,
-              now,
-              now,
-            );
+            await db.createRecordModel(jsonEncode(record.toJson()), true);
           }
         }
         await db.deleteRecordModelsByCollectionBeforeDate(

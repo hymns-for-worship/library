@@ -10,17 +10,16 @@ import 'export_playlist.dart';
 class ExportPlaylistPptx {
   final HfwDatabase db;
   final TemplateOptions options;
-  final PlaylistAssetLoader loadAsset;
-  late final exporter = ExportPlaylist(db, options, loadAsset);
-  ExportPlaylistPptx(this.db, this.options, this.loadAsset);
+
+  late final exporter = ExportPlaylist(db, options);
+  ExportPlaylistPptx(this.db, this.options);
 
   Future<void> call(
     String userId,
     Playlist playlist,
-    Playlist data,
     String template,
   ) async {
-    final items = await db.getItemsForPlaylist(userId, data.id).get();
+    final items = await db.getItemsForPlaylist(userId, playlist.id).get();
     final slides = await exporter.call(items);
     final bytes = await options.get(template);
     final pres = Presentation.fromBytes(bytes);

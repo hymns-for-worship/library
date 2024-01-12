@@ -12,6 +12,7 @@ DatabaseConnection connect(
   bool logStatements = false,
   bool inMemory = false,
   bool debug = false,
+  bool delete = false,
 }) {
   if (inMemory) {
     return DatabaseConnection(NativeDatabase.memory());
@@ -19,6 +20,10 @@ DatabaseConnection connect(
   return DatabaseConnection.delayed(Future.sync(() async {
     final appDir = await getApplicationDocumentsDirectory();
     final dbPath = p.join(appDir.path, dbName);
+
+    if (delete) {
+      await File(dbPath).delete(recursive: true);
+    }
 
     final receiveDriftIsolate = ReceivePort();
     await Isolate.spawn(

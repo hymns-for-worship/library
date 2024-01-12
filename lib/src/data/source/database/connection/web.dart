@@ -12,6 +12,7 @@ DatabaseConnection connect(
   bool logStatements = false,
   bool inMemory = false,
   bool debug = false,
+  bool delete = false,
 }) {
   return DatabaseConnection.delayed(Future(() async {
     final sqliteUrl = Uri.parse('/sqlite3.${debug ? 'debug.' : ''}wasm');

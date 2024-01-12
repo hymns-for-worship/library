@@ -2,29 +2,21 @@ import 'users.drift';
 
 -- Tables
 CREATE TABLE records (
-    id TEXT PRIMARY KEY NOT NULL,
-    collection_id TEXT NOT NULL,
-    collection_name TEXT NOT NULL,
-    [data] TEXT NOT NULL,
-    deleted BOOLEAN NOT NULL DEFAULT 0,
+    data TEXT NOT NULL,
+    id TEXT GENERATED ALWAYS AS (json_extract(data, '$.id')) VIRTUAL NOT NULL,
+    collection_id TEXT GENERATED ALWAYS AS (json_extract(data, '$.collectionId')) VIRTUAL NOT NULL,
+    collection_name TEXT GENERATED ALWAYS AS (json_extract(data, '$.collectionName')) VIRTUAL NOT NULL,
+    created DATETIME GENERATED ALWAYS AS (json_extract(data, '$.created')) VIRTUAL NOT NULL,
+    updated DATETIME GENERATED ALWAYS AS (json_extract(data, '$.updated')) VIRTUAL NOT NULL,
+    deleted BOOLEAN GENERATED ALWAYS AS (json_extract(data, '$.deleted')) VIRTUAL,
     synced BOOLEAN NOT NULL DEFAULT 0,
     fresh BOOLEAN,
-    created DATETIME NOT NULL,
-    updated DATETIME NOT NULL,
-    UNIQUE (id, collection_id, collection_name)
+    UNIQUE(id, collection_name)
 );
 
 CREATE VIEW user_records AS
 SELECT 
-    id,
-    collection_id,
-    collection_name, 
-    fresh,
-    synced,
-    deleted,
-    created,
-    updated,
-    [data],
+    *,
     CASE WHEN json_extract(data, '$.user') IS NOT NULL THEN CAST(json_extract(data, '$.user') AS TEXT) ELSE NULL END AS user,
     CASE WHEN json_extract(data, '$.uid') IS NOT NULL THEN CAST(json_extract(data, '$.uid') AS TEXT) ELSE NULL END AS uid
 FROM records;
@@ -46,11 +38,8 @@ CREATE TABLE records_cache (
     UNIQUE (collection)
 );
 
-
 -- Full Text Search
 CREATE VIRTUAL TABLE records_fts USING fts5 (
-    collection_id,
-    collection_name,
     data,
     content=records,
     content_rowid=id
@@ -58,32 +47,27 @@ CREATE VIRTUAL TABLE records_fts USING fts5 (
 CREATE TRIGGER records_fts_insert
 AFTER INSERT ON records
 BEGIN
-    INSERT INTO records_fts (rowid, collection_id, collection_name, data)
-    VALUES (new.ROWID, new.collection_id, new.collection_name, new.data);
+    INSERT INTO records_fts (rowid, data)
+    VALUES (new.ROWID, new.data);
 END;
 
 CREATE TRIGGER records_fts_update
 AFTER UPDATE ON records
 BEGIN
     UPDATE records_fts
-    SET collection_id = new.collection_id, 
-        collection_name = new.collection_name, 
-        data = new.data
+    SET data = new.data
     WHERE rowid = old.ROWID;
 END;
 
 CREATE TRIGGER records_fts_delete
 AFTER DELETE ON records
 BEGIN
-    INSERT INTO records_fts (records_fts, rowid, collection_id, collection_name, data)
-    VALUES ('delete', old.ROWID, old.collection_id, old.collection_name, old.data);
+    INSERT INTO records_fts (records_fts, rowid, data)
+    VALUES ('delete', old.ROWID, old.data);
 END;
 
 -- Indexes
-CREATE INDEX records_idx_collection ON records (collection_id, collection_name);
 CREATE INDEX records_idx_data ON records (data);
-CREATE INDEX records_idx_status ON records (deleted, synced);
-CREATE INDEX records_idx_date ON records (created, updated);
 
 getRecordModels:
 SELECT * FROM records;
@@ -101,26 +85,31 @@ SELECT * FROM records
 WHERE (collection_id = :collection OR collection_name = :collection)
 AND id = :id;
 
+setRecordModel:
+REPLACE INTO records (data, synced, fresh)
+VALUES (:data, :synced, :fresh)
+RETURNING *;
+
 createRecordModel:
-INSERT OR REPLACE INTO records (id, collection_id, collection_name, data, deleted, synced, fresh, created, updated)
-VALUES (:id, :collection_id, :collection_name, :data, :deleted, :synced, 1, :created, :updated);
+INSERT OR REPLACE INTO records (data, synced, fresh)
+VALUES (:data, :synced, 1)
 RETURNING *;
 
 updateRecordModel:
 UPDATE records
-SET data = :data, deleted = :deleted, synced = :synced, updated = :updated
+SET data = :data, synced = :synced
 WHERE id = :id
 AND (collection_id = :collection OR collection_name = :collection);
 
 deleteRecordModel:
 UPDATE records
-SET deleted = 1, updated = :updated
+SET data = json_set(data,'$.deleted', IFNULL(json_extract(data, '$.deleted'), 0) + 1)
 WHERE id = :id
 AND (collection_id = :collection OR collection_name = :collection);
 
 undoDeleteRecordModel:
 UPDATE records
-SET deleted = 0, updated = :updated
+SET data = json_set(data,'$.deleted', IFNULL(json_extract(data, '$.deleted'), 1) - 1)
 WHERE id = :id
 AND (collection_id = :collection OR collection_name = :collection);
 
@@ -135,8 +124,15 @@ AND (collection_id = :collection OR collection_name = :collection);
 
 setSyncStatusRecordModel:
 UPDATE records
-SET synced = :synced, updated = :updated
-WHERE id = :id;
+SET synced = :synced
+WHERE id = :id
+AND (collection_id = :collection OR collection_name = :collection);
+
+setFreshStatusRecordModel:
+UPDATE records
+SET fresh = :fresh
+WHERE id = :id
+AND (collection_id = :collection OR collection_name = :collection);
 
 deleteRecordModelByCollection:
 DELETE FROM records
@@ -149,11 +145,6 @@ AND id = :id;
 
 deleteAllRecordModels:
 DELETE FROM records;
-
-deleteRecordModelsByCollectionBeforeDate:
-DELETE FROM records
-WHERE (collection_id = :collection OR collection_name = :collection)
-AND updated < :date;
 
 getCollectionSyncedStatus:
 SELECT * FROM records_cache
@@ -178,11 +169,17 @@ SELECT * FROM user_records
 WHERE synced = 0
 AND (collection_name IN :collections OR collection_id IN :collections);
 
+getUnsyncedRecordsByUser:
+SELECT * FROM user_records
+WHERE synced = 0
+AND (user = :user OR uid = :user)
+AND collection_name != 'users';
+
 searchRecords:
 SELECT 
 	r.id,
-	highlight(records_fts, 0, '<b>', '</b>') collection_id,
-    highlight(records_fts, 1, '<b>', '</b>') collection_name,
+    r.collection_id,
+    r.collection_name,
     highlight(records_fts, 2, '<b>', '</b>') data,
     r.created,
     r.updated

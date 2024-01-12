@@ -1,8 +1,4 @@
 import '../../../../../hfw_core.dart';
-import '../../../model/defaults.dart';
-
-import 'add_hymn_to_playlist.dart';
-import 'add_text_to_playlist.dart';
 
 class PlaylistExpertEntry {
   final HfwDatabase db;

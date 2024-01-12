@@ -7,20 +7,24 @@ class DeletePlaylist {
   Future<Playlist> call(Playlist data) async {
     final now = DateTime.now();
     final playlist = data.copyWith(
-      deleted: true,
       synced: false,
       updated: now,
     );
     await db.createRecordModel(
-      playlist.id,
-      playlist.collectionId,
-      playlist.collectionName,
       playlist.toJsonString(),
-      playlist.deleted,
       playlist.synced,
-      playlist.created,
-      playlist.updated,
     );
+    final items = await db.getItemsForPlaylist(data.user, data.id).get();
+    for (var item in items) {
+      item = item.copyWith(
+        synced: false,
+        updated: now,
+      );
+      await db.createRecordModel(
+        item.toJsonString(),
+        item.synced,
+      );
+    }
     return playlist;
   }
 }

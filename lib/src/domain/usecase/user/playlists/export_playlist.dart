@@ -4,14 +4,11 @@ import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pptx/presentation.dart';
 import '../../../model/template_options.dart';
 
-typedef PlaylistAssetLoader = Future<Uint8List> Function(String key);
-
 class ExportPlaylist {
   final HfwDatabase db;
   final TemplateOptions options;
-  final PlaylistAssetLoader loadAsset;
 
-  ExportPlaylist(this.db, this.options, this.loadAsset);
+  ExportPlaylist(this.db, this.options);
 
   Future<List<PresentationSlide>> call(List<PlaylistItem> items) async {
     final slides = <PresentationSlide>[];
@@ -21,7 +18,7 @@ class ExportPlaylist {
         Uint8List? background;
         if (item.black != null) {
           final color = item.black! ? 'Black' : 'White';
-          final black = await loadAsset('assets/templates/$color.png');
+          final black = await options.get('assets/templates/$color.png');
           background = black.buffer.asUint8List();
         }
         slides.add((
@@ -41,7 +38,7 @@ class ExportPlaylist {
         final archive = await bundle.toArchiveAsync();
         if (archive == null) continue;
         final images = archive.files.where((e) => e.name.endsWith('.png'));
-        final parts = item.parts?.split(',') ?? [];
+        final parts = item.parts;
         if (parts.isNotEmpty && parts[0].toUpperCase() != 'TITLE') {
           parts.insert(0, 'Title');
         }

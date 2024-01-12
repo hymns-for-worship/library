@@ -34,9 +34,7 @@ class ReorderPlaylistItems {
       );
       await db.updateRecordModel(
         item.toJsonString(),
-        item.deleted,
         item.synced,
-        item.updated,
         item.id,
         item.collectionName,
       );

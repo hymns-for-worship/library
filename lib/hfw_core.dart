@@ -60,4 +60,10 @@ export 'src/domain/usecase/user/playlists/save_playlist.dart';
 export 'src/domain/usecase/user/playlists/playlist_expert_entry.dart';
 export 'src/domain/usecase/user/playlists/remove_playlist_item.dart';
 export 'src/domain/usecase/user/playlists/reorder_playlist_items.dart';
+export 'src/domain/usecase/user/playlists/edit_notes_playlist_item.dart';
+export 'src/domain/usecase/user/playlists/edit_parts_playlist_item.dart';
+export 'src/domain/usecase/user/playlists/duplicate_playlist.dart';
 export 'src/domain/model/template_options.dart';
+export 'src/domain/model/defaults.dart';
+
+export 'src/data/utils/retry/future.dart';

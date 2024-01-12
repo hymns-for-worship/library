@@ -115,5 +115,5 @@ class IdGenerator {
 }
 
 String generateId() {
-  return shortid.generate();
+  return shortid.generate().padLeft(15, "0");
 }

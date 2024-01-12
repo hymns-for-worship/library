@@ -22,7 +22,7 @@ class AddTextToPlaylist {
         .get()
         .then((items) => items.toList());
     final now = DateTime.now();
-    final item = PlaylistItem(
+    var item = PlaylistItem(
       id: current?.id ?? generateId(),
       deleted: false,
       synced: false,
@@ -30,13 +30,14 @@ class AddTextToPlaylist {
       created: now,
       updated: now,
       fresh: current?.fresh ?? true,
-      collectionId: 'playlists',
-      collectionName: 'playlists',
+      collectionId: 'playlist_items',
+      collectionName: 'playlist_items',
       playlistId: data.id,
       text: text,
       notes: current?.notes,
       uid: current?.uid,
-      parts: current?.parts,
+      user: userId,
+      parts: current?.parts ?? [],
       color: color ?? current?.color,
       order: current?.order,
     );
@@ -46,19 +47,38 @@ class AddTextToPlaylist {
       final index = items.indexWhere((e) => e.id == current.id);
       items[index] = item;
     }
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
+    if (current == null) {
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        item = item.copyWith(
+          order: Value(i.toDouble()),
+          updated: DateTime.now(),
+          synced: false,
+          user: Value(userId),
+        );
+        if (item.fresh == true) {
+          await db.createRecordModel(
+            item.toJsonString(),
+            item.synced,
+          );
+        } else {
+          await db.updateRecordModel(
+            item.toJsonString(),
+            item.synced,
+            item.id,
+            item.collectionName,
+          );
+        }
+      }
+    } else {
       item = item.copyWith(
-        order: Value(i.toDouble()),
         updated: DateTime.now(),
         synced: false,
         user: Value(userId),
       );
       await db.updateRecordModel(
         item.toJsonString(),
-        item.deleted,
         item.synced,
-        item.updated,
         item.id,
         item.collectionName,
       );

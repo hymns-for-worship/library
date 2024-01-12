@@ -51,14 +51,8 @@ class AddToUserLibrary {
           .getSingleOrNull();
       if (item == null) {
         await db.createRecordModel(
-          result.id,
-          result.collectionId,
-          result.collectionName,
           jsonEncode(result.toJson()),
           false,
-          true,
-          DateTime.now(),
-          DateTime.now(),
         );
       }
     } catch (error, stackTrace) {

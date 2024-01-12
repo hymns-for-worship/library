@@ -1,18 +1,19 @@
 import 'records.drift';
 import 'playlists.drift';
+import 'converters.dart';
 
 -- Tables
 CREATE VIEW local_playlist_items AS
 SELECT 
     *,
     CAST(json_extract(data, '$.playlist_id') AS TEXT) AS playlist_id,
-    CASE WHEN json_extract(data, '$.hymn_id') IS NOT NULL THEN CAST(json_extract(data, '$.hymn_id') AS TEXT) ELSE NULL END AS hymnId,
+    CASE WHEN json_extract(data, '$.hymn_id') IS NOT NULL THEN CAST(json_extract(data, '$.hymn_id') AS TEXT) ELSE NULL END AS hymn_id,
     CASE WHEN json_extract(data, '$.image') IS NOT NULL THEN CAST(json_extract(data, '$.image') AS TEXT) ELSE NULL END AS image,
-    CASE WHEN json_extract(data, '$.parts') IS NOT NULL THEN CAST(json_extract(data, '$.parts') AS TEXT) ELSE NULL END AS parts,
     CASE WHEN json_extract(data, '$.color') IS NOT NULL THEN CAST(json_extract(data, '$.color') AS TEXT) ELSE NULL END AS color,
     CASE WHEN json_extract(data, '$.notes') IS NOT NULL THEN CAST(json_extract(data, '$.notes') AS TEXT) ELSE NULL END AS notes,
     CASE WHEN json_extract(data, '$.text') IS NOT NULL THEN CAST(json_extract(data, '$.text') AS TEXT) ELSE NULL END AS [text],
-    CASE WHEN json_extract(data, '$.order') IS NOT NULL THEN CAST(json_extract(data, '$.order') AS REAL) ELSE NULL END AS [order]
+    CASE WHEN json_extract(data, '$.order') IS NOT NULL THEN CAST(json_extract(data, '$.order') AS REAL) ELSE NULL END AS [order],
+    CASE WHEN json_extract(data, '$.parts') IS NOT NULL THEN CAST(group_concat(json_extract(data, '$.parts')) AS TEXT) ELSE '[]' END MAPPED BY `const JsonStringListConverter()` AS parts
 FROM user_records
 WHERE collection_name = 'playlist_items'
 OR collection_name = 'public_playlist_items';
@@ -45,27 +46,30 @@ getItemsForPlaylist:
 SELECT * FROM playlist_items
 WHERE user = :user
 AND playlist_id = :playlist_id
-AND deleted = 0
+AND deleted != 1
 ORDER BY [order] ASC;
 
 getItemsForPublicPlaylist:
 SELECT * FROM public_playlist_items
 WHERE playlist_id = :playlist_id
-AND deleted = 0
+AND deleted != 1
 ORDER BY [order] ASC;
 
 getPlaylistItems:
 SELECT * FROM playlist_items
-ORDER BY [order] ASC;
+ORDER BY [order] ASC
+WHERE deleted != 1;
 
 getPlaylistItemsByUserAndPlaylistId:
 SELECT * FROM playlist_items
 WHERE user = :user
 AND playlist_id = :playlist_id
+AND deleted != 1
 ORDER BY [order] ASC;
 
 getPublicPlaylistItemsByUserAndPublicPlaylistId:
 SELECT * FROM public_playlist_items
 WHERE user = :user
 AND playlist_id = :playlist_id
+AND deleted != 1
 ORDER BY [order] ASC;

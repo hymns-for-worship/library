@@ -10,9 +10,8 @@ import 'export_playlist.dart';
 class ExportImagesImages {
   final HfwDatabase db;
   final TemplateOptions options;
-  final PlaylistAssetLoader loadAsset;
-  late final exporter = ExportPlaylist(db, options, loadAsset);
-  ExportImagesImages(this.db, this.options, this.loadAsset);
+  late final exporter = ExportPlaylist(db, options);
+  ExportImagesImages(this.db, this.options);
 
   Future<void> call(
     String template,

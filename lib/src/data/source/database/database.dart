@@ -3,7 +3,9 @@ import 'package:drift/drift.dart';
 import 'package:drift/extensions/json1.dart';
 
 import '../archive/zip.dart';
+import 'sql/converters.dart';
 export 'extension.dart';
+export 'sql/converters.dart';
 
 part 'database.g.dart';
 

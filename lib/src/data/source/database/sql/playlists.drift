@@ -6,7 +6,7 @@ CREATE VIEW local_playlists AS
 SELECT 
     *,
     CAST(json_extract(data, '$.name') as TEXT) AS name,
-    CASE WHEN json_extract(data, '$.description') IS NOT NULL THEN CAST(json_extract(data, '$.description') AS TEXT) ELSE NULL END AS [description],
+    CASE WHEN json_extract(data, '$.description') IS NOT NULL THEN CAST(json_extract(data, '$.description') AS TEXT) ELSE NULL END AS description,
     CASE WHEN json_extract(data, '$.public') IS NOT NULL THEN CAST(json_extract(data, '$.public') AS BOOLEAN) ELSE NULL END AS public,
     CASE WHEN json_extract(data, '$.medly') IS NOT NULL THEN CAST(json_extract(data, '$.medly') AS BOOLEAN) ELSE NULL END AS medly,
     CASE WHEN json_extract(data, '$.supplement') IS NOT NULL THEN CAST(json_extract(data, '$.supplement') AS BOOLEAN) ELSE NULL END AS supplement,
@@ -28,7 +28,7 @@ OR (collection_name = 'playlists' AND public = 1);
 getPlaylists:
 SELECT * FROM playlists
 WHERE user = :user
-AND deleted = 0
+AND deleted != 1
 ORDER BY updated DESC;
 
 getPlaylist:
@@ -38,7 +38,7 @@ AND id = :id;
 
 getPublicPlaylists:
 SELECT * FROM public_playlists
-WHERE deleted = 0
+WHERE deleted != 1
 ORDER BY updated DESC;
 
 getPublicPlaylist:

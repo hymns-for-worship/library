@@ -256,19 +256,7 @@ class OpenPlaylist {
       }
     }
     final name = result.files.first.name.split('/').last;
-    final now = DateTime.now();
-    final data = Playlist(
-      id: '',
-      user: userId,
-      created: now,
-      updated: now,
-      collectionId: 'playlists',
-      collectionName: 'playlists',
-      synced: false,
-      deleted: false,
-      data: '',
-      name: name,
-    );
+    final data = PlaylistData()..name = name;
     final playlist = await editPlaylist(data, userId);
     for (final item in items) {
       if (item.hymn != null) {

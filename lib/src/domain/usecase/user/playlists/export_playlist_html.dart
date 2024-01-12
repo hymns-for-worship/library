@@ -10,15 +10,14 @@ import 'export_playlist.dart';
 class ExportPlaylistHtml {
   final HfwDatabase db;
   final TemplateOptions options;
-  final PlaylistAssetLoader loadAsset;
-  late final exporter = ExportPlaylist(db, options, loadAsset);
-  ExportPlaylistHtml(this.db, this.options, this.loadAsset);
+  late final exporter = ExportPlaylist(db, options);
+  ExportPlaylistHtml(this.db, this.options);
 
   Future<void> call(
-    String template,
+    String userId,
     Playlist playlist,
-    List<PlaylistItem> items,
   ) async {
+    final items = await db.getItemsForPlaylist(userId, playlist.id).get();
     final xml = baseTemplate(await createTable(
       version: 'v3',
       items: items,
@@ -109,7 +108,7 @@ class ExportPlaylistHtml {
         cell('center', hymn.timeSignature ?? 'N/A'),
         cell('center', hymn.startingBeat ?? 'N/A'),
         cell('', hymn.title),
-        cell('', item.parts ?? 'N/A'),
+        cell('', item.parts.join(',')),
       ]));
     }
     return xml.toXmlString();

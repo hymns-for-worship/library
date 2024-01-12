@@ -47,14 +47,7 @@ class RemoveFromUserLibrary {
           )
           .getSingleOrNull();
       if (item != null) {
-        await db.updateRecordModel(
-          item.data,
-          true,
-          false,
-          DateTime.now(),
-          item.id,
-          item.collectionName,
-        );
+        await db.deleteRecordModel(item.id, item.collectionName);
       }
     }
   }
