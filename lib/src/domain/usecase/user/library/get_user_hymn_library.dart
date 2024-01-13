@@ -5,7 +5,7 @@ class GetUserHymnLibrary {
 
   GetUserHymnLibrary(this.db);
 
-  Stream<List<UserHymnLibraryData>> call(String user) {
+  Stream<List<Hymn>> call(String user) {
     return db.getUserHymnLibrary(user).watch();
   }
 }

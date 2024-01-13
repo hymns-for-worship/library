@@ -1,4 +1,7 @@
 import 'records.drift';
+import 'hymns.drift';
+import 'topics.drift';
+import 'stakeholders.drift';
 
 -- Tables
 CREATE VIEW user_library AS
@@ -10,24 +13,6 @@ SELECT
     CASE WHEN json_extract(data, '$.stakeholder_id') IS NOT NULL THEN CAST(json_extract(data, '$.stakeholder_id') AS TEXT) ELSE NULL END AS stakeholder_id
 FROM user_records
 WHERE collection_name = 'user_library';
-
-CREATE VIEW user_hymn_library AS
-SELECT *, CAST(json_extract(data, '$.hymn_id') AS TEXT) AS hymn_id
-FROM user_records
-WHERE collection_name = 'user_library'
-AND json_extract(data, '$.hymn_id') IS NOT NULL;
-
-CREATE VIEW user_stakeholder_library AS
-SELECT *, CAST(json_extract(data, '$.stakeholder_id') AS TEXT) AS stakeholder_id
-FROM user_records
-WHERE collection_name = 'user_library'
-AND json_extract(data, '$.stakeholder_id') IS NOT NULL;
-
-CREATE VIEW user_topic_library AS
-SELECT *, CAST(json_extract(data, '$.topic_id') AS TEXT) AS topic_id
-FROM user_records
-WHERE collection_name = 'user_library'
-AND json_extract(data, '$.topic_id') IS NOT NULL;
 
 CREATE VIEW user_playlist_library AS
 SELECT *, CAST(json_extract(data, '$.playlist_id') AS TEXT) AS playlist_id
@@ -56,46 +41,28 @@ WHERE (user = :user OR uid = :user)
 AND id = :id;
 
 getUserHymnLibrary:
-SELECT * FROM user_hymn_library
-WHERE user = :user OR uid = :user;
-
-getUserHymnLibraryById:
-SELECT * FROM user_hymn_library
-WHERE (user = :user OR uid = :user)
-AND id = :id;
-
-getUserHymnLibraryByHymnId:
-SELECT * FROM user_hymn_library
-WHERE (user = :user OR uid = :user)
-AND hymn_id = :hymn_id;
+SELECT * FROM hymns AS h
+WHERE EXISTS (
+    SELECT * FROM user_library
+    WHERE hymn_id = h.id
+    AND (user = :user OR uid = :user)
+);
 
 getUserStakeholderLibrary:
-SELECT * FROM user_stakeholder_library
-WHERE user = :user OR uid = :user;
-
-getUserStakeholderLibraryById:
-SELECT * FROM user_stakeholder_library
-WHERE (user = :user OR uid = :user)
-AND id = :id;
-
-getUserStakeholderLibraryByStakeholderId:
-SELECT * FROM user_stakeholder_library
-WHERE (user = :user OR uid = :user)
-AND stakeholder_id = :stakeholder_id;
+SELECT * FROM stakeholders AS s
+WHERE EXISTS (
+    SELECT * FROM user_library
+    WHERE stakeholder_id = s.id
+    AND (user = :user OR uid = :user)
+);
 
 getUserTopicLibrary:
-SELECT * FROM user_topic_library
-WHERE user = :user OR uid = :user;
-
-getUserTopicLibraryById:
-SELECT * FROM user_topic_library
-WHERE (user = :user OR uid = :user)
-AND id = :id;
-
-getUserTopicLibraryByTopicId:
-SELECT * FROM user_topic_library
-WHERE (user = :user OR uid = :user)
-AND topic_id = :topic_id;
+SELECT * FROM topics AS t
+WHERE EXISTS (
+    SELECT * FROM user_library
+    WHERE topic_id = t.id
+    AND (user = :user OR uid = :user)
+);
 
 getUserPlaylistLibrary:
 SELECT * FROM user_playlist_library

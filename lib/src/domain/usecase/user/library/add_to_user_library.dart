@@ -29,7 +29,7 @@ class AddToUserLibrary {
       }
       throw Exception('Invalid key');
     }();
-    final items = await db.getUserHymnLibrary(userId).get();
+    final items = await db.getUserLibrary(userId).get();
     final current = items.firstWhereOrNull((item) {
       final map = jsonDecode(item.data) as Map<String, dynamic>;
       return map.containsKey(key) && map[key] == id;

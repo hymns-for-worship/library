@@ -28,7 +28,7 @@ class RemoveFromUserLibrary {
       }
       throw Exception('Invalid key');
     }();
-    final items = await db.getUserHymnLibrary(user).get();
+    final items = await db.getUserLibrary(user).get();
     final current = items.firstWhereOrNull((item) {
       final map = jsonDecode(item.data) as Map<String, dynamic>;
       return map.containsKey(key) && map[key] == id;
