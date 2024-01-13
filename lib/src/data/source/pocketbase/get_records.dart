@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:pocketbase/pocketbase.dart';
 
+import '../../utils/retry/future.dart';
 import '../database/database.dart';
 import 'client.dart';
 
@@ -102,6 +103,7 @@ class GetRecords<T, Args> {
     final isStale = status?.updated.isAfter(target) ?? true;
     final needsFetch = status == null || !status.synced || isStale || force;
     if (status != null && !force && local.isNotEmpty) {
+      await null;
       yield 1;
       return;
     }
@@ -113,43 +115,45 @@ class GetRecords<T, Args> {
         const pageSize = 100;
         while (page < totalPages) {
           yield page / totalPages;
-          final result = await client.collection(collectionName).getList(
-                expand: expand,
-                page: ++page,
+          await retryFuture(() async {
+            final result = await client.collection(collectionName).getList(
+                  expand: expand,
+                  page: ++page,
+                  perPage: pageSize,
+                  fields: fields,
+                  filter: filter?.call(args),
+                );
+            if (records == null) {
+              records = result;
+              totalPages = result.totalPages;
+            } else {
+              records = ResultList<RecordModel>(
+                items: [...records!.items, ...result.items],
+                page: result.page,
                 perPage: pageSize,
-                fields: fields,
-                filter: filter?.call(args),
+                totalItems: result.totalItems,
+                totalPages: result.totalPages,
               );
-          if (records == null) {
-            records = result;
-            totalPages = result.totalPages;
-          } else {
-            records = ResultList<RecordModel>(
-              items: [...records.items, ...result.items],
-              page: result.page,
-              perPage: pageSize,
-              totalItems: result.totalItems,
-              totalPages: result.totalPages,
-            );
-            totalPages = result.totalPages;
-          }
-          for (final record in result.items) {
-            await db.setRecordModel(
-              jsonEncode({
-                ...record.toJson(),
-                'date': now.toIso8601String(),
-              }),
-              true,
-              false,
-            );
-          }
+              totalPages = result.totalPages;
+            }
+            for (final record in result.items) {
+              await db.setRecordModel(
+                jsonEncode({
+                  ...record.toJson(),
+                  '_date': now.toIso8601String(),
+                }),
+                true,
+                false,
+              );
+            }
+          });
         }
         final local = await db //
             .getRecordModelsByCollection(collectionName)
             .get();
         for (final item in local) {
           final map = jsonDecode(item.data) as Map<String, dynamic>;
-          if (map['date'] != now.toIso8601String()) {
+          if (map['_date'] != now.toIso8601String()) {
             await db.deleteRecordModelByCollectionAndId(
               item.collectionName,
               item.id,
@@ -165,17 +169,17 @@ class GetRecords<T, Args> {
     }
   }
 
+  bool checking = false;
+
   Stream<List<T>> call(
     Args args, {
     bool check = true,
     bool incremental = false,
   }) async* {
-    if (check && incremental) {
-      checkForUpdate(args).listen((_) => {});
-      yield* getRecords(args).map(itemFromRecord).watch();
-    } else {
-      if (check) await checkForUpdate(args).last;
-      yield* getRecords(args).map(itemFromRecord).watch();
+    if (check && !checking) {
+      checking = true;
+      checkForUpdate(args).listen((_) {});
     }
+    yield* getRecords(args).map(itemFromRecord).watch();
   }
 }

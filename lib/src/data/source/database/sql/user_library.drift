@@ -41,28 +41,19 @@ WHERE (user = :user OR uid = :user)
 AND id = :id;
 
 getUserHymnLibrary:
-SELECT * FROM hymns AS h
-WHERE EXISTS (
-    SELECT * FROM user_library
-    WHERE hymn_id = h.id
-    AND (user = :user OR uid = :user)
-);
+SELECT * FROM user_library
+WHERE (user = :user OR uid = :user)
+AND hymn_id IS NOT NULL AND hymn_id != '';
 
 getUserStakeholderLibrary:
-SELECT * FROM stakeholders AS s
-WHERE EXISTS (
-    SELECT * FROM user_library
-    WHERE stakeholder_id = s.id
-    AND (user = :user OR uid = :user)
-);
+SELECT * FROM user_library
+WHERE (user = :user OR uid = :user)
+AND stakeholder_id IS NOT NULL AND stakeholder_id != '';
 
 getUserTopicLibrary:
-SELECT * FROM topics AS t
-WHERE EXISTS (
-    SELECT * FROM user_library
-    WHERE topic_id = t.id
-    AND (user = :user OR uid = :user)
-);
+SELECT * FROM user_library
+WHERE (user = :user OR uid = :user)
+AND topic_id IS NOT NULL AND topic_id != '';
 
 getUserPlaylistLibrary:
 SELECT * FROM user_playlist_library

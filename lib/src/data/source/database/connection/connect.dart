@@ -20,6 +20,10 @@ LazyDatabase connectDb(
     return NativeDatabase.createInBackground(
       file,
       logStatements: logStatements,
+      setup: (db) async {
+         db.execute('PRAGMA journal_mode=WAL');
+         db.execute('PRAGMA busy_timeout=100');
+      },
     );
   });
 }

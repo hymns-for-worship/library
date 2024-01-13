@@ -31,7 +31,8 @@ class DownloadLibrary {
         }
       });
       yield page / pages;
-      if (cancel?.call() ?? false) return;
+      final shouldCancel = cancel?.call();
+      if (shouldCancel != null && shouldCancel) return;
     }
     yield 1;
   }

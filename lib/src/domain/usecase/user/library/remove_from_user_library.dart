@@ -11,19 +11,19 @@ class RemoveFromUserLibrary {
 
   Future<void> call(
     String user, {
-    String? hymnId,
-    String? topicId,
-    String? stakeholderId,
-    String? playlistId,
+    String hymnId = '',
+    String topicId = '',
+    String stakeholderId = '',
+    String playlistId = '',
   }) async {
     final (key, id) = () {
-      if (hymnId != null) {
+      if (hymnId.isNotEmpty) {
         return ('hymn_id', hymnId);
-      } else if (topicId != null) {
+      } else if (topicId.isNotEmpty) {
         return ('topic_id', topicId);
-      } else if (stakeholderId != null) {
+      } else if (stakeholderId.isNotEmpty) {
         return ('stakeholder_id', stakeholderId);
-      } else if (playlistId != null) {
+      } else if (playlistId.isNotEmpty) {
         return ('playlist_id', playlistId);
       }
       throw Exception('Invalid key');
@@ -34,7 +34,8 @@ class RemoveFromUserLibrary {
       return map.containsKey(key) && map[key] == id;
     });
     if (current != null) {
-      await db.deleteRecordModel(id, 'user_library');
+      await db.deleteRecordModel(current.id, 'user_library');
+      await db.setSyncStatusRecordModel(false, current.id, 'user_library');
     }
   }
 }

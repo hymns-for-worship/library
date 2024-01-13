@@ -12,19 +12,19 @@ class AddToUserLibrary {
 
   Future<void> call(
     String userId, {
-    String? hymnId,
-    String? topicId,
-    String? stakeholderId,
-    String? playlistId,
+    String hymnId = '',
+    String topicId = '',
+    String stakeholderId = '',
+    String playlistId = '',
   }) async {
     final (key, id) = () {
-      if (hymnId != null) {
+      if (hymnId.isNotEmpty) {
         return ('hymn_id', hymnId);
-      } else if (topicId != null) {
+      } else if (topicId.isNotEmpty) {
         return ('topic_id', topicId);
-      } else if (stakeholderId != null) {
+      } else if (stakeholderId.isNotEmpty) {
         return ('stakeholder_id', stakeholderId);
-      } else if (playlistId != null) {
+      } else if (playlistId.isNotEmpty) {
         return ('playlist_id', playlistId);
       }
       throw Exception('Invalid key');
@@ -35,24 +35,18 @@ class AddToUserLibrary {
       return map.containsKey(key) && map[key] == id;
     });
     if (current != null) {
-      final map = jsonDecode(current.data) as Map<String, dynamic>;
-      map.remove('hymn_id');
-      map.remove('topic_id');
-      map.remove('stakeholder_id');
-      map.remove('playlist_id');
-      map[key] = id;
-      await db.setRecordModel(
-        jsonEncode(map),
-        false,
-        false,
-      );
+      if (current.deleted == true) {
+        await db.undoDeleteRecordModel(current.id, 'user_library');
+        await db.setSyncStatusRecordModel(false, current.id, 'user_library');
+      }
+      return;
     } else {
       final id = generateId();
       final now = DateTime.now();
       final map = <String, dynamic>{
         'id': id,
-        'collectionId': 'playlist_items',
-        'collectionName': 'playlist_items',
+        'collectionId': 'user_library',
+        'collectionName': 'user_library',
         'created': now.toIso8601String(),
         'updated': now.toIso8601String(),
         'deleted': false,
@@ -64,6 +58,7 @@ class AddToUserLibrary {
         false,
         true,
       );
+      await db.setSyncStatusRecordModel(false, id, 'user_library');
     }
   }
 }

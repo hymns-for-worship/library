@@ -6,6 +6,9 @@ class GetUserLibrary {
   GetUserLibrary(this.db);
 
   Stream<List<UserLibraryData>> call(String user) {
-    return db.getUserLibrary(user).watch();
+    return db
+        .getUserLibrary(user)
+        .watch()
+        .map((items) => items.where((e) => e.deleted != true).toList());
   }
 }

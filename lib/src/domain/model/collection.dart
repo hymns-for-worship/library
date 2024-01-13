@@ -4,6 +4,7 @@ class Collection {
   final String? alias;
   final Uri? file;
   final String? hymnalId;
+  final bool? deleted;
 
   Collection({
     required this.id,
@@ -11,6 +12,7 @@ class Collection {
     required this.alias,
     required this.file,
     required this.hymnalId,
+    required this.deleted,
   });
 }
 
@@ -20,6 +22,7 @@ class HymnCollection {
   final String? number;
   final String? collectionId;
   final String? hymnId;
+  final bool? deleted;
 
   HymnCollection({
     required this.id,
@@ -27,5 +30,6 @@ class HymnCollection {
     required this.number,
     required this.collectionId,
     required this.hymnId,
+    required this.deleted,
   });
 }

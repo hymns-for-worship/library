@@ -1,5 +1,3 @@
-import 'dart:async';
-
 // ignore: avoid_web_libraries_in_flutter
 
 import 'package:drift/drift.dart';
@@ -7,14 +5,14 @@ import 'package:drift/wasm.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqlite3/wasm.dart';
 
-DatabaseConnection connect(
+LazyDatabase connect(
   String dbName, {
   bool logStatements = false,
   bool inMemory = false,
   bool debug = false,
   bool delete = false,
 }) {
-  return DatabaseConnection.delayed(Future(() async {
+  return LazyDatabase(() async {
     final sqliteUrl = Uri.parse('/sqlite3.${debug ? 'debug.' : ''}wasm');
     if (inMemory) {
       final sqlite = await WasmSqlite3.loadFromUrl(sqliteUrl);
@@ -45,5 +43,5 @@ DatabaseConnection connect(
     }
 
     return result.resolvedExecutor;
-  }));
+  });
 }

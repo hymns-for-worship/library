@@ -9,32 +9,34 @@ import '../../../model/collection.dart';
 import 'get_collection_hymns.dart';
 import 'get_collections.dart';
 
-class GetCollectionForHymn {
+class GetCollectionDetails {
   final HfwDatabase db;
   final HfwStudio client;
 
-  GetCollectionForHymn({required this.db, required this.client});
+  GetCollectionDetails({required this.db, required this.client});
 
-  Stream<List<(HymnCollection, Collection?)>> call(String hymnId) async* {
-    final current =
-        await db.getRecordModelsByCollection('hymn_collections').get();
-    final currentCollections = await db
+  Stream<(Collection?, List<HymnCollection>)> call(String collectionId) async* {
+    final current = await db //
         .getRecordModelsByCollection('collections')
         .map((e) => RecordModel.fromJson(jsonDecode(e.data)))
         .map((e) => e.toCollection(client))
         .get();
-    final related = current
-        .where((e) => e.deleted != true)
+    final items = await db //
+        .getRecordModelsByCollection('hymn_collections')
         .map((e) => RecordModel.fromJson(jsonDecode(e.data)))
         .map((e) => e.toHymnCollection())
-        .where((e) => e.hymnId == hymnId)
-        .map((e) {
-      final col = currentCollections.firstWhereOrNull((c) => c.id == e.id);
-      return (e, col);
-    }).toList();
-    yield related;
+        .get();
+    final collection = current
+        .where((e) => e.deleted != true)
+        .firstWhereOrNull((e) => e.id == collectionId);
+    final related = items
+        .where((e) => e.deleted != true)
+        .where((e) => e.collectionId == collectionId)
+        .toList();
+    yield (collection, related);
+
     final status = await db
-        .getCollectionSyncedStatus('hymn_collections_$hymnId')
+        .getCollectionSyncedStatus('collection_$collectionId')
         .getSingleOrNull();
     final now = DateTime.now();
     const duration = Duration(days: 1);
@@ -45,7 +47,7 @@ class GetCollectionForHymn {
     if (needsUpdate) {
       try {
         final remote = await client.collection('hymn_collections').getFullList(
-              filter: "hymn_id = '$hymnId'",
+              filter: "collection_id = '$collectionId'",
               expand: 'collection_id',
             );
         if (remote.isNotEmpty) {
@@ -65,7 +67,7 @@ class GetCollectionForHymn {
             }
           }
           await db.setCollectionSyncedStatus(
-            'hymn_collections_$hymnId',
+            'collection_$collectionId',
             true,
             now,
             now,
@@ -73,26 +75,25 @@ class GetCollectionForHymn {
         }
       } catch (e) {
         // ignore: avoid_print
-        print('error updating hymn_collections for $hymnId: $e');
+        print('error updating collection for $collectionId: $e');
       }
     }
 
     final stream = db.getRecordModelsByCollection('hymn_collections').watch();
     await for (final items in stream) {
-      final currentCollections = await db
+      final collections = await db
           .getRecordModelsByCollection('collections')
           .map((e) => RecordModel.fromJson(jsonDecode(e.data)))
           .map((e) => e.toCollection(client))
-          .get();
-      yield items
+          .get()
+          .then((e) => e.where((e) => e.id == collectionId).toList());
+      final related = items
           .where((e) => e.deleted != true)
           .map((e) => RecordModel.fromJson(jsonDecode(e.data)))
           .map((e) => e.toHymnCollection())
-          .where((e) => e.hymnId == hymnId)
-          .map((e) {
-        final col = currentCollections.firstWhereOrNull((c) => c.id == e.id);
-        return (e, col);
-      }).toList();
+          .where((e) => e.collectionId == collectionId)
+          .toList();
+      yield (collections.firstOrNull, related);
     }
   }
 }

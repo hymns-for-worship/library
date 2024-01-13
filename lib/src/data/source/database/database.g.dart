@@ -3291,1579 +3291,6 @@ class UserPlaylistLibrary
   Set<String> get readTables => const {'records'};
 }
 
-class Hymns extends Table with TableInfo<Hymns, Hymn> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  Hymns(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'PRIMARY KEY NOT NULL');
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _translatedTitleMeta =
-      const VerificationMeta('translatedTitle');
-  late final GeneratedColumn<String> translatedTitle = GeneratedColumn<String>(
-      'translatedTitle', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _numberMeta = const VerificationMeta('number');
-  late final GeneratedColumn<String> number = GeneratedColumn<String>(
-      'number', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _startingKeyMeta =
-      const VerificationMeta('startingKey');
-  late final GeneratedColumn<String> startingKey = GeneratedColumn<String>(
-      'startingKey', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _beatPatternMeta =
-      const VerificationMeta('beatPattern');
-  late final GeneratedColumn<String> beatPattern = GeneratedColumn<String>(
-      'beatPattern', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _startingPitchMeta =
-      const VerificationMeta('startingPitch');
-  late final GeneratedColumn<String> startingPitch = GeneratedColumn<String>(
-      'startingPitch', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _startingBeatMeta =
-      const VerificationMeta('startingBeat');
-  late final GeneratedColumn<String> startingBeat = GeneratedColumn<String>(
-      'startingBeat', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _startingPitchDirectionMeta =
-      const VerificationMeta('startingPitchDirection');
-  late final GeneratedColumn<String> startingPitchDirection =
-      GeneratedColumn<String>('startingPitchDirection', aliasedName, true,
-          type: DriftSqlType.string,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  static const VerificationMeta _timeSignatureMeta =
-      const VerificationMeta('timeSignature');
-  late final GeneratedColumn<String> timeSignature = GeneratedColumn<String>(
-      'timeSignature', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _complexTimeSignatureMeta =
-      const VerificationMeta('complexTimeSignature');
-  late final GeneratedColumn<String> complexTimeSignature =
-      GeneratedColumn<String>('complexTimeSignature', aliasedName, true,
-          type: DriftSqlType.string,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-      'status', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _keyMeta = const VerificationMeta('key');
-  late final GeneratedColumn<String> key = GeneratedColumn<String>(
-      'key', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _skuMeta = const VerificationMeta('sku');
-  late final GeneratedColumn<String> sku = GeneratedColumn<String>(
-      'sku', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _electronicVersionMeta =
-      const VerificationMeta('electronicVersion');
-  late final GeneratedColumn<String> electronicVersion =
-      GeneratedColumn<String>('electronicVersion', aliasedName, true,
-          type: DriftSqlType.string,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  static const VerificationMeta _tuneNameMeta =
-      const VerificationMeta('tuneName');
-  late final GeneratedColumn<String> tuneName = GeneratedColumn<String>(
-      'tuneName', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _arrangementMeta =
-      const VerificationMeta('arrangement');
-  late final GeneratedColumn<String> arrangement = GeneratedColumn<String>(
-      'arrangement', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _languageMeta =
-      const VerificationMeta('language');
-  late final GeneratedColumn<String> language = GeneratedColumn<String>(
-      'language', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _copyrightMeta =
-      const VerificationMeta('copyright');
-  late final GeneratedColumn<String> copyright = GeneratedColumn<String>(
-      'copyright', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _createdMeta =
-      const VerificationMeta('created');
-  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
-      'created', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _updatedMeta =
-      const VerificationMeta('updated');
-  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
-      'updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        title,
-        translatedTitle,
-        number,
-        startingKey,
-        beatPattern,
-        startingPitch,
-        startingBeat,
-        startingPitchDirection,
-        timeSignature,
-        complexTimeSignature,
-        status,
-        key,
-        sku,
-        electronicVersion,
-        tuneName,
-        arrangement,
-        language,
-        copyright,
-        created,
-        updated
-      ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'hymns';
-  @override
-  VerificationContext validateIntegrity(Insertable<Hymn> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('translatedTitle')) {
-      context.handle(
-          _translatedTitleMeta,
-          translatedTitle.isAcceptableOrUnknown(
-              data['translatedTitle']!, _translatedTitleMeta));
-    }
-    if (data.containsKey('number')) {
-      context.handle(_numberMeta,
-          number.isAcceptableOrUnknown(data['number']!, _numberMeta));
-    } else if (isInserting) {
-      context.missing(_numberMeta);
-    }
-    if (data.containsKey('startingKey')) {
-      context.handle(
-          _startingKeyMeta,
-          startingKey.isAcceptableOrUnknown(
-              data['startingKey']!, _startingKeyMeta));
-    }
-    if (data.containsKey('beatPattern')) {
-      context.handle(
-          _beatPatternMeta,
-          beatPattern.isAcceptableOrUnknown(
-              data['beatPattern']!, _beatPatternMeta));
-    }
-    if (data.containsKey('startingPitch')) {
-      context.handle(
-          _startingPitchMeta,
-          startingPitch.isAcceptableOrUnknown(
-              data['startingPitch']!, _startingPitchMeta));
-    }
-    if (data.containsKey('startingBeat')) {
-      context.handle(
-          _startingBeatMeta,
-          startingBeat.isAcceptableOrUnknown(
-              data['startingBeat']!, _startingBeatMeta));
-    }
-    if (data.containsKey('startingPitchDirection')) {
-      context.handle(
-          _startingPitchDirectionMeta,
-          startingPitchDirection.isAcceptableOrUnknown(
-              data['startingPitchDirection']!, _startingPitchDirectionMeta));
-    }
-    if (data.containsKey('timeSignature')) {
-      context.handle(
-          _timeSignatureMeta,
-          timeSignature.isAcceptableOrUnknown(
-              data['timeSignature']!, _timeSignatureMeta));
-    }
-    if (data.containsKey('complexTimeSignature')) {
-      context.handle(
-          _complexTimeSignatureMeta,
-          complexTimeSignature.isAcceptableOrUnknown(
-              data['complexTimeSignature']!, _complexTimeSignatureMeta));
-    }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
-    }
-    if (data.containsKey('key')) {
-      context.handle(
-          _keyMeta, key.isAcceptableOrUnknown(data['key']!, _keyMeta));
-    }
-    if (data.containsKey('sku')) {
-      context.handle(
-          _skuMeta, sku.isAcceptableOrUnknown(data['sku']!, _skuMeta));
-    }
-    if (data.containsKey('electronicVersion')) {
-      context.handle(
-          _electronicVersionMeta,
-          electronicVersion.isAcceptableOrUnknown(
-              data['electronicVersion']!, _electronicVersionMeta));
-    }
-    if (data.containsKey('tuneName')) {
-      context.handle(_tuneNameMeta,
-          tuneName.isAcceptableOrUnknown(data['tuneName']!, _tuneNameMeta));
-    }
-    if (data.containsKey('arrangement')) {
-      context.handle(
-          _arrangementMeta,
-          arrangement.isAcceptableOrUnknown(
-              data['arrangement']!, _arrangementMeta));
-    }
-    if (data.containsKey('language')) {
-      context.handle(_languageMeta,
-          language.isAcceptableOrUnknown(data['language']!, _languageMeta));
-    }
-    if (data.containsKey('copyright')) {
-      context.handle(_copyrightMeta,
-          copyright.isAcceptableOrUnknown(data['copyright']!, _copyrightMeta));
-    }
-    if (data.containsKey('created')) {
-      context.handle(_createdMeta,
-          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
-    } else if (isInserting) {
-      context.missing(_createdMeta);
-    }
-    if (data.containsKey('updated')) {
-      context.handle(_updatedMeta,
-          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
-    } else if (isInserting) {
-      context.missing(_updatedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {title, number},
-      ];
-  @override
-  Hymn map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Hymn(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      translatedTitle: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}translatedTitle']),
-      number: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}number'])!,
-      startingKey: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}startingKey']),
-      beatPattern: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}beatPattern']),
-      startingPitch: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}startingPitch']),
-      startingBeat: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}startingBeat']),
-      startingPitchDirection: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}startingPitchDirection']),
-      timeSignature: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}timeSignature']),
-      complexTimeSignature: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}complexTimeSignature']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
-      key: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}key']),
-      sku: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}sku']),
-      electronicVersion: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}electronicVersion']),
-      tuneName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}tuneName']),
-      arrangement: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}arrangement']),
-      language: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}language']),
-      copyright: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}copyright']),
-      created: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
-      updated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
-    );
-  }
-
-  @override
-  Hymns createAlias(String alias) {
-    return Hymns(attachedDatabase, alias);
-  }
-
-  @override
-  List<String> get customConstraints => const ['UNIQUE(title, number)'];
-  @override
-  bool get dontWriteConstraints => true;
-}
-
-class Hymn extends DataClass implements Insertable<Hymn> {
-  String id;
-  String title;
-  String? translatedTitle;
-  String number;
-  String? startingKey;
-  String? beatPattern;
-  String? startingPitch;
-  String? startingBeat;
-  String? startingPitchDirection;
-  String? timeSignature;
-  String? complexTimeSignature;
-  String? status;
-  String? key;
-  String? sku;
-  String? electronicVersion;
-  String? tuneName;
-  String? arrangement;
-  String? language;
-  String? copyright;
-  DateTime created;
-  DateTime updated;
-  Hymn(
-      {required this.id,
-      required this.title,
-      this.translatedTitle,
-      required this.number,
-      this.startingKey,
-      this.beatPattern,
-      this.startingPitch,
-      this.startingBeat,
-      this.startingPitchDirection,
-      this.timeSignature,
-      this.complexTimeSignature,
-      this.status,
-      this.key,
-      this.sku,
-      this.electronicVersion,
-      this.tuneName,
-      this.arrangement,
-      this.language,
-      this.copyright,
-      required this.created,
-      required this.updated});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['title'] = Variable<String>(title);
-    if (!nullToAbsent || translatedTitle != null) {
-      map['translatedTitle'] = Variable<String>(translatedTitle);
-    }
-    map['number'] = Variable<String>(number);
-    if (!nullToAbsent || startingKey != null) {
-      map['startingKey'] = Variable<String>(startingKey);
-    }
-    if (!nullToAbsent || beatPattern != null) {
-      map['beatPattern'] = Variable<String>(beatPattern);
-    }
-    if (!nullToAbsent || startingPitch != null) {
-      map['startingPitch'] = Variable<String>(startingPitch);
-    }
-    if (!nullToAbsent || startingBeat != null) {
-      map['startingBeat'] = Variable<String>(startingBeat);
-    }
-    if (!nullToAbsent || startingPitchDirection != null) {
-      map['startingPitchDirection'] = Variable<String>(startingPitchDirection);
-    }
-    if (!nullToAbsent || timeSignature != null) {
-      map['timeSignature'] = Variable<String>(timeSignature);
-    }
-    if (!nullToAbsent || complexTimeSignature != null) {
-      map['complexTimeSignature'] = Variable<String>(complexTimeSignature);
-    }
-    if (!nullToAbsent || status != null) {
-      map['status'] = Variable<String>(status);
-    }
-    if (!nullToAbsent || key != null) {
-      map['key'] = Variable<String>(key);
-    }
-    if (!nullToAbsent || sku != null) {
-      map['sku'] = Variable<String>(sku);
-    }
-    if (!nullToAbsent || electronicVersion != null) {
-      map['electronicVersion'] = Variable<String>(electronicVersion);
-    }
-    if (!nullToAbsent || tuneName != null) {
-      map['tuneName'] = Variable<String>(tuneName);
-    }
-    if (!nullToAbsent || arrangement != null) {
-      map['arrangement'] = Variable<String>(arrangement);
-    }
-    if (!nullToAbsent || language != null) {
-      map['language'] = Variable<String>(language);
-    }
-    if (!nullToAbsent || copyright != null) {
-      map['copyright'] = Variable<String>(copyright);
-    }
-    map['created'] = Variable<DateTime>(created);
-    map['updated'] = Variable<DateTime>(updated);
-    return map;
-  }
-
-  HymnsCompanion toCompanion(bool nullToAbsent) {
-    return HymnsCompanion(
-      id: Value(id),
-      title: Value(title),
-      translatedTitle: translatedTitle == null && nullToAbsent
-          ? const Value.absent()
-          : Value(translatedTitle),
-      number: Value(number),
-      startingKey: startingKey == null && nullToAbsent
-          ? const Value.absent()
-          : Value(startingKey),
-      beatPattern: beatPattern == null && nullToAbsent
-          ? const Value.absent()
-          : Value(beatPattern),
-      startingPitch: startingPitch == null && nullToAbsent
-          ? const Value.absent()
-          : Value(startingPitch),
-      startingBeat: startingBeat == null && nullToAbsent
-          ? const Value.absent()
-          : Value(startingBeat),
-      startingPitchDirection: startingPitchDirection == null && nullToAbsent
-          ? const Value.absent()
-          : Value(startingPitchDirection),
-      timeSignature: timeSignature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(timeSignature),
-      complexTimeSignature: complexTimeSignature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(complexTimeSignature),
-      status:
-          status == null && nullToAbsent ? const Value.absent() : Value(status),
-      key: key == null && nullToAbsent ? const Value.absent() : Value(key),
-      sku: sku == null && nullToAbsent ? const Value.absent() : Value(sku),
-      electronicVersion: electronicVersion == null && nullToAbsent
-          ? const Value.absent()
-          : Value(electronicVersion),
-      tuneName: tuneName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(tuneName),
-      arrangement: arrangement == null && nullToAbsent
-          ? const Value.absent()
-          : Value(arrangement),
-      language: language == null && nullToAbsent
-          ? const Value.absent()
-          : Value(language),
-      copyright: copyright == null && nullToAbsent
-          ? const Value.absent()
-          : Value(copyright),
-      created: Value(created),
-      updated: Value(updated),
-    );
-  }
-
-  factory Hymn.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Hymn(
-      id: serializer.fromJson<String>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
-      translatedTitle: serializer.fromJson<String?>(json['translatedTitle']),
-      number: serializer.fromJson<String>(json['number']),
-      startingKey: serializer.fromJson<String?>(json['startingKey']),
-      beatPattern: serializer.fromJson<String?>(json['beatPattern']),
-      startingPitch: serializer.fromJson<String?>(json['startingPitch']),
-      startingBeat: serializer.fromJson<String?>(json['startingBeat']),
-      startingPitchDirection:
-          serializer.fromJson<String?>(json['startingPitchDirection']),
-      timeSignature: serializer.fromJson<String?>(json['timeSignature']),
-      complexTimeSignature:
-          serializer.fromJson<String?>(json['complexTimeSignature']),
-      status: serializer.fromJson<String?>(json['status']),
-      key: serializer.fromJson<String?>(json['key']),
-      sku: serializer.fromJson<String?>(json['sku']),
-      electronicVersion:
-          serializer.fromJson<String?>(json['electronicVersion']),
-      tuneName: serializer.fromJson<String?>(json['tuneName']),
-      arrangement: serializer.fromJson<String?>(json['arrangement']),
-      language: serializer.fromJson<String?>(json['language']),
-      copyright: serializer.fromJson<String?>(json['copyright']),
-      created: serializer.fromJson<DateTime>(json['created']),
-      updated: serializer.fromJson<DateTime>(json['updated']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'title': serializer.toJson<String>(title),
-      'translatedTitle': serializer.toJson<String?>(translatedTitle),
-      'number': serializer.toJson<String>(number),
-      'startingKey': serializer.toJson<String?>(startingKey),
-      'beatPattern': serializer.toJson<String?>(beatPattern),
-      'startingPitch': serializer.toJson<String?>(startingPitch),
-      'startingBeat': serializer.toJson<String?>(startingBeat),
-      'startingPitchDirection':
-          serializer.toJson<String?>(startingPitchDirection),
-      'timeSignature': serializer.toJson<String?>(timeSignature),
-      'complexTimeSignature': serializer.toJson<String?>(complexTimeSignature),
-      'status': serializer.toJson<String?>(status),
-      'key': serializer.toJson<String?>(key),
-      'sku': serializer.toJson<String?>(sku),
-      'electronicVersion': serializer.toJson<String?>(electronicVersion),
-      'tuneName': serializer.toJson<String?>(tuneName),
-      'arrangement': serializer.toJson<String?>(arrangement),
-      'language': serializer.toJson<String?>(language),
-      'copyright': serializer.toJson<String?>(copyright),
-      'created': serializer.toJson<DateTime>(created),
-      'updated': serializer.toJson<DateTime>(updated),
-    };
-  }
-
-  Hymn copyWith(
-          {String? id,
-          String? title,
-          Value<String?> translatedTitle = const Value.absent(),
-          String? number,
-          Value<String?> startingKey = const Value.absent(),
-          Value<String?> beatPattern = const Value.absent(),
-          Value<String?> startingPitch = const Value.absent(),
-          Value<String?> startingBeat = const Value.absent(),
-          Value<String?> startingPitchDirection = const Value.absent(),
-          Value<String?> timeSignature = const Value.absent(),
-          Value<String?> complexTimeSignature = const Value.absent(),
-          Value<String?> status = const Value.absent(),
-          Value<String?> key = const Value.absent(),
-          Value<String?> sku = const Value.absent(),
-          Value<String?> electronicVersion = const Value.absent(),
-          Value<String?> tuneName = const Value.absent(),
-          Value<String?> arrangement = const Value.absent(),
-          Value<String?> language = const Value.absent(),
-          Value<String?> copyright = const Value.absent(),
-          DateTime? created,
-          DateTime? updated}) =>
-      Hymn(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        translatedTitle: translatedTitle.present
-            ? translatedTitle.value
-            : this.translatedTitle,
-        number: number ?? this.number,
-        startingKey: startingKey.present ? startingKey.value : this.startingKey,
-        beatPattern: beatPattern.present ? beatPattern.value : this.beatPattern,
-        startingPitch:
-            startingPitch.present ? startingPitch.value : this.startingPitch,
-        startingBeat:
-            startingBeat.present ? startingBeat.value : this.startingBeat,
-        startingPitchDirection: startingPitchDirection.present
-            ? startingPitchDirection.value
-            : this.startingPitchDirection,
-        timeSignature:
-            timeSignature.present ? timeSignature.value : this.timeSignature,
-        complexTimeSignature: complexTimeSignature.present
-            ? complexTimeSignature.value
-            : this.complexTimeSignature,
-        status: status.present ? status.value : this.status,
-        key: key.present ? key.value : this.key,
-        sku: sku.present ? sku.value : this.sku,
-        electronicVersion: electronicVersion.present
-            ? electronicVersion.value
-            : this.electronicVersion,
-        tuneName: tuneName.present ? tuneName.value : this.tuneName,
-        arrangement: arrangement.present ? arrangement.value : this.arrangement,
-        language: language.present ? language.value : this.language,
-        copyright: copyright.present ? copyright.value : this.copyright,
-        created: created ?? this.created,
-        updated: updated ?? this.updated,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Hymn(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('translatedTitle: $translatedTitle, ')
-          ..write('number: $number, ')
-          ..write('startingKey: $startingKey, ')
-          ..write('beatPattern: $beatPattern, ')
-          ..write('startingPitch: $startingPitch, ')
-          ..write('startingBeat: $startingBeat, ')
-          ..write('startingPitchDirection: $startingPitchDirection, ')
-          ..write('timeSignature: $timeSignature, ')
-          ..write('complexTimeSignature: $complexTimeSignature, ')
-          ..write('status: $status, ')
-          ..write('key: $key, ')
-          ..write('sku: $sku, ')
-          ..write('electronicVersion: $electronicVersion, ')
-          ..write('tuneName: $tuneName, ')
-          ..write('arrangement: $arrangement, ')
-          ..write('language: $language, ')
-          ..write('copyright: $copyright, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hashAll([
-        id,
-        title,
-        translatedTitle,
-        number,
-        startingKey,
-        beatPattern,
-        startingPitch,
-        startingBeat,
-        startingPitchDirection,
-        timeSignature,
-        complexTimeSignature,
-        status,
-        key,
-        sku,
-        electronicVersion,
-        tuneName,
-        arrangement,
-        language,
-        copyright,
-        created,
-        updated
-      ]);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Hymn &&
-          other.id == this.id &&
-          other.title == this.title &&
-          other.translatedTitle == this.translatedTitle &&
-          other.number == this.number &&
-          other.startingKey == this.startingKey &&
-          other.beatPattern == this.beatPattern &&
-          other.startingPitch == this.startingPitch &&
-          other.startingBeat == this.startingBeat &&
-          other.startingPitchDirection == this.startingPitchDirection &&
-          other.timeSignature == this.timeSignature &&
-          other.complexTimeSignature == this.complexTimeSignature &&
-          other.status == this.status &&
-          other.key == this.key &&
-          other.sku == this.sku &&
-          other.electronicVersion == this.electronicVersion &&
-          other.tuneName == this.tuneName &&
-          other.arrangement == this.arrangement &&
-          other.language == this.language &&
-          other.copyright == this.copyright &&
-          other.created == this.created &&
-          other.updated == this.updated);
-}
-
-class HymnsCompanion extends UpdateCompanion<Hymn> {
-  Value<String> id;
-  Value<String> title;
-  Value<String?> translatedTitle;
-  Value<String> number;
-  Value<String?> startingKey;
-  Value<String?> beatPattern;
-  Value<String?> startingPitch;
-  Value<String?> startingBeat;
-  Value<String?> startingPitchDirection;
-  Value<String?> timeSignature;
-  Value<String?> complexTimeSignature;
-  Value<String?> status;
-  Value<String?> key;
-  Value<String?> sku;
-  Value<String?> electronicVersion;
-  Value<String?> tuneName;
-  Value<String?> arrangement;
-  Value<String?> language;
-  Value<String?> copyright;
-  Value<DateTime> created;
-  Value<DateTime> updated;
-  Value<int> rowid;
-  HymnsCompanion({
-    this.id = const Value.absent(),
-    this.title = const Value.absent(),
-    this.translatedTitle = const Value.absent(),
-    this.number = const Value.absent(),
-    this.startingKey = const Value.absent(),
-    this.beatPattern = const Value.absent(),
-    this.startingPitch = const Value.absent(),
-    this.startingBeat = const Value.absent(),
-    this.startingPitchDirection = const Value.absent(),
-    this.timeSignature = const Value.absent(),
-    this.complexTimeSignature = const Value.absent(),
-    this.status = const Value.absent(),
-    this.key = const Value.absent(),
-    this.sku = const Value.absent(),
-    this.electronicVersion = const Value.absent(),
-    this.tuneName = const Value.absent(),
-    this.arrangement = const Value.absent(),
-    this.language = const Value.absent(),
-    this.copyright = const Value.absent(),
-    this.created = const Value.absent(),
-    this.updated = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  HymnsCompanion.insert({
-    required String id,
-    required String title,
-    this.translatedTitle = const Value.absent(),
-    required String number,
-    this.startingKey = const Value.absent(),
-    this.beatPattern = const Value.absent(),
-    this.startingPitch = const Value.absent(),
-    this.startingBeat = const Value.absent(),
-    this.startingPitchDirection = const Value.absent(),
-    this.timeSignature = const Value.absent(),
-    this.complexTimeSignature = const Value.absent(),
-    this.status = const Value.absent(),
-    this.key = const Value.absent(),
-    this.sku = const Value.absent(),
-    this.electronicVersion = const Value.absent(),
-    this.tuneName = const Value.absent(),
-    this.arrangement = const Value.absent(),
-    this.language = const Value.absent(),
-    this.copyright = const Value.absent(),
-    required DateTime created,
-    required DateTime updated,
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        title = Value(title),
-        number = Value(number),
-        created = Value(created),
-        updated = Value(updated);
-  static Insertable<Hymn> custom({
-    Expression<String>? id,
-    Expression<String>? title,
-    Expression<String>? translatedTitle,
-    Expression<String>? number,
-    Expression<String>? startingKey,
-    Expression<String>? beatPattern,
-    Expression<String>? startingPitch,
-    Expression<String>? startingBeat,
-    Expression<String>? startingPitchDirection,
-    Expression<String>? timeSignature,
-    Expression<String>? complexTimeSignature,
-    Expression<String>? status,
-    Expression<String>? key,
-    Expression<String>? sku,
-    Expression<String>? electronicVersion,
-    Expression<String>? tuneName,
-    Expression<String>? arrangement,
-    Expression<String>? language,
-    Expression<String>? copyright,
-    Expression<DateTime>? created,
-    Expression<DateTime>? updated,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (title != null) 'title': title,
-      if (translatedTitle != null) 'translatedTitle': translatedTitle,
-      if (number != null) 'number': number,
-      if (startingKey != null) 'startingKey': startingKey,
-      if (beatPattern != null) 'beatPattern': beatPattern,
-      if (startingPitch != null) 'startingPitch': startingPitch,
-      if (startingBeat != null) 'startingBeat': startingBeat,
-      if (startingPitchDirection != null)
-        'startingPitchDirection': startingPitchDirection,
-      if (timeSignature != null) 'timeSignature': timeSignature,
-      if (complexTimeSignature != null)
-        'complexTimeSignature': complexTimeSignature,
-      if (status != null) 'status': status,
-      if (key != null) 'key': key,
-      if (sku != null) 'sku': sku,
-      if (electronicVersion != null) 'electronicVersion': electronicVersion,
-      if (tuneName != null) 'tuneName': tuneName,
-      if (arrangement != null) 'arrangement': arrangement,
-      if (language != null) 'language': language,
-      if (copyright != null) 'copyright': copyright,
-      if (created != null) 'created': created,
-      if (updated != null) 'updated': updated,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  HymnsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? title,
-      Value<String?>? translatedTitle,
-      Value<String>? number,
-      Value<String?>? startingKey,
-      Value<String?>? beatPattern,
-      Value<String?>? startingPitch,
-      Value<String?>? startingBeat,
-      Value<String?>? startingPitchDirection,
-      Value<String?>? timeSignature,
-      Value<String?>? complexTimeSignature,
-      Value<String?>? status,
-      Value<String?>? key,
-      Value<String?>? sku,
-      Value<String?>? electronicVersion,
-      Value<String?>? tuneName,
-      Value<String?>? arrangement,
-      Value<String?>? language,
-      Value<String?>? copyright,
-      Value<DateTime>? created,
-      Value<DateTime>? updated,
-      Value<int>? rowid}) {
-    return HymnsCompanion(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      translatedTitle: translatedTitle ?? this.translatedTitle,
-      number: number ?? this.number,
-      startingKey: startingKey ?? this.startingKey,
-      beatPattern: beatPattern ?? this.beatPattern,
-      startingPitch: startingPitch ?? this.startingPitch,
-      startingBeat: startingBeat ?? this.startingBeat,
-      startingPitchDirection:
-          startingPitchDirection ?? this.startingPitchDirection,
-      timeSignature: timeSignature ?? this.timeSignature,
-      complexTimeSignature: complexTimeSignature ?? this.complexTimeSignature,
-      status: status ?? this.status,
-      key: key ?? this.key,
-      sku: sku ?? this.sku,
-      electronicVersion: electronicVersion ?? this.electronicVersion,
-      tuneName: tuneName ?? this.tuneName,
-      arrangement: arrangement ?? this.arrangement,
-      language: language ?? this.language,
-      copyright: copyright ?? this.copyright,
-      created: created ?? this.created,
-      updated: updated ?? this.updated,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
-    }
-    if (translatedTitle.present) {
-      map['translatedTitle'] = Variable<String>(translatedTitle.value);
-    }
-    if (number.present) {
-      map['number'] = Variable<String>(number.value);
-    }
-    if (startingKey.present) {
-      map['startingKey'] = Variable<String>(startingKey.value);
-    }
-    if (beatPattern.present) {
-      map['beatPattern'] = Variable<String>(beatPattern.value);
-    }
-    if (startingPitch.present) {
-      map['startingPitch'] = Variable<String>(startingPitch.value);
-    }
-    if (startingBeat.present) {
-      map['startingBeat'] = Variable<String>(startingBeat.value);
-    }
-    if (startingPitchDirection.present) {
-      map['startingPitchDirection'] =
-          Variable<String>(startingPitchDirection.value);
-    }
-    if (timeSignature.present) {
-      map['timeSignature'] = Variable<String>(timeSignature.value);
-    }
-    if (complexTimeSignature.present) {
-      map['complexTimeSignature'] =
-          Variable<String>(complexTimeSignature.value);
-    }
-    if (status.present) {
-      map['status'] = Variable<String>(status.value);
-    }
-    if (key.present) {
-      map['key'] = Variable<String>(key.value);
-    }
-    if (sku.present) {
-      map['sku'] = Variable<String>(sku.value);
-    }
-    if (electronicVersion.present) {
-      map['electronicVersion'] = Variable<String>(electronicVersion.value);
-    }
-    if (tuneName.present) {
-      map['tuneName'] = Variable<String>(tuneName.value);
-    }
-    if (arrangement.present) {
-      map['arrangement'] = Variable<String>(arrangement.value);
-    }
-    if (language.present) {
-      map['language'] = Variable<String>(language.value);
-    }
-    if (copyright.present) {
-      map['copyright'] = Variable<String>(copyright.value);
-    }
-    if (created.present) {
-      map['created'] = Variable<DateTime>(created.value);
-    }
-    if (updated.present) {
-      map['updated'] = Variable<DateTime>(updated.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('HymnsCompanion(')
-          ..write('id: $id, ')
-          ..write('title: $title, ')
-          ..write('translatedTitle: $translatedTitle, ')
-          ..write('number: $number, ')
-          ..write('startingKey: $startingKey, ')
-          ..write('beatPattern: $beatPattern, ')
-          ..write('startingPitch: $startingPitch, ')
-          ..write('startingBeat: $startingBeat, ')
-          ..write('startingPitchDirection: $startingPitchDirection, ')
-          ..write('timeSignature: $timeSignature, ')
-          ..write('complexTimeSignature: $complexTimeSignature, ')
-          ..write('status: $status, ')
-          ..write('key: $key, ')
-          ..write('sku: $sku, ')
-          ..write('electronicVersion: $electronicVersion, ')
-          ..write('tuneName: $tuneName, ')
-          ..write('arrangement: $arrangement, ')
-          ..write('language: $language, ')
-          ..write('copyright: $copyright, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class Stakeholders extends Table with TableInfo<Stakeholders, Stakeholder> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  Stakeholders(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'PRIMARY KEY NOT NULL');
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _createdMeta =
-      const VerificationMeta('created');
-  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
-      'created', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _updatedMeta =
-      const VerificationMeta('updated');
-  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
-      'updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  @override
-  List<GeneratedColumn> get $columns => [id, name, created, updated];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'stakeholders';
-  @override
-  VerificationContext validateIntegrity(Insertable<Stakeholder> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('created')) {
-      context.handle(_createdMeta,
-          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
-    } else if (isInserting) {
-      context.missing(_createdMeta);
-    }
-    if (data.containsKey('updated')) {
-      context.handle(_updatedMeta,
-          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
-    } else if (isInserting) {
-      context.missing(_updatedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {name},
-      ];
-  @override
-  Stakeholder map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Stakeholder(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      created: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
-      updated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
-    );
-  }
-
-  @override
-  Stakeholders createAlias(String alias) {
-    return Stakeholders(attachedDatabase, alias);
-  }
-
-  @override
-  List<String> get customConstraints => const ['UNIQUE(name)'];
-  @override
-  bool get dontWriteConstraints => true;
-}
-
-class Stakeholder extends DataClass implements Insertable<Stakeholder> {
-  String id;
-  String name;
-  DateTime created;
-  DateTime updated;
-  Stakeholder(
-      {required this.id,
-      required this.name,
-      required this.created,
-      required this.updated});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['name'] = Variable<String>(name);
-    map['created'] = Variable<DateTime>(created);
-    map['updated'] = Variable<DateTime>(updated);
-    return map;
-  }
-
-  StakeholdersCompanion toCompanion(bool nullToAbsent) {
-    return StakeholdersCompanion(
-      id: Value(id),
-      name: Value(name),
-      created: Value(created),
-      updated: Value(updated),
-    );
-  }
-
-  factory Stakeholder.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Stakeholder(
-      id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      created: serializer.fromJson<DateTime>(json['created']),
-      updated: serializer.fromJson<DateTime>(json['updated']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'created': serializer.toJson<DateTime>(created),
-      'updated': serializer.toJson<DateTime>(updated),
-    };
-  }
-
-  Stakeholder copyWith(
-          {String? id, String? name, DateTime? created, DateTime? updated}) =>
-      Stakeholder(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        created: created ?? this.created,
-        updated: updated ?? this.updated,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Stakeholder(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, created, updated);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Stakeholder &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.created == this.created &&
-          other.updated == this.updated);
-}
-
-class StakeholdersCompanion extends UpdateCompanion<Stakeholder> {
-  Value<String> id;
-  Value<String> name;
-  Value<DateTime> created;
-  Value<DateTime> updated;
-  Value<int> rowid;
-  StakeholdersCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.created = const Value.absent(),
-    this.updated = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  StakeholdersCompanion.insert({
-    required String id,
-    required String name,
-    required DateTime created,
-    required DateTime updated,
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        name = Value(name),
-        created = Value(created),
-        updated = Value(updated);
-  static Insertable<Stakeholder> custom({
-    Expression<String>? id,
-    Expression<String>? name,
-    Expression<DateTime>? created,
-    Expression<DateTime>? updated,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (created != null) 'created': created,
-      if (updated != null) 'updated': updated,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  StakeholdersCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? name,
-      Value<DateTime>? created,
-      Value<DateTime>? updated,
-      Value<int>? rowid}) {
-    return StakeholdersCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      created: created ?? this.created,
-      updated: updated ?? this.updated,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (created.present) {
-      map['created'] = Variable<DateTime>(created.value);
-    }
-    if (updated.present) {
-      map['updated'] = Variable<DateTime>(updated.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('StakeholdersCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class Topics extends Table with TableInfo<Topics, Topic> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  Topics(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'PRIMARY KEY NOT NULL');
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _aliasMeta = const VerificationMeta('alias');
-  late final GeneratedColumn<String> alias = GeneratedColumn<String>(
-      'alias', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _createdMeta =
-      const VerificationMeta('created');
-  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
-      'created', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _updatedMeta =
-      const VerificationMeta('updated');
-  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
-      'updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  @override
-  List<GeneratedColumn> get $columns => [id, name, alias, created, updated];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'topics';
-  @override
-  VerificationContext validateIntegrity(Insertable<Topic> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('alias')) {
-      context.handle(
-          _aliasMeta, alias.isAcceptableOrUnknown(data['alias']!, _aliasMeta));
-    } else if (isInserting) {
-      context.missing(_aliasMeta);
-    }
-    if (data.containsKey('created')) {
-      context.handle(_createdMeta,
-          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
-    } else if (isInserting) {
-      context.missing(_createdMeta);
-    }
-    if (data.containsKey('updated')) {
-      context.handle(_updatedMeta,
-          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
-    } else if (isInserting) {
-      context.missing(_updatedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {name},
-      ];
-  @override
-  Topic map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Topic(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      alias: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}alias'])!,
-      created: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
-      updated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
-    );
-  }
-
-  @override
-  Topics createAlias(String alias) {
-    return Topics(attachedDatabase, alias);
-  }
-
-  @override
-  List<String> get customConstraints => const ['UNIQUE(name)'];
-  @override
-  bool get dontWriteConstraints => true;
-}
-
-class Topic extends DataClass implements Insertable<Topic> {
-  String id;
-  String name;
-  String alias;
-  DateTime created;
-  DateTime updated;
-  Topic(
-      {required this.id,
-      required this.name,
-      required this.alias,
-      required this.created,
-      required this.updated});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['name'] = Variable<String>(name);
-    map['alias'] = Variable<String>(alias);
-    map['created'] = Variable<DateTime>(created);
-    map['updated'] = Variable<DateTime>(updated);
-    return map;
-  }
-
-  TopicsCompanion toCompanion(bool nullToAbsent) {
-    return TopicsCompanion(
-      id: Value(id),
-      name: Value(name),
-      alias: Value(alias),
-      created: Value(created),
-      updated: Value(updated),
-    );
-  }
-
-  factory Topic.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Topic(
-      id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      alias: serializer.fromJson<String>(json['alias']),
-      created: serializer.fromJson<DateTime>(json['created']),
-      updated: serializer.fromJson<DateTime>(json['updated']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'alias': serializer.toJson<String>(alias),
-      'created': serializer.toJson<DateTime>(created),
-      'updated': serializer.toJson<DateTime>(updated),
-    };
-  }
-
-  Topic copyWith(
-          {String? id,
-          String? name,
-          String? alias,
-          DateTime? created,
-          DateTime? updated}) =>
-      Topic(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        alias: alias ?? this.alias,
-        created: created ?? this.created,
-        updated: updated ?? this.updated,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Topic(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('alias: $alias, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, alias, created, updated);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Topic &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.alias == this.alias &&
-          other.created == this.created &&
-          other.updated == this.updated);
-}
-
-class TopicsCompanion extends UpdateCompanion<Topic> {
-  Value<String> id;
-  Value<String> name;
-  Value<String> alias;
-  Value<DateTime> created;
-  Value<DateTime> updated;
-  Value<int> rowid;
-  TopicsCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.alias = const Value.absent(),
-    this.created = const Value.absent(),
-    this.updated = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  TopicsCompanion.insert({
-    required String id,
-    required String name,
-    required String alias,
-    required DateTime created,
-    required DateTime updated,
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        name = Value(name),
-        alias = Value(alias),
-        created = Value(created),
-        updated = Value(updated);
-  static Insertable<Topic> custom({
-    Expression<String>? id,
-    Expression<String>? name,
-    Expression<String>? alias,
-    Expression<DateTime>? created,
-    Expression<DateTime>? updated,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (alias != null) 'alias': alias,
-      if (created != null) 'created': created,
-      if (updated != null) 'updated': updated,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  TopicsCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? name,
-      Value<String>? alias,
-      Value<DateTime>? created,
-      Value<DateTime>? updated,
-      Value<int>? rowid}) {
-    return TopicsCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      alias: alias ?? this.alias,
-      created: created ?? this.created,
-      updated: updated ?? this.updated,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (alias.present) {
-      map['alias'] = Variable<String>(alias.value);
-    }
-    if (created.present) {
-      map['created'] = Variable<DateTime>(created.value);
-    }
-    if (updated.present) {
-      map['updated'] = Variable<DateTime>(updated.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TopicsCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('alias: $alias, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class LocalPlaylistItem extends DataClass {
   String data;
   String id;
@@ -7266,6 +5693,1000 @@ class HymnPortionsCompanion extends UpdateCompanion<HymnPortion> {
           ..write('hymnId: $hymnId, ')
           ..write('created: $created, ')
           ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Hymns extends Table with TableInfo<Hymns, Hymn> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Hymns(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _translatedTitleMeta =
+      const VerificationMeta('translatedTitle');
+  late final GeneratedColumn<String> translatedTitle = GeneratedColumn<String>(
+      'translatedTitle', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _numberMeta = const VerificationMeta('number');
+  late final GeneratedColumn<String> number = GeneratedColumn<String>(
+      'number', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _startingKeyMeta =
+      const VerificationMeta('startingKey');
+  late final GeneratedColumn<String> startingKey = GeneratedColumn<String>(
+      'startingKey', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _beatPatternMeta =
+      const VerificationMeta('beatPattern');
+  late final GeneratedColumn<String> beatPattern = GeneratedColumn<String>(
+      'beatPattern', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _startingPitchMeta =
+      const VerificationMeta('startingPitch');
+  late final GeneratedColumn<String> startingPitch = GeneratedColumn<String>(
+      'startingPitch', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _startingBeatMeta =
+      const VerificationMeta('startingBeat');
+  late final GeneratedColumn<String> startingBeat = GeneratedColumn<String>(
+      'startingBeat', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _startingPitchDirectionMeta =
+      const VerificationMeta('startingPitchDirection');
+  late final GeneratedColumn<String> startingPitchDirection =
+      GeneratedColumn<String>('startingPitchDirection', aliasedName, true,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _timeSignatureMeta =
+      const VerificationMeta('timeSignature');
+  late final GeneratedColumn<String> timeSignature = GeneratedColumn<String>(
+      'timeSignature', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _complexTimeSignatureMeta =
+      const VerificationMeta('complexTimeSignature');
+  late final GeneratedColumn<String> complexTimeSignature =
+      GeneratedColumn<String>('complexTimeSignature', aliasedName, true,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+      'key', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _skuMeta = const VerificationMeta('sku');
+  late final GeneratedColumn<String> sku = GeneratedColumn<String>(
+      'sku', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _electronicVersionMeta =
+      const VerificationMeta('electronicVersion');
+  late final GeneratedColumn<String> electronicVersion =
+      GeneratedColumn<String>('electronicVersion', aliasedName, true,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _tuneNameMeta =
+      const VerificationMeta('tuneName');
+  late final GeneratedColumn<String> tuneName = GeneratedColumn<String>(
+      'tuneName', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _arrangementMeta =
+      const VerificationMeta('arrangement');
+  late final GeneratedColumn<String> arrangement = GeneratedColumn<String>(
+      'arrangement', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _languageMeta =
+      const VerificationMeta('language');
+  late final GeneratedColumn<String> language = GeneratedColumn<String>(
+      'language', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _copyrightMeta =
+      const VerificationMeta('copyright');
+  late final GeneratedColumn<String> copyright = GeneratedColumn<String>(
+      'copyright', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        title,
+        translatedTitle,
+        number,
+        startingKey,
+        beatPattern,
+        startingPitch,
+        startingBeat,
+        startingPitchDirection,
+        timeSignature,
+        complexTimeSignature,
+        status,
+        key,
+        sku,
+        electronicVersion,
+        tuneName,
+        arrangement,
+        language,
+        copyright,
+        created,
+        updated
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'hymns';
+  @override
+  VerificationContext validateIntegrity(Insertable<Hymn> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('translatedTitle')) {
+      context.handle(
+          _translatedTitleMeta,
+          translatedTitle.isAcceptableOrUnknown(
+              data['translatedTitle']!, _translatedTitleMeta));
+    }
+    if (data.containsKey('number')) {
+      context.handle(_numberMeta,
+          number.isAcceptableOrUnknown(data['number']!, _numberMeta));
+    } else if (isInserting) {
+      context.missing(_numberMeta);
+    }
+    if (data.containsKey('startingKey')) {
+      context.handle(
+          _startingKeyMeta,
+          startingKey.isAcceptableOrUnknown(
+              data['startingKey']!, _startingKeyMeta));
+    }
+    if (data.containsKey('beatPattern')) {
+      context.handle(
+          _beatPatternMeta,
+          beatPattern.isAcceptableOrUnknown(
+              data['beatPattern']!, _beatPatternMeta));
+    }
+    if (data.containsKey('startingPitch')) {
+      context.handle(
+          _startingPitchMeta,
+          startingPitch.isAcceptableOrUnknown(
+              data['startingPitch']!, _startingPitchMeta));
+    }
+    if (data.containsKey('startingBeat')) {
+      context.handle(
+          _startingBeatMeta,
+          startingBeat.isAcceptableOrUnknown(
+              data['startingBeat']!, _startingBeatMeta));
+    }
+    if (data.containsKey('startingPitchDirection')) {
+      context.handle(
+          _startingPitchDirectionMeta,
+          startingPitchDirection.isAcceptableOrUnknown(
+              data['startingPitchDirection']!, _startingPitchDirectionMeta));
+    }
+    if (data.containsKey('timeSignature')) {
+      context.handle(
+          _timeSignatureMeta,
+          timeSignature.isAcceptableOrUnknown(
+              data['timeSignature']!, _timeSignatureMeta));
+    }
+    if (data.containsKey('complexTimeSignature')) {
+      context.handle(
+          _complexTimeSignatureMeta,
+          complexTimeSignature.isAcceptableOrUnknown(
+              data['complexTimeSignature']!, _complexTimeSignatureMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('key')) {
+      context.handle(
+          _keyMeta, key.isAcceptableOrUnknown(data['key']!, _keyMeta));
+    }
+    if (data.containsKey('sku')) {
+      context.handle(
+          _skuMeta, sku.isAcceptableOrUnknown(data['sku']!, _skuMeta));
+    }
+    if (data.containsKey('electronicVersion')) {
+      context.handle(
+          _electronicVersionMeta,
+          electronicVersion.isAcceptableOrUnknown(
+              data['electronicVersion']!, _electronicVersionMeta));
+    }
+    if (data.containsKey('tuneName')) {
+      context.handle(_tuneNameMeta,
+          tuneName.isAcceptableOrUnknown(data['tuneName']!, _tuneNameMeta));
+    }
+    if (data.containsKey('arrangement')) {
+      context.handle(
+          _arrangementMeta,
+          arrangement.isAcceptableOrUnknown(
+              data['arrangement']!, _arrangementMeta));
+    }
+    if (data.containsKey('language')) {
+      context.handle(_languageMeta,
+          language.isAcceptableOrUnknown(data['language']!, _languageMeta));
+    }
+    if (data.containsKey('copyright')) {
+      context.handle(_copyrightMeta,
+          copyright.isAcceptableOrUnknown(data['copyright']!, _copyrightMeta));
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {title, number},
+      ];
+  @override
+  Hymn map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Hymn(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      translatedTitle: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}translatedTitle']),
+      number: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}number'])!,
+      startingKey: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}startingKey']),
+      beatPattern: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}beatPattern']),
+      startingPitch: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}startingPitch']),
+      startingBeat: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}startingBeat']),
+      startingPitchDirection: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}startingPitchDirection']),
+      timeSignature: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}timeSignature']),
+      complexTimeSignature: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}complexTimeSignature']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      key: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}key']),
+      sku: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sku']),
+      electronicVersion: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}electronicVersion']),
+      tuneName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tuneName']),
+      arrangement: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}arrangement']),
+      language: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}language']),
+      copyright: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}copyright']),
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  Hymns createAlias(String alias) {
+    return Hymns(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['UNIQUE(title, number)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Hymn extends DataClass implements Insertable<Hymn> {
+  String id;
+  String title;
+  String? translatedTitle;
+  String number;
+  String? startingKey;
+  String? beatPattern;
+  String? startingPitch;
+  String? startingBeat;
+  String? startingPitchDirection;
+  String? timeSignature;
+  String? complexTimeSignature;
+  String? status;
+  String? key;
+  String? sku;
+  String? electronicVersion;
+  String? tuneName;
+  String? arrangement;
+  String? language;
+  String? copyright;
+  DateTime created;
+  DateTime updated;
+  Hymn(
+      {required this.id,
+      required this.title,
+      this.translatedTitle,
+      required this.number,
+      this.startingKey,
+      this.beatPattern,
+      this.startingPitch,
+      this.startingBeat,
+      this.startingPitchDirection,
+      this.timeSignature,
+      this.complexTimeSignature,
+      this.status,
+      this.key,
+      this.sku,
+      this.electronicVersion,
+      this.tuneName,
+      this.arrangement,
+      this.language,
+      this.copyright,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    if (!nullToAbsent || translatedTitle != null) {
+      map['translatedTitle'] = Variable<String>(translatedTitle);
+    }
+    map['number'] = Variable<String>(number);
+    if (!nullToAbsent || startingKey != null) {
+      map['startingKey'] = Variable<String>(startingKey);
+    }
+    if (!nullToAbsent || beatPattern != null) {
+      map['beatPattern'] = Variable<String>(beatPattern);
+    }
+    if (!nullToAbsent || startingPitch != null) {
+      map['startingPitch'] = Variable<String>(startingPitch);
+    }
+    if (!nullToAbsent || startingBeat != null) {
+      map['startingBeat'] = Variable<String>(startingBeat);
+    }
+    if (!nullToAbsent || startingPitchDirection != null) {
+      map['startingPitchDirection'] = Variable<String>(startingPitchDirection);
+    }
+    if (!nullToAbsent || timeSignature != null) {
+      map['timeSignature'] = Variable<String>(timeSignature);
+    }
+    if (!nullToAbsent || complexTimeSignature != null) {
+      map['complexTimeSignature'] = Variable<String>(complexTimeSignature);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || key != null) {
+      map['key'] = Variable<String>(key);
+    }
+    if (!nullToAbsent || sku != null) {
+      map['sku'] = Variable<String>(sku);
+    }
+    if (!nullToAbsent || electronicVersion != null) {
+      map['electronicVersion'] = Variable<String>(electronicVersion);
+    }
+    if (!nullToAbsent || tuneName != null) {
+      map['tuneName'] = Variable<String>(tuneName);
+    }
+    if (!nullToAbsent || arrangement != null) {
+      map['arrangement'] = Variable<String>(arrangement);
+    }
+    if (!nullToAbsent || language != null) {
+      map['language'] = Variable<String>(language);
+    }
+    if (!nullToAbsent || copyright != null) {
+      map['copyright'] = Variable<String>(copyright);
+    }
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  HymnsCompanion toCompanion(bool nullToAbsent) {
+    return HymnsCompanion(
+      id: Value(id),
+      title: Value(title),
+      translatedTitle: translatedTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(translatedTitle),
+      number: Value(number),
+      startingKey: startingKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startingKey),
+      beatPattern: beatPattern == null && nullToAbsent
+          ? const Value.absent()
+          : Value(beatPattern),
+      startingPitch: startingPitch == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startingPitch),
+      startingBeat: startingBeat == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startingBeat),
+      startingPitchDirection: startingPitchDirection == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startingPitchDirection),
+      timeSignature: timeSignature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timeSignature),
+      complexTimeSignature: complexTimeSignature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(complexTimeSignature),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      key: key == null && nullToAbsent ? const Value.absent() : Value(key),
+      sku: sku == null && nullToAbsent ? const Value.absent() : Value(sku),
+      electronicVersion: electronicVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(electronicVersion),
+      tuneName: tuneName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tuneName),
+      arrangement: arrangement == null && nullToAbsent
+          ? const Value.absent()
+          : Value(arrangement),
+      language: language == null && nullToAbsent
+          ? const Value.absent()
+          : Value(language),
+      copyright: copyright == null && nullToAbsent
+          ? const Value.absent()
+          : Value(copyright),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory Hymn.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Hymn(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      translatedTitle: serializer.fromJson<String?>(json['translatedTitle']),
+      number: serializer.fromJson<String>(json['number']),
+      startingKey: serializer.fromJson<String?>(json['startingKey']),
+      beatPattern: serializer.fromJson<String?>(json['beatPattern']),
+      startingPitch: serializer.fromJson<String?>(json['startingPitch']),
+      startingBeat: serializer.fromJson<String?>(json['startingBeat']),
+      startingPitchDirection:
+          serializer.fromJson<String?>(json['startingPitchDirection']),
+      timeSignature: serializer.fromJson<String?>(json['timeSignature']),
+      complexTimeSignature:
+          serializer.fromJson<String?>(json['complexTimeSignature']),
+      status: serializer.fromJson<String?>(json['status']),
+      key: serializer.fromJson<String?>(json['key']),
+      sku: serializer.fromJson<String?>(json['sku']),
+      electronicVersion:
+          serializer.fromJson<String?>(json['electronicVersion']),
+      tuneName: serializer.fromJson<String?>(json['tuneName']),
+      arrangement: serializer.fromJson<String?>(json['arrangement']),
+      language: serializer.fromJson<String?>(json['language']),
+      copyright: serializer.fromJson<String?>(json['copyright']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'translatedTitle': serializer.toJson<String?>(translatedTitle),
+      'number': serializer.toJson<String>(number),
+      'startingKey': serializer.toJson<String?>(startingKey),
+      'beatPattern': serializer.toJson<String?>(beatPattern),
+      'startingPitch': serializer.toJson<String?>(startingPitch),
+      'startingBeat': serializer.toJson<String?>(startingBeat),
+      'startingPitchDirection':
+          serializer.toJson<String?>(startingPitchDirection),
+      'timeSignature': serializer.toJson<String?>(timeSignature),
+      'complexTimeSignature': serializer.toJson<String?>(complexTimeSignature),
+      'status': serializer.toJson<String?>(status),
+      'key': serializer.toJson<String?>(key),
+      'sku': serializer.toJson<String?>(sku),
+      'electronicVersion': serializer.toJson<String?>(electronicVersion),
+      'tuneName': serializer.toJson<String?>(tuneName),
+      'arrangement': serializer.toJson<String?>(arrangement),
+      'language': serializer.toJson<String?>(language),
+      'copyright': serializer.toJson<String?>(copyright),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  Hymn copyWith(
+          {String? id,
+          String? title,
+          Value<String?> translatedTitle = const Value.absent(),
+          String? number,
+          Value<String?> startingKey = const Value.absent(),
+          Value<String?> beatPattern = const Value.absent(),
+          Value<String?> startingPitch = const Value.absent(),
+          Value<String?> startingBeat = const Value.absent(),
+          Value<String?> startingPitchDirection = const Value.absent(),
+          Value<String?> timeSignature = const Value.absent(),
+          Value<String?> complexTimeSignature = const Value.absent(),
+          Value<String?> status = const Value.absent(),
+          Value<String?> key = const Value.absent(),
+          Value<String?> sku = const Value.absent(),
+          Value<String?> electronicVersion = const Value.absent(),
+          Value<String?> tuneName = const Value.absent(),
+          Value<String?> arrangement = const Value.absent(),
+          Value<String?> language = const Value.absent(),
+          Value<String?> copyright = const Value.absent(),
+          DateTime? created,
+          DateTime? updated}) =>
+      Hymn(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        translatedTitle: translatedTitle.present
+            ? translatedTitle.value
+            : this.translatedTitle,
+        number: number ?? this.number,
+        startingKey: startingKey.present ? startingKey.value : this.startingKey,
+        beatPattern: beatPattern.present ? beatPattern.value : this.beatPattern,
+        startingPitch:
+            startingPitch.present ? startingPitch.value : this.startingPitch,
+        startingBeat:
+            startingBeat.present ? startingBeat.value : this.startingBeat,
+        startingPitchDirection: startingPitchDirection.present
+            ? startingPitchDirection.value
+            : this.startingPitchDirection,
+        timeSignature:
+            timeSignature.present ? timeSignature.value : this.timeSignature,
+        complexTimeSignature: complexTimeSignature.present
+            ? complexTimeSignature.value
+            : this.complexTimeSignature,
+        status: status.present ? status.value : this.status,
+        key: key.present ? key.value : this.key,
+        sku: sku.present ? sku.value : this.sku,
+        electronicVersion: electronicVersion.present
+            ? electronicVersion.value
+            : this.electronicVersion,
+        tuneName: tuneName.present ? tuneName.value : this.tuneName,
+        arrangement: arrangement.present ? arrangement.value : this.arrangement,
+        language: language.present ? language.value : this.language,
+        copyright: copyright.present ? copyright.value : this.copyright,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Hymn(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('translatedTitle: $translatedTitle, ')
+          ..write('number: $number, ')
+          ..write('startingKey: $startingKey, ')
+          ..write('beatPattern: $beatPattern, ')
+          ..write('startingPitch: $startingPitch, ')
+          ..write('startingBeat: $startingBeat, ')
+          ..write('startingPitchDirection: $startingPitchDirection, ')
+          ..write('timeSignature: $timeSignature, ')
+          ..write('complexTimeSignature: $complexTimeSignature, ')
+          ..write('status: $status, ')
+          ..write('key: $key, ')
+          ..write('sku: $sku, ')
+          ..write('electronicVersion: $electronicVersion, ')
+          ..write('tuneName: $tuneName, ')
+          ..write('arrangement: $arrangement, ')
+          ..write('language: $language, ')
+          ..write('copyright: $copyright, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        title,
+        translatedTitle,
+        number,
+        startingKey,
+        beatPattern,
+        startingPitch,
+        startingBeat,
+        startingPitchDirection,
+        timeSignature,
+        complexTimeSignature,
+        status,
+        key,
+        sku,
+        electronicVersion,
+        tuneName,
+        arrangement,
+        language,
+        copyright,
+        created,
+        updated
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Hymn &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.translatedTitle == this.translatedTitle &&
+          other.number == this.number &&
+          other.startingKey == this.startingKey &&
+          other.beatPattern == this.beatPattern &&
+          other.startingPitch == this.startingPitch &&
+          other.startingBeat == this.startingBeat &&
+          other.startingPitchDirection == this.startingPitchDirection &&
+          other.timeSignature == this.timeSignature &&
+          other.complexTimeSignature == this.complexTimeSignature &&
+          other.status == this.status &&
+          other.key == this.key &&
+          other.sku == this.sku &&
+          other.electronicVersion == this.electronicVersion &&
+          other.tuneName == this.tuneName &&
+          other.arrangement == this.arrangement &&
+          other.language == this.language &&
+          other.copyright == this.copyright &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class HymnsCompanion extends UpdateCompanion<Hymn> {
+  Value<String> id;
+  Value<String> title;
+  Value<String?> translatedTitle;
+  Value<String> number;
+  Value<String?> startingKey;
+  Value<String?> beatPattern;
+  Value<String?> startingPitch;
+  Value<String?> startingBeat;
+  Value<String?> startingPitchDirection;
+  Value<String?> timeSignature;
+  Value<String?> complexTimeSignature;
+  Value<String?> status;
+  Value<String?> key;
+  Value<String?> sku;
+  Value<String?> electronicVersion;
+  Value<String?> tuneName;
+  Value<String?> arrangement;
+  Value<String?> language;
+  Value<String?> copyright;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  Value<int> rowid;
+  HymnsCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.translatedTitle = const Value.absent(),
+    this.number = const Value.absent(),
+    this.startingKey = const Value.absent(),
+    this.beatPattern = const Value.absent(),
+    this.startingPitch = const Value.absent(),
+    this.startingBeat = const Value.absent(),
+    this.startingPitchDirection = const Value.absent(),
+    this.timeSignature = const Value.absent(),
+    this.complexTimeSignature = const Value.absent(),
+    this.status = const Value.absent(),
+    this.key = const Value.absent(),
+    this.sku = const Value.absent(),
+    this.electronicVersion = const Value.absent(),
+    this.tuneName = const Value.absent(),
+    this.arrangement = const Value.absent(),
+    this.language = const Value.absent(),
+    this.copyright = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  HymnsCompanion.insert({
+    required String id,
+    required String title,
+    this.translatedTitle = const Value.absent(),
+    required String number,
+    this.startingKey = const Value.absent(),
+    this.beatPattern = const Value.absent(),
+    this.startingPitch = const Value.absent(),
+    this.startingBeat = const Value.absent(),
+    this.startingPitchDirection = const Value.absent(),
+    this.timeSignature = const Value.absent(),
+    this.complexTimeSignature = const Value.absent(),
+    this.status = const Value.absent(),
+    this.key = const Value.absent(),
+    this.sku = const Value.absent(),
+    this.electronicVersion = const Value.absent(),
+    this.tuneName = const Value.absent(),
+    this.arrangement = const Value.absent(),
+    this.language = const Value.absent(),
+    this.copyright = const Value.absent(),
+    required DateTime created,
+    required DateTime updated,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        title = Value(title),
+        number = Value(number),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<Hymn> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<String>? translatedTitle,
+    Expression<String>? number,
+    Expression<String>? startingKey,
+    Expression<String>? beatPattern,
+    Expression<String>? startingPitch,
+    Expression<String>? startingBeat,
+    Expression<String>? startingPitchDirection,
+    Expression<String>? timeSignature,
+    Expression<String>? complexTimeSignature,
+    Expression<String>? status,
+    Expression<String>? key,
+    Expression<String>? sku,
+    Expression<String>? electronicVersion,
+    Expression<String>? tuneName,
+    Expression<String>? arrangement,
+    Expression<String>? language,
+    Expression<String>? copyright,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (translatedTitle != null) 'translatedTitle': translatedTitle,
+      if (number != null) 'number': number,
+      if (startingKey != null) 'startingKey': startingKey,
+      if (beatPattern != null) 'beatPattern': beatPattern,
+      if (startingPitch != null) 'startingPitch': startingPitch,
+      if (startingBeat != null) 'startingBeat': startingBeat,
+      if (startingPitchDirection != null)
+        'startingPitchDirection': startingPitchDirection,
+      if (timeSignature != null) 'timeSignature': timeSignature,
+      if (complexTimeSignature != null)
+        'complexTimeSignature': complexTimeSignature,
+      if (status != null) 'status': status,
+      if (key != null) 'key': key,
+      if (sku != null) 'sku': sku,
+      if (electronicVersion != null) 'electronicVersion': electronicVersion,
+      if (tuneName != null) 'tuneName': tuneName,
+      if (arrangement != null) 'arrangement': arrangement,
+      if (language != null) 'language': language,
+      if (copyright != null) 'copyright': copyright,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  HymnsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? title,
+      Value<String?>? translatedTitle,
+      Value<String>? number,
+      Value<String?>? startingKey,
+      Value<String?>? beatPattern,
+      Value<String?>? startingPitch,
+      Value<String?>? startingBeat,
+      Value<String?>? startingPitchDirection,
+      Value<String?>? timeSignature,
+      Value<String?>? complexTimeSignature,
+      Value<String?>? status,
+      Value<String?>? key,
+      Value<String?>? sku,
+      Value<String?>? electronicVersion,
+      Value<String?>? tuneName,
+      Value<String?>? arrangement,
+      Value<String?>? language,
+      Value<String?>? copyright,
+      Value<DateTime>? created,
+      Value<DateTime>? updated,
+      Value<int>? rowid}) {
+    return HymnsCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      translatedTitle: translatedTitle ?? this.translatedTitle,
+      number: number ?? this.number,
+      startingKey: startingKey ?? this.startingKey,
+      beatPattern: beatPattern ?? this.beatPattern,
+      startingPitch: startingPitch ?? this.startingPitch,
+      startingBeat: startingBeat ?? this.startingBeat,
+      startingPitchDirection:
+          startingPitchDirection ?? this.startingPitchDirection,
+      timeSignature: timeSignature ?? this.timeSignature,
+      complexTimeSignature: complexTimeSignature ?? this.complexTimeSignature,
+      status: status ?? this.status,
+      key: key ?? this.key,
+      sku: sku ?? this.sku,
+      electronicVersion: electronicVersion ?? this.electronicVersion,
+      tuneName: tuneName ?? this.tuneName,
+      arrangement: arrangement ?? this.arrangement,
+      language: language ?? this.language,
+      copyright: copyright ?? this.copyright,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (translatedTitle.present) {
+      map['translatedTitle'] = Variable<String>(translatedTitle.value);
+    }
+    if (number.present) {
+      map['number'] = Variable<String>(number.value);
+    }
+    if (startingKey.present) {
+      map['startingKey'] = Variable<String>(startingKey.value);
+    }
+    if (beatPattern.present) {
+      map['beatPattern'] = Variable<String>(beatPattern.value);
+    }
+    if (startingPitch.present) {
+      map['startingPitch'] = Variable<String>(startingPitch.value);
+    }
+    if (startingBeat.present) {
+      map['startingBeat'] = Variable<String>(startingBeat.value);
+    }
+    if (startingPitchDirection.present) {
+      map['startingPitchDirection'] =
+          Variable<String>(startingPitchDirection.value);
+    }
+    if (timeSignature.present) {
+      map['timeSignature'] = Variable<String>(timeSignature.value);
+    }
+    if (complexTimeSignature.present) {
+      map['complexTimeSignature'] =
+          Variable<String>(complexTimeSignature.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (sku.present) {
+      map['sku'] = Variable<String>(sku.value);
+    }
+    if (electronicVersion.present) {
+      map['electronicVersion'] = Variable<String>(electronicVersion.value);
+    }
+    if (tuneName.present) {
+      map['tuneName'] = Variable<String>(tuneName.value);
+    }
+    if (arrangement.present) {
+      map['arrangement'] = Variable<String>(arrangement.value);
+    }
+    if (language.present) {
+      map['language'] = Variable<String>(language.value);
+    }
+    if (copyright.present) {
+      map['copyright'] = Variable<String>(copyright.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('HymnsCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('translatedTitle: $translatedTitle, ')
+          ..write('number: $number, ')
+          ..write('startingKey: $startingKey, ')
+          ..write('beatPattern: $beatPattern, ')
+          ..write('startingPitch: $startingPitch, ')
+          ..write('startingBeat: $startingBeat, ')
+          ..write('startingPitchDirection: $startingPitchDirection, ')
+          ..write('timeSignature: $timeSignature, ')
+          ..write('complexTimeSignature: $complexTimeSignature, ')
+          ..write('status: $status, ')
+          ..write('key: $key, ')
+          ..write('sku: $sku, ')
+          ..write('electronicVersion: $electronicVersion, ')
+          ..write('tuneName: $tuneName, ')
+          ..write('arrangement: $arrangement, ')
+          ..write('language: $language, ')
+          ..write('copyright: $copyright, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -9833,6 +9254,276 @@ class HymnStakeholdersCompanion extends UpdateCompanion<HymnStakeholder> {
   }
 }
 
+class Stakeholders extends Table with TableInfo<Stakeholders, Stakeholder> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Stakeholders(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [id, name, created, updated];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'stakeholders';
+  @override
+  VerificationContext validateIntegrity(Insertable<Stakeholder> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {name},
+      ];
+  @override
+  Stakeholder map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Stakeholder(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  Stakeholders createAlias(String alias) {
+    return Stakeholders(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['UNIQUE(name)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Stakeholder extends DataClass implements Insertable<Stakeholder> {
+  String id;
+  String name;
+  DateTime created;
+  DateTime updated;
+  Stakeholder(
+      {required this.id,
+      required this.name,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  StakeholdersCompanion toCompanion(bool nullToAbsent) {
+    return StakeholdersCompanion(
+      id: Value(id),
+      name: Value(name),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory Stakeholder.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Stakeholder(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  Stakeholder copyWith(
+          {String? id, String? name, DateTime? created, DateTime? updated}) =>
+      Stakeholder(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Stakeholder(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, created, updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Stakeholder &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class StakeholdersCompanion extends UpdateCompanion<Stakeholder> {
+  Value<String> id;
+  Value<String> name;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  Value<int> rowid;
+  StakeholdersCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  StakeholdersCompanion.insert({
+    required String id,
+    required String name,
+    required DateTime created,
+    required DateTime updated,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<Stakeholder> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  StakeholdersCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<DateTime>? created,
+      Value<DateTime>? updated,
+      Value<int>? rowid}) {
+    return StakeholdersCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('StakeholdersCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class HymnTopics extends Table with TableInfo<HymnTopics, HymnTopic> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -10125,6 +9816,315 @@ class HymnTopicsCompanion extends UpdateCompanion<HymnTopic> {
           ..write('hymnId: $hymnId, ')
           ..write('created: $created, ')
           ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class Topics extends Table with TableInfo<Topics, Topic> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Topics(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _aliasMeta = const VerificationMeta('alias');
+  late final GeneratedColumn<String> alias = GeneratedColumn<String>(
+      'alias', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns => [id, name, alias, created, updated];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'topics';
+  @override
+  VerificationContext validateIntegrity(Insertable<Topic> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('alias')) {
+      context.handle(
+          _aliasMeta, alias.isAcceptableOrUnknown(data['alias']!, _aliasMeta));
+    } else if (isInserting) {
+      context.missing(_aliasMeta);
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {name},
+      ];
+  @override
+  Topic map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Topic(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      alias: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}alias'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  Topics createAlias(String alias) {
+    return Topics(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['UNIQUE(name)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Topic extends DataClass implements Insertable<Topic> {
+  String id;
+  String name;
+  String alias;
+  DateTime created;
+  DateTime updated;
+  Topic(
+      {required this.id,
+      required this.name,
+      required this.alias,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['alias'] = Variable<String>(alias);
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  TopicsCompanion toCompanion(bool nullToAbsent) {
+    return TopicsCompanion(
+      id: Value(id),
+      name: Value(name),
+      alias: Value(alias),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory Topic.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Topic(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      alias: serializer.fromJson<String>(json['alias']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'alias': serializer.toJson<String>(alias),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  Topic copyWith(
+          {String? id,
+          String? name,
+          String? alias,
+          DateTime? created,
+          DateTime? updated}) =>
+      Topic(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        alias: alias ?? this.alias,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Topic(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('alias: $alias, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, alias, created, updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Topic &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.alias == this.alias &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class TopicsCompanion extends UpdateCompanion<Topic> {
+  Value<String> id;
+  Value<String> name;
+  Value<String> alias;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  Value<int> rowid;
+  TopicsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.alias = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TopicsCompanion.insert({
+    required String id,
+    required String name,
+    required String alias,
+    required DateTime created,
+    required DateTime updated,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        alias = Value(alias),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<Topic> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? alias,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (alias != null) 'alias': alias,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TopicsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? alias,
+      Value<DateTime>? created,
+      Value<DateTime>? updated,
+      Value<int>? rowid}) {
+    return TopicsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      alias: alias ?? this.alias,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (alias.present) {
+      map['alias'] = Variable<String>(alias.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TopicsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('alias: $alias, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -11593,9 +11593,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final UserLibrary userLibrary = UserLibrary(this);
   late final UserPlaylistLibrary userPlaylistLibrary =
       UserPlaylistLibrary(this);
-  late final Hymns hymns = Hymns(this);
-  late final Stakeholders stakeholders = Stakeholders(this);
-  late final Topics topics = Topics(this);
   late final LocalPlaylistItems localPlaylistItems = LocalPlaylistItems(this);
   late final PlaylistItems playlistItems = PlaylistItems(this);
   late final LocalPlaylists localPlaylists = LocalPlaylists(this);
@@ -11612,6 +11609,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final Index hymnPortionsIdxPortionId = Index(
       'hymn_portions_idx_portionId',
       'CREATE INDEX hymn_portions_idx_portionId ON hymn_portions (portionId)');
+  late final Hymns hymns = Hymns(this);
   late final Trigger hymnPortionsDeleteHymn = Trigger(
       'CREATE TRIGGER hymn_portions_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_portions WHERE hymnId = old.id;END',
       'hymn_portions_delete_hymn');
@@ -11688,6 +11686,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final Trigger hymnStakeholdersDeleteHymn = Trigger(
       'CREATE TRIGGER hymn_stakeholders_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_stakeholders WHERE hymnId = old.id;END',
       'hymn_stakeholders_delete_hymn');
+  late final Stakeholders stakeholders = Stakeholders(this);
   late final Trigger hymnStakeholdersDeleteStakeholder = Trigger(
       'CREATE TRIGGER hymn_stakeholders_delete_stakeholder AFTER DELETE ON stakeholders BEGIN DELETE FROM hymn_stakeholders WHERE stakeholderId = old.id;END',
       'hymn_stakeholders_delete_stakeholder');
@@ -11701,6 +11700,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final Trigger hymnTopicsDeleteHymn = Trigger(
       'CREATE TRIGGER hymn_topics_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_topics WHERE hymnId = old.id;END',
       'hymn_topics_delete_hymn');
+  late final Topics topics = Topics(this);
   late final Trigger hymnTopicsDeleteTopic = Trigger(
       'CREATE TRIGGER hymn_topics_delete_topic AFTER DELETE ON topics BEGIN DELETE FROM hymn_topics WHERE topicId = old.id;END',
       'hymn_topics_delete_topic');
@@ -12119,40 +12119,37 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userLibrary.mapFromRow);
   }
 
-  Selectable<Hymn> getUserHymnLibrary(String? user) {
+  Selectable<UserLibraryData> getUserHymnLibrary(String? user) {
     return customSelect(
-        'SELECT * FROM hymns AS h WHERE EXISTS (SELECT * FROM user_library WHERE hymn_id = h.id AND(user = ?1 OR uid = ?1))',
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?1)AND hymn_id IS NOT NULL AND hymn_id != \'\'',
         variables: [
           Variable<String>(user)
         ],
         readsFrom: {
-          hymns,
           records,
-        }).asyncMap(hymns.mapFromRow);
+        }).asyncMap(userLibrary.mapFromRow);
   }
 
-  Selectable<Stakeholder> getUserStakeholderLibrary(String? user) {
+  Selectable<UserLibraryData> getUserStakeholderLibrary(String? user) {
     return customSelect(
-        'SELECT * FROM stakeholders AS s WHERE EXISTS (SELECT * FROM user_library WHERE stakeholder_id = s.id AND(user = ?1 OR uid = ?1))',
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?1)AND stakeholder_id IS NOT NULL AND stakeholder_id != \'\'',
         variables: [
           Variable<String>(user)
         ],
         readsFrom: {
-          stakeholders,
           records,
-        }).asyncMap(stakeholders.mapFromRow);
+        }).asyncMap(userLibrary.mapFromRow);
   }
 
-  Selectable<Topic> getUserTopicLibrary(String? user) {
+  Selectable<UserLibraryData> getUserTopicLibrary(String? user) {
     return customSelect(
-        'SELECT * FROM topics AS t WHERE EXISTS (SELECT * FROM user_library WHERE topic_id = t.id AND(user = ?1 OR uid = ?1))',
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?1)AND topic_id IS NOT NULL AND topic_id != \'\'',
         variables: [
           Variable<String>(user)
         ],
         readsFrom: {
-          topics,
           records,
-        }).asyncMap(topics.mapFromRow);
+        }).asyncMap(userLibrary.mapFromRow);
   }
 
   Selectable<UserPlaylistLibraryData> getUserPlaylistLibrary(String? user) {
@@ -14345,9 +14342,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         userPurchases,
         userLibrary,
         userPlaylistLibrary,
-        hymns,
-        stakeholders,
-        topics,
         localPlaylistItems,
         playlistItems,
         localPlaylists,
@@ -14358,6 +14352,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         hymnPortions,
         hymnPortionsIdxHymnId,
         hymnPortionsIdxPortionId,
+        hymns,
         hymnPortionsDeleteHymn,
         portions,
         hymnPortionsDeletePortion,
@@ -14392,12 +14387,14 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         hymnStakeholdersIdxStakeholderId,
         hymnStakeholdersIdxRelationship,
         hymnStakeholdersDeleteHymn,
+        stakeholders,
         hymnStakeholdersDeleteStakeholder,
         stakeholdersIdxName,
         hymnTopics,
         hymnTopicsIdxHymnId,
         hymnTopicsIdxTopicId,
         hymnTopicsDeleteHymn,
+        topics,
         hymnTopicsDeleteTopic,
         topicsIdxName,
         topicsIdxAlias,
