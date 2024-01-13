@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:pocketbase/pocketbase.dart';
 
-import '../../../data/source/pocketbase/client.dart';
-import '../../../data/source/pocketbase/get_records.dart';
-import '../../model/collection.dart';
+import '../../../../data/source/pocketbase/client.dart';
+import '../../../../data/source/pocketbase/get_records.dart';
+import '../../../model/collection.dart';
 
 class GetHymnCollections extends GetRecords<HymnCollection, void> {
   GetHymnCollections({required super.db, required super.client})

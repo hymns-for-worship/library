@@ -87,19 +87,25 @@ class GetRecords<T, Args> {
     _dispose = null;
   }
 
-  Stream<double> checkForUpdate(Args args, {bool force = false}) async* {
+  Stream<double> checkForUpdate(
+    Args args, {
+    bool force = false,
+  }) async* {
     final status = await db //
         .getCollectionSyncedStatus(collectionName)
         .getSingleOrNull();
+    final local = await db //
+        .getRecordModelsByCollection(collectionName)
+        .get();
     final now = DateTime.now();
     final target = now.subtract(staleDuration);
     final isStale = status?.updated.isAfter(target) ?? true;
     final needsFetch = status == null || !status.synced || isStale || force;
-    if (status != null && !force) {
+    if (status != null && !force && local.isNotEmpty) {
       yield 1;
       return;
     }
-    if (needsFetch) {
+    if (needsFetch || local.isEmpty) {
       ResultList<RecordModel>? records;
       try {
         int page = 0;
@@ -128,15 +134,22 @@ class GetRecords<T, Args> {
             totalPages = result.totalPages;
           }
           for (final record in result.items) {
-            await db.createRecordModel(jsonEncode(record.toJson()), true);
+            await db.setRecordModel(
+              jsonEncode({
+                ...record.toJson(),
+                'date': now.toIso8601String(),
+              }),
+              true,
+              false,
+            );
           }
         }
-        final local = await db
+        final local = await db //
             .getRecordModelsByCollection(collectionName)
-            .get()
-            .then((items) => items.toList());
+            .get();
         for (final item in local) {
-          if (item.deleted == true || item.updated.isBefore(target)) {
+          final map = jsonDecode(item.data) as Map<String, dynamic>;
+          if (map['date'] != now.toIso8601String()) {
             await db.deleteRecordModelByCollectionAndId(
               item.collectionName,
               item.id,
@@ -152,8 +165,17 @@ class GetRecords<T, Args> {
     }
   }
 
-  Stream<List<T>> call(Args args, {bool check = true}) async* {
-    if (check) await checkForUpdate(args).last;
-    yield* getRecords(args).map(itemFromRecord).watch();
+  Stream<List<T>> call(
+    Args args, {
+    bool check = true,
+    bool incremental = false,
+  }) async* {
+    if (check && incremental) {
+      checkForUpdate(args).listen((_) => {});
+      yield* getRecords(args).map(itemFromRecord).watch();
+    } else {
+      if (check) await checkForUpdate(args).last;
+      yield* getRecords(args).map(itemFromRecord).watch();
+    }
   }
 }

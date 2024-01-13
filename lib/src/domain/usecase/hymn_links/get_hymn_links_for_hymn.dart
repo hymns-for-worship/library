@@ -11,10 +11,10 @@ class GetHymnLinksForHymn {
 
   late final getLinks = GetHymnLinks(db: db, client: client);
 
-  Stream<List<HymnLink>> call(String id) async* {
-    final links = getLinks(id);
+  Stream<List<HymnLink>> call(String hymnId) async* {
+    final links = getLinks(null);
     await for (final items in links) {
-      yield items.where((e) => e.hymnId == id).toList();
+      yield items.where((e) => e.hymnId == hymnId).toList();
     }
   }
 }

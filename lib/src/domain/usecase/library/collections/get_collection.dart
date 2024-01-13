@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../../data/source/database/database.dart';
-import '../../../data/source/pocketbase/client.dart';
-import '../../model/collection.dart';
+import '../../../../data/source/database/database.dart';
+import '../../../../data/source/pocketbase/client.dart';
+import '../../../model/collection.dart';
 import 'get_collection_hymns.dart';
 import 'get_collections.dart';
 

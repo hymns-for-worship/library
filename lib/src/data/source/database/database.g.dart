@@ -14537,7 +14537,8 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   }
 
   Selectable<Hymn> getHymns() {
-    return customSelect('SELECT * FROM hymns ORDER BY number ASC',
+    return customSelect(
+        'SELECT * FROM hymns WHERE status = \'Purchased\' OR status = \'Browsable\' ORDER BY number ASC',
         variables: [],
         readsFrom: {
           hymns,

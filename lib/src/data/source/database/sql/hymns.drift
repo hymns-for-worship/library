@@ -102,6 +102,7 @@ ORDER BY number ASC;
 
 getHymns:
 SELECT * FROM hymns
+WHERE status = 'Purchased' OR status = 'Browsable'
 ORDER BY number ASC;
 
 getHymn:
