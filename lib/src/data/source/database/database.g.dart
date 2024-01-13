@@ -12824,12 +12824,11 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userPurchases.mapFromRow);
   }
 
-  Selectable<UserLibraryData> getUserLibrary(String? user, String? uid) {
+  Selectable<UserLibraryData> getUserLibrary(String? user) {
     return customSelect(
-        'SELECT * FROM user_library WHERE user = ?1 OR uid = ?2',
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?1)',
         variables: [
-          Variable<String>(user),
-          Variable<String>(uid)
+          Variable<String>(user)
         ],
         readsFrom: {
           records,
@@ -12839,7 +12838,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   Selectable<UserLibraryData> getUserLibraryMatch(String? user, String? hymnId,
       String? playlistId, String? topicId, String? stakeholderId) {
     return customSelect(
-        'SELECT * FROM user_library WHERE user = ?1 AND(hymn_id = ?2 AND playlist_id = ?3 AND topic_id = ?4 AND stakeholder_id = ?5)',
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?1)AND(hymn_id = ?2 AND playlist_id = ?3 AND topic_id = ?4 AND stakeholder_id = ?5)',
         variables: [
           Variable<String>(user),
           Variable<String>(hymnId),
@@ -12854,7 +12853,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
 
   Selectable<UserLibraryData> getUserLibraryById(String? user, String id) {
     return customSelect(
-        'SELECT * FROM user_library WHERE user = ?1 AND id = ?2',
+        'SELECT * FROM user_library WHERE(user = ?1 OR uid = ?1)AND id = ?2',
         variables: [
           Variable<String>(user),
           Variable<String>(id)
@@ -12864,13 +12863,11 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userLibrary.mapFromRow);
   }
 
-  Selectable<UserHymnLibraryData> getUserHymnLibrary(
-      String? user, String? uid) {
+  Selectable<UserHymnLibraryData> getUserHymnLibrary(String? user) {
     return customSelect(
-        'SELECT * FROM user_hymn_library WHERE user = ?1 OR uid = ?2',
+        'SELECT * FROM user_hymn_library WHERE user = ?1 OR uid = ?1',
         variables: [
-          Variable<String>(user),
-          Variable<String>(uid)
+          Variable<String>(user)
         ],
         readsFrom: {
           records,
@@ -12880,7 +12877,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   Selectable<UserHymnLibraryData> getUserHymnLibraryById(
       String? user, String id) {
     return customSelect(
-        'SELECT * FROM user_hymn_library WHERE user = ?1 AND id = ?2',
+        'SELECT * FROM user_hymn_library WHERE(user = ?1 OR uid = ?1)AND id = ?2',
         variables: [
           Variable<String>(user),
           Variable<String>(id)
@@ -12890,13 +12887,25 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userHymnLibrary.mapFromRow);
   }
 
-  Selectable<UserStakeholderLibraryData> getUserStakeholderLibrary(
-      String? user, String? uid) {
+  Selectable<UserHymnLibraryData> getUserHymnLibraryByHymnId(
+      String? user, String hymnId) {
     return customSelect(
-        'SELECT * FROM user_stakeholder_library WHERE user = ?1 OR uid = ?2',
+        'SELECT * FROM user_hymn_library WHERE(user = ?1 OR uid = ?1)AND hymn_id = ?2',
         variables: [
           Variable<String>(user),
-          Variable<String>(uid)
+          Variable<String>(hymnId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userHymnLibrary.mapFromRow);
+  }
+
+  Selectable<UserStakeholderLibraryData> getUserStakeholderLibrary(
+      String? user) {
+    return customSelect(
+        'SELECT * FROM user_stakeholder_library WHERE user = ?1 OR uid = ?1',
+        variables: [
+          Variable<String>(user)
         ],
         readsFrom: {
           records,
@@ -12906,7 +12915,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   Selectable<UserStakeholderLibraryData> getUserStakeholderLibraryById(
       String? user, String id) {
     return customSelect(
-        'SELECT * FROM user_stakeholder_library WHERE user = ?1 AND id = ?2',
+        'SELECT * FROM user_stakeholder_library WHERE(user = ?1 OR uid = ?1)AND id = ?2',
         variables: [
           Variable<String>(user),
           Variable<String>(id)
@@ -12916,13 +12925,25 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userStakeholderLibrary.mapFromRow);
   }
 
-  Selectable<UserTopicLibraryData> getUserTopicLibrary(
-      String? user, String? uid) {
+  Selectable<UserStakeholderLibraryData>
+      getUserStakeholderLibraryByStakeholderId(
+          String? user, String stakeholderId) {
     return customSelect(
-        'SELECT * FROM user_topic_library WHERE user = ?1 OR uid = ?2',
+        'SELECT * FROM user_stakeholder_library WHERE(user = ?1 OR uid = ?1)AND stakeholder_id = ?2',
         variables: [
           Variable<String>(user),
-          Variable<String>(uid)
+          Variable<String>(stakeholderId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userStakeholderLibrary.mapFromRow);
+  }
+
+  Selectable<UserTopicLibraryData> getUserTopicLibrary(String? user) {
+    return customSelect(
+        'SELECT * FROM user_topic_library WHERE user = ?1 OR uid = ?1',
+        variables: [
+          Variable<String>(user)
         ],
         readsFrom: {
           records,
@@ -12932,7 +12953,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   Selectable<UserTopicLibraryData> getUserTopicLibraryById(
       String? user, String id) {
     return customSelect(
-        'SELECT * FROM user_topic_library WHERE user = ?1 AND id = ?2',
+        'SELECT * FROM user_topic_library WHERE(user = ?1 OR uid = ?1)AND id = ?2',
         variables: [
           Variable<String>(user),
           Variable<String>(id)
@@ -12942,13 +12963,24 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userTopicLibrary.mapFromRow);
   }
 
-  Selectable<UserPlaylistLibraryData> getUserPlaylistLibrary(
-      String? user, String? uid) {
+  Selectable<UserTopicLibraryData> getUserTopicLibraryByTopicId(
+      String? user, String topicId) {
     return customSelect(
-        'SELECT * FROM user_playlist_library WHERE user = ?1 OR uid = ?2',
+        'SELECT * FROM user_topic_library WHERE(user = ?1 OR uid = ?1)AND topic_id = ?2',
         variables: [
           Variable<String>(user),
-          Variable<String>(uid)
+          Variable<String>(topicId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userTopicLibrary.mapFromRow);
+  }
+
+  Selectable<UserPlaylistLibraryData> getUserPlaylistLibrary(String? user) {
+    return customSelect(
+        'SELECT * FROM user_playlist_library WHERE user = ?1 OR uid = ?1',
+        variables: [
+          Variable<String>(user)
         ],
         readsFrom: {
           records,
@@ -12958,7 +12990,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   Selectable<UserPlaylistLibraryData> getUserPlaylistLibraryById(
       String? user, String id) {
     return customSelect(
-        'SELECT * FROM user_playlist_library WHERE user = ?1 AND id = ?2',
+        'SELECT * FROM user_playlist_library WHERE(user = ?1 OR uid = ?1)AND id = ?2',
         variables: [
           Variable<String>(user),
           Variable<String>(id)
@@ -12968,10 +13000,23 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(userPlaylistLibrary.mapFromRow);
   }
 
+  Selectable<UserPlaylistLibraryData> getUserPlaylistLibraryByPlaylistId(
+      String? user, String playlistId) {
+    return customSelect(
+        'SELECT * FROM user_playlist_library WHERE(user = ?1 OR uid = ?1)AND playlist_id = ?2',
+        variables: [
+          Variable<String>(user),
+          Variable<String>(playlistId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(userPlaylistLibrary.mapFromRow);
+  }
+
   Selectable<PlaylistItem> getItemsForPlaylist(
       String? user, String playlistId) {
     return customSelect(
-        'SELECT * FROM playlist_items WHERE user = ?1 AND playlist_id = ?2 AND deleted != 1 ORDER BY "order" ASC',
+        'SELECT * FROM playlist_items WHERE user = ?1 AND playlist_id = ?2 ORDER BY "order" ASC',
         variables: [
           Variable<String>(user),
           Variable<String>(playlistId)
@@ -12983,7 +13028,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
 
   Selectable<PublicPlaylistItem> getItemsForPublicPlaylist(String playlistId) {
     return customSelect(
-        'SELECT * FROM public_playlist_items WHERE playlist_id = ?1 AND deleted != 1 ORDER BY "order" ASC',
+        'SELECT * FROM public_playlist_items WHERE playlist_id = ?1 ORDER BY "order" ASC',
         variables: [
           Variable<String>(playlistId)
         ],
@@ -13000,10 +13045,22 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(playlistItems.mapFromRow);
   }
 
+  Selectable<PlaylistItem> getPlaylistItem(String id, String playlistId) {
+    return customSelect(
+        'SELECT * FROM playlist_items WHERE id = ?1 AND playlist_id = ?2',
+        variables: [
+          Variable<String>(id),
+          Variable<String>(playlistId)
+        ],
+        readsFrom: {
+          records,
+        }).asyncMap(playlistItems.mapFromRow);
+  }
+
   Selectable<PlaylistItem> getPlaylistItemsByUserAndPlaylistId(
       String? user, String playlistId) {
     return customSelect(
-        'SELECT * FROM playlist_items WHERE user = ?1 AND playlist_id = ?2 AND deleted != 1 ORDER BY "order" ASC',
+        'SELECT * FROM playlist_items WHERE user = ?1 AND playlist_id = ?2 ORDER BY "order" ASC',
         variables: [
           Variable<String>(user),
           Variable<String>(playlistId)
@@ -13017,7 +13074,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
       getPublicPlaylistItemsByUserAndPublicPlaylistId(
           String? user, String playlistId) {
     return customSelect(
-        'SELECT * FROM public_playlist_items WHERE user = ?1 AND playlist_id = ?2 AND deleted != 1 ORDER BY "order" ASC',
+        'SELECT * FROM public_playlist_items WHERE user = ?1 AND playlist_id = ?2 ORDER BY "order" ASC',
         variables: [
           Variable<String>(user),
           Variable<String>(playlistId)
@@ -13029,7 +13086,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
 
   Selectable<Playlist> getPlaylists(String? user) {
     return customSelect(
-        'SELECT * FROM playlists WHERE user = ?1 AND deleted != 1 ORDER BY updated DESC',
+        'SELECT * FROM playlists WHERE user = ?1 ORDER BY updated DESC',
         variables: [
           Variable<String>(user)
         ],
@@ -14990,16 +15047,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
     return customUpdate(
       'DELETE FROM records',
       variables: [],
-      updates: {records},
-      updateKind: UpdateKind.delete,
-    );
-  }
-
-  Future<int> deleteRecordModelsByCollectionBeforeDate(
-      String collection, DateTime date) {
-    return customUpdate(
-      'DELETE FROM records WHERE(collection_id = ?1 OR collection_name = ?1)AND updated < ?2',
-      variables: [Variable<String>(collection), Variable<DateTime>(date)],
       updates: {records},
       updateKind: UpdateKind.delete,
     );

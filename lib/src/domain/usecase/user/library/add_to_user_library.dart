@@ -1,63 +1,69 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
+
 import '../../../../data/source/database/database.dart';
-import '../../../../data/source/pocketbase/client.dart';
+import '../../../../data/source/id.dart';
 
 class AddToUserLibrary {
   final HfwDatabase db;
-  final HfwStudio client;
 
-  AddToUserLibrary({
-    required this.db,
-    required this.client,
-  });
+  AddToUserLibrary(this.db);
 
   Future<void> call(
-    String user, {
+    String userId, {
     String? hymnId,
     String? topicId,
     String? stakeholderId,
     String? playlistId,
   }) async {
-    final col = client.collection('user_library');
-    try {
-      final filter = StringBuffer("user = '$user'");
+    final (key, id) = () {
       if (hymnId != null) {
-        filter.write(" && hymn_id = '$hymnId'");
+        return ('hymn_id', hymnId);
       } else if (topicId != null) {
-        filter.write(" && topic_id = '$topicId'");
+        return ('topic_id', topicId);
       } else if (stakeholderId != null) {
-        filter.write(" && stakeholder_id = '$stakeholderId'");
+        return ('stakeholder_id', stakeholderId);
       } else if (playlistId != null) {
-        filter.write(" && playlist_id = '$playlistId'");
+        return ('playlist_id', playlistId);
       }
-      final current = await col.getList(filter: filter.toString());
-      if (current.items.isNotEmpty) return;
-      final result = await col.create(body: {
-        'user': user,
-        if (hymnId != null) 'hymn_id': hymnId,
-        if (topicId != null) 'topic_id': topicId,
-        if (stakeholderId != null) 'stakeholder_id': stakeholderId,
-        if (playlistId != null) 'playlist_id': playlistId,
-      });
-      final item = await db
-          .getUserLibraryMatch(
-            user,
-            hymnId,
-            playlistId,
-            topicId,
-            stakeholderId,
-          )
-          .getSingleOrNull();
-      if (item == null) {
-        await db.createRecordModel(
-          jsonEncode(result.toJson()),
-          false,
-        );
-      }
-    } catch (error, stackTrace) {
-      // ignore: avoid_print
-      print('error adding to user library: $error $stackTrace');
+      throw Exception('Invalid key');
+    }();
+    final items = await db.getUserHymnLibrary(userId).get();
+    final current = items.firstWhereOrNull((item) {
+      final map = jsonDecode(item.data) as Map<String, dynamic>;
+      return map.containsKey(key) && map[key] == id;
+    });
+    if (current != null) {
+      final map = jsonDecode(current.data) as Map<String, dynamic>;
+      map.remove('hymn_id');
+      map.remove('topic_id');
+      map.remove('stakeholder_id');
+      map.remove('playlist_id');
+      map[key] = id;
+      await db.setRecordModel(
+        jsonEncode(map),
+        false,
+        false,
+      );
+    } else {
+      final id = generateId();
+      final now = DateTime.now();
+      final map = <String, dynamic>{
+        'id': id,
+        'collectionId': 'playlist_items',
+        'collectionName': 'playlist_items',
+        'created': now.toIso8601String(),
+        'updated': now.toIso8601String(),
+        'deleted': false,
+        'user': userId,
+      };
+      map[key] = id;
+      await db.setRecordModel(
+        jsonEncode(map),
+        false,
+        true,
+      );
     }
   }
 }

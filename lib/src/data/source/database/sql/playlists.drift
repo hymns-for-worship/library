@@ -28,7 +28,6 @@ OR (collection_name = 'playlists' AND public = 1);
 getPlaylists:
 SELECT * FROM playlists
 WHERE user = :user
-AND deleted != 1
 ORDER BY updated DESC;
 
 getPlaylist:

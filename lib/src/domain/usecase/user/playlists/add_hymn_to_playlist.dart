@@ -1,13 +1,15 @@
-import 'package:drift/drift.dart';
+import 'dart:convert';
 
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/id.dart';
+import 'reorder_playlist_items.dart';
 
 class AddHymnToPlaylist {
   final HfwDatabase db;
-  const AddHymnToPlaylist(this.db);
+  AddHymnToPlaylist(this.db);
+  late final reorder = ReorderPlaylistItems(db);
 
-  Future<PlaylistItem> call(
+  Future<void> call(
     String userId,
     Playlist data,
     Hymn hymn, {
@@ -17,67 +19,46 @@ class AddHymnToPlaylist {
     if (data.user != userId) {
       throw Exception('Not allowed to edit this playlist');
     }
-    final items = await db
-        .getItemsForPlaylist(userId, data.id)
-        .get()
-        .then((items) => items.toList());
-    final now = DateTime.now();
-    var item = current ??
-        PlaylistItem(
-          id: generateId(),
-          deleted: false,
-          synced: false,
-          data: '',
-          created: now,
-          updated: now,
-          fresh: true,
-          collectionId: 'playlist_items',
-          collectionName: 'playlist_items',
-          playlistId: data.id,
-          hymnId: hymn.id,
-          user: userId,
-          parts: [],
-        );
-    item = item.copyWith(
-      updated: now,
-      hymnId: Value(hymn.id),
-      parts: parts ?? current?.parts ?? [],
-      user: Value(userId),
-    );
-    if (current == null) {
-      items.add(item);
-    } else {
-      final index = items.indexWhere((e) => e.id == current.id);
-      items[index] = item;
-    }
-    if (current == null) {
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        item = item.copyWith(
-          order: Value(i.toDouble()),
-        );
-        if (item.fresh == true) {
-          await db.createRecordModel(
-            item.toJsonString(),
-            item.synced,
-          );
-        } else {
-          await db.updateRecordModel(
-            item.toJsonString(),
-            item.synced,
-            item.id,
-            item.collectionName,
-          );
-        }
+    if (current != null) {
+      final map = jsonDecode(current.data) as Map<String, dynamic>;
+      map['hymn_id'] = hymn.id;
+      if (current.hymnId != hymn.id) {
+        map['parts'] = parts ?? [];
+      } else {
+        map['parts'] = parts ?? current.parts;
       }
-    } else {
-      await db.updateRecordModel(
-        item.toJsonString(),
-        item.synced,
-        item.id,
-        item.collectionName,
+      await db.setRecordModel(
+        jsonEncode(map),
+        false,
+        false,
       );
+    } else {
+      final items = await db
+          .getItemsForPlaylist(userId, data.id)
+          .get()
+          .then((items) => items.toList());
+      final id = generateId();
+      final now = DateTime.now();
+      final map = <String, dynamic>{
+        'id': id,
+        'collectionId': 'playlist_items',
+        'collectionName': 'playlist_items',
+        'created': now.toIso8601String(),
+        'updated': now.toIso8601String(),
+        'deleted': false,
+        'user': userId,
+      };
+      map['playlist_id'] = data.id;
+      map['hymn_id'] = hymn.id;
+      map['parts'] = parts ?? [];
+      await db.setRecordModel(
+        jsonEncode(map),
+        false,
+        false,
+      );
+      final item = await db.getPlaylistItem(id, data.id).getSingle();
+      items.add(item);
+      await reorder.setOrder(items);
     }
-    return item;
   }
 }

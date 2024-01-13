@@ -131,10 +131,18 @@ class GetRecords<T, Args> {
             await db.createRecordModel(jsonEncode(record.toJson()), true);
           }
         }
-        await db.deleteRecordModelsByCollectionBeforeDate(
-          collectionName,
-          now,
-        );
+        final local = await db
+            .getRecordModelsByCollection(collectionName)
+            .get()
+            .then((items) => items.toList());
+        for (final item in local) {
+          if (item.deleted == true || item.updated.isBefore(target)) {
+            await db.deleteRecordModelByCollectionAndId(
+              item.collectionName,
+              item.id,
+            );
+          }
+        }
         await db.setCollectionSyncedStatus(collectionName, true, now, now);
       } catch (e) {
         // ignore: avoid_print

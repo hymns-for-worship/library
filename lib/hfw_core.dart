@@ -11,12 +11,17 @@ export 'src/data/source/http/http_get_cache.dart';
 export 'src/data/source/http/store/http_store.dart';
 export 'src/data/source/http/store/in_memory_http_store.dart';
 export 'src/data/source/http/store/database_http_store.dart';
+export 'src/data/utils/retry/future.dart';
 
 // Models
 export 'src/domain/model/bundle_file.dart';
 export 'src/domain/model/hymn_archive.dart';
 export 'src/domain/model/hymn_download.dart';
 export 'src/domain/model/hymn.dart';
+export 'src/domain/model/hymn_link.dart';
+export 'src/domain/model/template_options.dart';
+export 'src/domain/model/defaults.dart';
+export 'src/domain/model/collection.dart';
 
 // Use Cases
 export 'src/domain/usecase/library/hymns/download_library.dart';
@@ -62,8 +67,7 @@ export 'src/domain/usecase/user/playlists/remove_playlist_item.dart';
 export 'src/domain/usecase/user/playlists/reorder_playlist_items.dart';
 export 'src/domain/usecase/user/playlists/edit_notes_playlist_item.dart';
 export 'src/domain/usecase/user/playlists/edit_parts_playlist_item.dart';
-export 'src/domain/usecase/user/playlists/duplicate_playlist.dart';
-export 'src/domain/model/template_options.dart';
-export 'src/domain/model/defaults.dart';
-
-export 'src/data/utils/retry/future.dart';
+export 'src/domain/usecase/hymn_links/get_hymn_links.dart';
+export 'src/domain/usecase/collections/get_collections.dart';
+export 'src/domain/usecase/collections/get_collection.dart';
+export 'src/domain/usecase/collections/get_collection_hymns.dart';

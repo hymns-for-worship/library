@@ -46,30 +46,30 @@ getItemsForPlaylist:
 SELECT * FROM playlist_items
 WHERE user = :user
 AND playlist_id = :playlist_id
-AND deleted != 1
 ORDER BY [order] ASC;
 
 getItemsForPublicPlaylist:
 SELECT * FROM public_playlist_items
 WHERE playlist_id = :playlist_id
-AND deleted != 1
 ORDER BY [order] ASC;
 
 getPlaylistItems:
 SELECT * FROM playlist_items
-ORDER BY [order] ASC
-WHERE deleted != 1;
+ORDER BY [order] ASC;
+
+getPlaylistItem:
+SELECT * FROM playlist_items
+WHERE id = :id
+AND playlist_id = :playlist_id;
 
 getPlaylistItemsByUserAndPlaylistId:
 SELECT * FROM playlist_items
 WHERE user = :user
 AND playlist_id = :playlist_id
-AND deleted != 1
 ORDER BY [order] ASC;
 
 getPublicPlaylistItemsByUserAndPublicPlaylistId:
 SELECT * FROM public_playlist_items
 WHERE user = :user
 AND playlist_id = :playlist_id
-AND deleted != 1
 ORDER BY [order] ASC;

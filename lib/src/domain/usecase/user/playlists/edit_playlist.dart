@@ -54,11 +54,10 @@ class EditPlaylist {
     if (current != null) {
       final map = jsonDecode(current.data) as Map<String, dynamic>;
       map.addAll(data.toJson());
-      await db.updateRecordModel(
+      await db.setRecordModel(
         jsonEncode(map),
         false,
-        current.id,
-        current.collectionName,
+        false,
       );
       return db.getPlaylist(userId, current.id).getSingle();
     } else {
@@ -74,45 +73,12 @@ class EditPlaylist {
         'user': userId,
       };
       map.addAll(data.toJson());
-      await db.createRecordModel(
+      await db.setRecordModel(
         jsonEncode(map),
         false,
+        true,
       );
       return db.getPlaylist(userId, id).getSingle();
     }
-    // Playlist playlist = data;
-    // if (data.id.isEmpty) {
-    //   final id = generateId();
-    //   final now = DateTime.now();
-    //   playlist = data.copyWith(
-    //     id: id,
-    //     created: now,
-    //     updated: now,
-    //     collectionId: 'playlists',
-    //     collectionName: 'playlists',
-    //     deleted: const Value(false),
-    //     synced: false,
-    //     user: Value(userId),
-    //     fresh: const Value(true),
-    //   );
-    //   await db.createRecordModel(
-    //     playlist.toJsonString(),
-    //     playlist.synced,
-    //   );
-    // } else {
-    //   final now = DateTime.now();
-    //   playlist = data.copyWith(
-    //     updated: now,
-    //     synced: false,
-    //     user: Value(userId),
-    //   );
-    //   await db.updateRecordModel(
-    //     playlist.toJsonString(),
-    //     playlist.synced,
-    //     playlist.id,
-    //     playlist.collectionName,
-    //   );
-    // }
-    // return playlist;
   }
 }

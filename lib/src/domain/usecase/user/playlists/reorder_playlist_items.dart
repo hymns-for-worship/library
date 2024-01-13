@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart';
+import 'dart:convert';
 
 import '../../../../data/source/database/database.dart';
 
@@ -24,20 +24,15 @@ class ReorderPlaylistItems {
         .then((items) => items.toList());
     final item = items.removeAt(oldIndex);
     items.insert(newIndex, item);
+    await setOrder(items);
+  }
+
+  Future<void> setOrder(List<PlaylistItem> items) async {
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-      item = item.copyWith(
-        order: Value(i.toDouble()),
-        updated: DateTime.now(),
-        synced: false,
-        user: Value(userId),
-      );
-      await db.updateRecordModel(
-        item.toJsonString(),
-        item.synced,
-        item.id,
-        item.collectionName,
-      );
+      final map = jsonDecode(item.data) as Map<String, dynamic>;
+      map['order'] = i.toDouble();
+      await db.setRecordModel(jsonEncode(map), item.synced, false);
     }
   }
 }

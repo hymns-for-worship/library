@@ -16,7 +16,6 @@ class GetPlaylists {
   });
 
   Selectable<Playlist> call(String userId) {
-    print('get playlists, $userId');
     return db.getPlaylists(userId);
   }
 }

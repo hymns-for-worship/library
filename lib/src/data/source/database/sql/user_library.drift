@@ -38,12 +38,11 @@ AND json_extract(data, '$.playlist_id') IS NOT NULL;
 -- Queries
 getUserLibrary:
 SELECT * FROM user_library
-WHERE user = :user
-OR uid = :uid;
+WHERE (user = :user OR uid = :user);
 
 getUserLibraryMatch:
 SELECT * FROM user_library
-WHERE user = :user
+WHERE (user = :user OR uid = :user)
 AND (
     hymn_id = :hymn_id
     AND playlist_id = :playlist_id
@@ -53,45 +52,61 @@ AND (
 
 getUserLibraryById:
 SELECT * FROM user_library
-WHERE user = :user
+WHERE (user = :user OR uid = :user)
 AND id = :id;
 
 getUserHymnLibrary:
 SELECT * FROM user_hymn_library
-WHERE user = :user
-OR uid = :uid;
+WHERE user = :user OR uid = :user;
 
 getUserHymnLibraryById:
 SELECT * FROM user_hymn_library
-WHERE user = :user
+WHERE (user = :user OR uid = :user)
 AND id = :id;
+
+getUserHymnLibraryByHymnId:
+SELECT * FROM user_hymn_library
+WHERE (user = :user OR uid = :user)
+AND hymn_id = :hymn_id;
 
 getUserStakeholderLibrary:
 SELECT * FROM user_stakeholder_library
-WHERE user = :user
-OR uid = :uid;
+WHERE user = :user OR uid = :user;
 
 getUserStakeholderLibraryById:
 SELECT * FROM user_stakeholder_library
-WHERE user = :user
+WHERE (user = :user OR uid = :user)
 AND id = :id;
+
+getUserStakeholderLibraryByStakeholderId:
+SELECT * FROM user_stakeholder_library
+WHERE (user = :user OR uid = :user)
+AND stakeholder_id = :stakeholder_id;
 
 getUserTopicLibrary:
 SELECT * FROM user_topic_library
-WHERE user = :user
-OR uid = :uid;
+WHERE user = :user OR uid = :user;
 
 getUserTopicLibraryById:
 SELECT * FROM user_topic_library
-WHERE user = :user
+WHERE (user = :user OR uid = :user)
 AND id = :id;
+
+getUserTopicLibraryByTopicId:
+SELECT * FROM user_topic_library
+WHERE (user = :user OR uid = :user)
+AND topic_id = :topic_id;
 
 getUserPlaylistLibrary:
 SELECT * FROM user_playlist_library
-WHERE user = :user
-OR uid = :uid;
+WHERE user = :user OR uid = :user;
 
 getUserPlaylistLibraryById:
 SELECT * FROM user_playlist_library
-WHERE user = :user
+WHERE (user = :user OR uid = :user)
 AND id = :id;
+
+getUserPlaylistLibraryByPlaylistId:
+SELECT * FROM user_playlist_library
+WHERE (user = :user OR uid = :user)
+AND playlist_id = :playlist_id;

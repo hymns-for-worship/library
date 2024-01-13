@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart';
+import 'dart:convert';
 
 import '../../../../data/source/database/database.dart';
 
@@ -15,22 +15,12 @@ class EditPartsPlaylistItem {
     if (data.user != userId) {
       throw Exception('Not allowed to edit this playlist');
     }
-    final now = DateTime.now();
-    var item = current.copyWith(
-      synced: false,
-      updated: now,
-      parts: parts,
-    );
-    item = item.copyWith(
-      updated: DateTime.now(),
-      synced: false,
-      user: Value(userId),
-    );
-    await db.updateRecordModel(
-      item.toJsonString(),
-      item.synced,
-      item.id,
-      item.collectionName,
+    final map = jsonDecode(current.data) as Map<String, dynamic>;
+    map['parts'] = parts;
+    await db.setRecordModel(
+      jsonEncode(map),
+      false,
+      false,
     );
   }
 }
