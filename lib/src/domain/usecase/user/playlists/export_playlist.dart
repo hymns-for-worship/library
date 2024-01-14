@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pptx/presentation.dart';
+import '../../../model/playlist_item.dart';
 import '../../../model/template_options.dart';
 
 class ExportPlaylist {

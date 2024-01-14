@@ -19,7 +19,7 @@ class ExportPlaylistPptx {
     Playlist playlist,
     String template,
   ) async {
-    final items = await db.getItemsForPlaylist(userId, playlist.id).get();
+    final items = await db.getPlaylistItemsForPlaylist(playlist.id).first;
     final slides = await exporter.call(items);
     final bytes = await options.get(template);
     final pres = Presentation.fromBytes(bytes);

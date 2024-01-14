@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import '../../../model/playlist_item.dart';
 import '../../../../data/source/database/database.dart';
 
 class ReorderPlaylistItems {
@@ -19,8 +20,8 @@ class ReorderPlaylistItems {
       newIndex -= 1;
     }
     final items = await db
-        .getItemsForPlaylist(userId, data.id)
-        .get()
+        .getPlaylistItemsForPlaylist(data.id)
+        .first
         .then((items) => items.toList());
     final item = items.removeAt(oldIndex);
     items.insert(newIndex, item);
@@ -32,7 +33,7 @@ class ReorderPlaylistItems {
       var item = items[i];
       final map = jsonDecode(item.data) as Map<String, dynamic>;
       map['order'] = i.toDouble();
-      await db.setRecordModel(jsonEncode(map), item.synced, false);
+      await db.setRecordModel(jsonEncode(map), item.synced, item.fresh);
     }
   }
 }

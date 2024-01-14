@@ -86,7 +86,7 @@ WHERE (collection_id = :collection OR collection_name = :collection)
 AND id = :id;
 
 setRecordModel:
-REPLACE INTO records (data, synced, fresh)
+INSERT OR REPLACE INTO records (data, synced, fresh)
 VALUES (:data, :synced, :fresh)
 RETURNING *;
 

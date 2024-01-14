@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../../../../data/source/database/database.dart';
+import '../../../model/playlist_item.dart';
 
 class EditNotesPlaylistItem {
   final HfwDatabase db;

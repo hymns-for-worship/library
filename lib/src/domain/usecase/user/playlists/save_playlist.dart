@@ -228,7 +228,7 @@ class SavePlaylist {
     }
 
     final rows = <XmlElement>[];
-    final items = await db.getItemsForPlaylist(userId, data.id).get();
+    final items = await db.getPlaylistItemsForPlaylist(data.id).first;
 
     var idx = 0;
     for (var item in items) {

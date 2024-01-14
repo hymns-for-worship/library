@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/id.dart';
+import '../../../model/playlist_item.dart';
 import 'reorder_playlist_items.dart';
 
 class AddHymnToPlaylist {
@@ -34,8 +35,8 @@ class AddHymnToPlaylist {
       );
     } else {
       final items = await db
-          .getItemsForPlaylist(userId, data.id)
-          .get()
+          .getPlaylistItemsForPlaylist(data.id)
+          .first
           .then((items) => items.toList());
       final id = generateId();
       final now = DateTime.now();
@@ -47,17 +48,18 @@ class AddHymnToPlaylist {
         'updated': now.toIso8601String(),
         'deleted': false,
         'user': userId,
+        'order': items.length,
       };
       map['playlist_id'] = data.id;
       map['hymn_id'] = hymn.id;
       map['parts'] = parts ?? [];
-      await db.setRecordModel(
+      await db.createRecordModel(
         jsonEncode(map),
         false,
-        false,
       );
-      final item = await db.getPlaylistItem(id, data.id).getSingle();
-      items.add(item);
+      await Future.delayed(const Duration(milliseconds: 10));
+      final item = await db.getPlaylistItem(data.id, id).first;
+      if (item != null) items.add(item);
       await reorder.setOrder(items);
     }
   }

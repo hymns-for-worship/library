@@ -4,6 +4,7 @@ import 'package:file_saver/file_saver.dart';
 import 'package:xml/xml.dart';
 
 import '../../../../data/source/database/database.dart';
+import '../../../model/playlist_item.dart';
 import '../../../model/template_options.dart';
 import 'export_playlist.dart';
 
@@ -17,7 +18,7 @@ class ExportPlaylistHtml {
     String userId,
     Playlist playlist,
   ) async {
-    final items = await db.getItemsForPlaylist(userId, playlist.id).get();
+    final items = await db.getPlaylistItemsForPlaylist(playlist.id).first;
     final xml = baseTemplate(await createTable(
       version: 'v3',
       items: items,

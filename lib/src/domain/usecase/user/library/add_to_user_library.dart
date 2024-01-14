@@ -41,10 +41,10 @@ class AddToUserLibrary {
       }
       return;
     } else {
-      final id = generateId();
+      final newId = generateId();
       final now = DateTime.now();
       final map = <String, dynamic>{
-        'id': id,
+        'id': newId,
         'collectionId': 'user_library',
         'collectionName': 'user_library',
         'created': now.toIso8601String(),
@@ -58,7 +58,7 @@ class AddToUserLibrary {
         false,
         true,
       );
-      await db.setSyncStatusRecordModel(false, id, 'user_library');
+      await db.setSyncStatusRecordModel(false, newId, 'user_library');
     }
   }
 }

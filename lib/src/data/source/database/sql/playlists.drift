@@ -12,8 +12,8 @@ SELECT
     CASE WHEN json_extract(data, '$.supplement') IS NOT NULL THEN CAST(json_extract(data, '$.supplement') AS BOOLEAN) ELSE NULL END AS supplement,
     CASE WHEN json_extract(data, '$.event') IS NOT NULL THEN CAST(json_extract(data, '$.event') AS TEXT) ELSE NULL END AS [event]
 FROM user_records
-WHERE collection_name = 'playlists'
-OR collection_name = 'public_playlists';
+WHERE collection_name = 'public_playlists'
+OR collection_name = 'playlists';
 
 CREATE VIEW playlists AS
 SELECT * FROM local_playlists

@@ -4,6 +4,7 @@ import 'package:archive/archive.dart';
 import 'package:file_saver/file_saver.dart';
 
 import '../../../../data/source/database/database.dart';
+import '../../../model/playlist_item.dart';
 import '../../../model/template_options.dart';
 import 'export_playlist.dart';
 

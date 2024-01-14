@@ -1,4 +1,5 @@
 import '../../../../data/source/database/database.dart';
+import '../../../model/playlist_item.dart';
 
 class RemovePlaylistItem {
   final HfwDatabase db;
