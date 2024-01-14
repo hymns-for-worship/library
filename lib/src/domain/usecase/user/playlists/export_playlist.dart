@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:hfw_core/src/domain/model/defaults.dart';
+
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pptx/presentation.dart';
 import '../../../model/playlist_item.dart';
@@ -11,17 +13,20 @@ class ExportPlaylist {
 
   ExportPlaylist(this.db, this.options);
 
-  Future<List<PresentationSlide>> call(List<PlaylistItem> items) async {
+  Future<List<PresentationSlide>> call(
+    List<PlaylistItem> items, {
+    bool firstAndLast = false,
+    bool chorusOnlyOnce = false,
+    bool autoAddChorus = true,
+  }) async {
     final slides = <PresentationSlide>[];
     var itemIdx = 0;
     for (final item in items) {
-      if (item.text != null || item.black != null) {
+      if (item.text.valid || item.black != null) {
         Uint8List? background;
-        if (item.black != null) {
-          final color = item.black! ? 'Black' : 'White';
-          final black = await options.get('assets/templates/$color.png');
-          background = black.buffer.asUint8List();
-        }
+        final color = item.black == true ? 'Black' : 'White';
+        final black = await options.getRaw('assets/templates/$color.png');
+        background = black.buffer.asUint8List();
         slides.add((
           name: '',
           background: background,
@@ -31,7 +36,7 @@ class ExportPlaylist {
           invertText: item.black == true,
           metadata: {'index': itemIdx},
         ));
-      } else if (item.hymnId != null && item.hymnId!.isNotEmpty) {
+      } else if (item.hymnId.valid) {
         final hymn = await db.getHymn(item.hymnId!).getSingleOrNull();
         if (hymn == null) continue;
         final bundle = await db.getBundlesByHymnId(hymn.id).getSingleOrNull();
@@ -39,7 +44,15 @@ class ExportPlaylist {
         final archive = await bundle.toArchiveAsync();
         if (archive == null) continue;
         final images = archive.files.where((e) => e.name.endsWith('.png'));
-        final parts = item.parts;
+        var parts = item.parts;
+        if (parts.isEmpty) {
+          final portions = await db.getPortionsByHymnId(item.hymnId!).get();
+          parts = portions.defaults(
+            firstAndLast: firstAndLast,
+            chorusOnlyOnce: chorusOnlyOnce,
+            autoAddChorus: autoAddChorus,
+          );
+        }
         if (parts.isNotEmpty && parts[0].toUpperCase() != 'TITLE') {
           parts.insert(0, 'Title');
         }
@@ -80,6 +93,9 @@ class ExportPlaylist {
       }
       itemIdx++;
     }
+    for (final s in slides) {
+      print('-- slide: $s');
+    }
     return slides;
   }
 }
@@ -95,4 +111,8 @@ extension PlaylistItemItems on PlaylistItem {
     }
     return null;
   }
+}
+
+extension on String? {
+  bool get valid => this != null && this!.isNotEmpty;
 }

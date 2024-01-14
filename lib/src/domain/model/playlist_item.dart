@@ -14,14 +14,14 @@ import 'package:pocketbase/pocketbase.dart';
 import '../../data/source/database/database.dart';
 
 class PlaylistItem extends UserRecord {
-  final String playlistId;
-  final String? hymnId;
-  final String? image;
-  final String? color;
-  final String? notes;
-  final String? text;
-  final num? order;
-  final List<String> parts;
+  String playlistId;
+  String? hymnId;
+  String? image;
+  String? color;
+  String? notes;
+  String? text;
+  num? order;
+  List<String> parts;
 
   PlaylistItem({
     required super.id,

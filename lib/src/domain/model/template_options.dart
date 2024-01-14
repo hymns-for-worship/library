@@ -12,13 +12,17 @@ class TemplateOptions {
     'Single Slide Template (No Transition)--Widescreen',
   ];
 
-  Future<Uint8List> get(String key) async {
+  Future<Uint8List> get(String key, [String ext = '.pptx']) async {
+    return getRaw('assets/templates/$key.pptx');
+  }
+
+  Future<Uint8List> getRaw(String key) async {
     try {
-      final buffer = await rootBundle.load('assets/templates/$key.pptx');
+      final buffer = await rootBundle.load(key);
       final bytes = buffer.buffer.asUint8List();
       return bytes;
     } catch (e) {
-      return throw Exception('Error loading template: $e');
+      return throw Exception('Error loading asset: $e');
     }
   }
 }

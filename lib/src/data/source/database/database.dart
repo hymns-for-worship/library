@@ -128,13 +128,18 @@ class HfwDatabase extends _$HfwDatabase {
 
   Stream<List<PlaylistItem>> getPlaylistItemsForUser(String userId) {
     final items = getPlaylistItems().watch();
-    return items.map((e) => e.where((e) => e.user == userId).toList());
+    return items.map((e) => e
+        .where((e) => e.deleted != true)
+        .where((e) => e.user == userId)
+        .toList());
   }
 
   Stream<List<PlaylistItem>> getPlaylistItemsForPlaylist(String playlistId) {
     final items = getPlaylistItems().watch();
-    return items
-        .map((e) => e.where((e) => e.playlistId == playlistId).toList());
+    return items.map((e) => e
+        .where((e) => e.deleted != true)
+        .where((e) => e.playlistId == playlistId)
+        .toList());
   }
 
   Stream<PlaylistItem?> getPlaylistItem(String playlistId, String id) {

@@ -31,9 +31,12 @@ class ReorderPlaylistItems {
   Future<void> setOrder(List<PlaylistItem> items) async {
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
-      final map = jsonDecode(item.data) as Map<String, dynamic>;
-      map['order'] = i.toDouble();
-      await db.setRecordModel(jsonEncode(map), item.synced, item.fresh);
+      item.order = i.toDouble();
+      await db.setRecordModel(
+        jsonEncode(item.toData()),
+        false,
+        item.fresh,
+      );
     }
   }
 }

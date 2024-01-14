@@ -49,34 +49,10 @@ class AddTextToPlaylist {
       map['playlist_id'] = data.id;
       map['text'] = text;
       map['color'] = color;
-      final str = jsonEncode(map);
-      print('saving playlist item: $str');
-      final results = await db.createRecordModel(
+      await db.createRecordModel(
         jsonEncode(map),
         false,
       );
-      print('results: $results');
-      final items1 = await db
-          .getPlaylistItemsForPlaylist(data.id)
-          .first
-          .then((items) => items.toList());
-      final items2 = await db
-          .getPlaylistItemsForUser(userId)
-          .first
-          .then((items) => items.toList());
-      final items3 = await db
-          .getRecordModelByCollection('playlist_items', id)
-          .get()
-          .then((items) => items.toList());
-      final items4 = await db //
-          .getPlaylistItems()
-          .get()
-          .then((items) => items.toList());
-      print('----------------');
-      print(
-          '1: ${items1.length}, 2: ${items2.length}, 3: ${items3.length}, 4: ${items4.length}');
-      print(items4);
-      await Future.delayed(const Duration(milliseconds: 10));
       final item = await db.getPlaylistItem(data.id, id).first;
       if (item != null) items.add(item);
       await reorder.setOrder(items);
