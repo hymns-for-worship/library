@@ -93,9 +93,6 @@ class ExportPlaylist {
       }
       itemIdx++;
     }
-    for (final s in slides) {
-      print('-- slide: $s');
-    }
     return slides;
   }
 }

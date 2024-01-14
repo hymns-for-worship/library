@@ -17,8 +17,9 @@ class ExportPlaylistPptx {
   Future<void> call(
     String userId,
     Playlist playlist,
-    String template,
-  ) async {
+    String template, {
+    bool saveAs = false,
+  }) async {
     final items = await db.getPlaylistItemsForPlaylist(playlist.id).first;
     final slides = await exporter.call(items);
     final bytes = await options.get(template);
@@ -28,11 +29,20 @@ class ExportPlaylistPptx {
     if (outBytes == null) {
       throw Exception('Error exporting presentation');
     }
-    await FileSaver.instance.saveFile(
-      name: playlist.name,
-      bytes: Uint8List.fromList(outBytes),
-      ext: 'pptx',
-      mimeType: MimeType.microsoftPresentation,
-    );
+    if (saveAs) {
+      await FileSaver.instance.saveAs(
+        name: playlist.name,
+        bytes: Uint8List.fromList(outBytes),
+        ext: 'pptx',
+        mimeType: MimeType.microsoftPresentation,
+      );
+    } else {
+      await FileSaver.instance.saveFile(
+        name: playlist.name,
+        bytes: Uint8List.fromList(outBytes),
+        ext: 'pptx',
+        mimeType: MimeType.microsoftPresentation,
+      );
+    }
   }
 }

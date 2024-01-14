@@ -11,6 +11,7 @@ LazyDatabase connect(
   bool inMemory = false,
   bool debug = false,
   bool delete = false,
+  Future<Uint8List?> Function()? preload,
 }) {
   return LazyDatabase(() async {
     final sqliteUrl = Uri.parse('/sqlite3.${debug ? 'debug.' : ''}wasm');
@@ -28,6 +29,7 @@ LazyDatabase connect(
       databaseName: dbName.replaceAll('.db', ''),
       sqlite3Uri: sqliteUrl,
       driftWorkerUri: Uri.parse('/drift_worker.js'),
+      initializeDatabase: preload,
     );
 
     if (result.missingFeatures.isNotEmpty) {
@@ -44,4 +46,8 @@ LazyDatabase connect(
 
     return result.resolvedExecutor;
   });
+}
+
+Future<Uint8List?> getDatabaseBytes(String dbName) async {
+  return null;
 }

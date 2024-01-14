@@ -25,6 +25,7 @@ export 'src/domain/model/collection.dart';
 export 'src/domain/model/playlist_item.dart';
 
 // Use Cases
+export 'src/domain/usecase/export_database.dart';
 export 'src/domain/usecase/library/download_library.dart';
 export 'src/domain/usecase/library/hymns/get_public_domain.dart';
 export 'src/domain/usecase/library/hymns/get_hymn.dart';

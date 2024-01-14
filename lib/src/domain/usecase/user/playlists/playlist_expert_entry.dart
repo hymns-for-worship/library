@@ -35,17 +35,7 @@ class PlaylistExpertEntry {
           final hymns = await db.getHymns().get();
           final hymn = hymnFromHymnNumber(desc, hymns);
           if (hymn != null) {
-            final allParts = await db //
-                .getPortionsWithHymnIdByHymnId(hymn.id)
-                .map((e) => e.portion)
-                .get()
-                .then((items) => items.toSet().toList());
-            final defaults = allParts.defaults(
-              firstAndLast: firstAndLast,
-              chorusOnlyOnce: chorusOnlyOnce,
-              autoAddChorus: autoAddChorus,
-            );
-            await addHymn(userId, playlist, hymn, parts: defaults);
+            await addHymn(userId, playlist, hymn, parts: []);
           }
         }
       } else {
@@ -61,12 +51,12 @@ class PlaylistExpertEntry {
           final hymns = await db.getHymns().get();
           final hymn = hymnFromHymnNumber(desc, hymns);
           if (hymn != null) {
-            final allParts = await db //
-                .getPortionsWithHymnIdByHymnId(hymn.id)
-                .map((e) => e.portion)
-                .map((e) => e.name)
-                .get()
-                .then((items) => items.toSet().toList());
+            final portions = await db.getPortionsByHymnId(hymn.id).get();
+            final allParts = portions.defaults(
+              firstAndLast: firstAndLast,
+              chorusOnlyOnce: chorusOnlyOnce,
+              autoAddChorus: autoAddChorus,
+            );
             final filteredParts = convertParts(details, allParts);
             await addHymn(userId, playlist, hymn, parts: filteredParts);
           }

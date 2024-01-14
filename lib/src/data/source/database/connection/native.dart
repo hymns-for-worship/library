@@ -11,6 +11,7 @@ LazyDatabase connect(
   bool inMemory = false,
   bool debug = false,
   bool delete = false,
+  Future<Uint8List?> Function()? preload,
 }) {
   return LazyDatabase(() async {
     if (inMemory) {
@@ -23,10 +24,24 @@ LazyDatabase connect(
       await file.delete(recursive: true);
     }
 
+    final bytes = await preload?.call();
+    if (bytes != null) {
+      await file.writeAsBytes(bytes);
+    }
+
     return NativeDatabase.createInBackground(
       file,
       logStatements: logStatements,
       cachePreparedStatements: true,
     );
   });
+}
+
+Future<Uint8List?> getDatabaseBytes(String dbName) async {
+  final appDir = await getApplicationDocumentsDirectory();
+  final file = File(p.join(appDir.path, dbName));
+  if (await file.exists()) {
+    return file.readAsBytes();
+  }
+  return null;
 }

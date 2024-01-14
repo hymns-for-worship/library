@@ -16,8 +16,9 @@ class ExportPlaylistHtml {
 
   Future<void> call(
     String userId,
-    Playlist playlist,
-  ) async {
+    Playlist playlist, {
+    bool saveAs = false,
+  }) async {
     final items = await db.getPlaylistItemsForPlaylist(playlist.id).first;
     final xml = baseTemplate(await createTable(
       version: 'v3',
@@ -25,12 +26,21 @@ class ExportPlaylistHtml {
     ));
     final str = XmlDocument.parse(xml).toXmlString(pretty: true);
 
-    await FileSaver.instance.saveFile(
-      name: playlist.name,
-      bytes: Uint8List.fromList(str.codeUnits),
-      ext: 'html',
-      mimeType: MimeType.text,
-    );
+    if (saveAs) {
+      await FileSaver.instance.saveAs(
+        name: playlist.name,
+        bytes: Uint8List.fromList(str.codeUnits),
+        ext: 'html',
+        mimeType: MimeType.text,
+      );
+    } else {
+      await FileSaver.instance.saveFile(
+        name: playlist.name,
+        bytes: Uint8List.fromList(str.codeUnits),
+        ext: 'html',
+        mimeType: MimeType.text,
+      );
+    }
   }
 
   String baseTemplate(String body) {

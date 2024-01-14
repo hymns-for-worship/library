@@ -17,8 +17,9 @@ class ExportImagesImages {
   Future<void> call(
     String template,
     Playlist playlist,
-    List<PlaylistItem> items,
-  ) async {
+    List<PlaylistItem> items, {
+    bool saveAs = false,
+  }) async {
     final slides = await exporter.call(items);
     final filtered = slides //
         .where((e) => e.notes != null && e.background != null)
@@ -39,11 +40,20 @@ class ExportImagesImages {
     if (outBytes == null) {
       throw Exception('Error exporting presentation');
     }
-    await FileSaver.instance.saveFile(
-      name: playlist.name,
-      bytes: Uint8List.fromList(outBytes),
-      ext: 'zip',
-      mimeType: MimeType.zip,
-    );
+    if (saveAs) {
+      await FileSaver.instance.saveAs(
+        name: playlist.name,
+        bytes: Uint8List.fromList(outBytes),
+        ext: 'zip',
+        mimeType: MimeType.zip,
+      );
+    } else {
+      await FileSaver.instance.saveFile(
+        name: playlist.name,
+        bytes: Uint8List.fromList(outBytes),
+        ext: 'zip',
+        mimeType: MimeType.zip,
+      );
+    }
   }
 }

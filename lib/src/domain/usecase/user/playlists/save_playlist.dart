@@ -193,7 +193,11 @@ class SavePlaylist {
   final HfwDatabase db;
   SavePlaylist(this.db);
 
-  Future<void> call(String userId, Playlist data) async {
+  Future<void> call(
+    String userId,
+    Playlist data, {
+    bool saveAs = false,
+  }) async {
     Future<XmlElement> createItem(
       PlaylistItem item,
       int index,
@@ -259,11 +263,20 @@ class SavePlaylist {
 
     final str = xml.toXmlString(pretty: true, indent: '  ');
 
-    await FileSaver.instance.saveFile(
-      name: data.name,
-      bytes: Uint8List.fromList(str.codeUnits),
-      ext: 'hymn.xml',
-      mimeType: MimeType.microsoftPresentation,
-    );
+    if (saveAs) {
+      await FileSaver.instance.saveAs(
+        name: data.name,
+        bytes: Uint8List.fromList(str.codeUnits),
+        ext: 'hymn.xml',
+        mimeType: MimeType.microsoftPresentation,
+      );
+    } else {
+      await FileSaver.instance.saveFile(
+        name: data.name,
+        bytes: Uint8List.fromList(str.codeUnits),
+        ext: 'hymn.xml',
+        mimeType: MimeType.microsoftPresentation,
+      );
+    }
   }
 }
