@@ -12,6 +12,7 @@ export 'src/data/source/http/store/http_store.dart';
 export 'src/data/source/http/store/in_memory_http_store.dart';
 export 'src/data/source/http/store/database_http_store.dart';
 export 'src/data/utils/retry/future.dart';
+export 'src/data/source/id.dart';
 
 // Models
 export 'src/domain/model/bundle_file.dart';

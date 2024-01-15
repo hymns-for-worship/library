@@ -24,9 +24,12 @@ LazyDatabase connect(
       await file.delete(recursive: true);
     }
 
-    final bytes = await preload?.call();
-    if (bytes != null) {
-      await file.writeAsBytes(bytes);
+    final current = await file.readAsBytes();
+    if (current.isEmpty) {
+      final bytes = await preload?.call();
+      if (bytes != null) {
+        await file.writeAsBytes(bytes);
+      }
     }
 
     return NativeDatabase.createInBackground(
