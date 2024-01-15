@@ -24,6 +24,10 @@ LazyDatabase connect(
       await file.delete(recursive: true);
     }
 
+    if (!file.existsSync()) {
+      await file.create(recursive: true);
+    }
+
     final current = await file.readAsBytes();
     if (current.isEmpty) {
       final bytes = await preload?.call();

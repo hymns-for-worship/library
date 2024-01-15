@@ -11,7 +11,12 @@ class HfwStudio extends PocketBase {
     String url = 'https://hymnsforworship.studio',
     super.httpClientFactory,
     super.lang,
-  }) : super(url, authStore: HfwAuthStore(prefs));
+    String authKey = 'app-user-data',
+  }) : super(url,
+            authStore: HfwAuthStore(
+              prefs,
+              authKey: authKey,
+            ));
 
   HfwAuthStore get asyncAuthStore => authStore as HfwAuthStore;
 }
