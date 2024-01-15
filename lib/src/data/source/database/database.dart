@@ -7,6 +7,7 @@ import 'package:drift/extensions/json1.dart';
 
 import '../../../domain/model/playlist_item.dart';
 import '../archive/zip.dart';
+import 'schema_versions.dart';
 export 'extension.dart';
 export 'sql/converters.dart';
 
@@ -43,7 +44,21 @@ class HfwDatabase extends _$HfwDatabase {
   HfwDatabase(super.connection);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: stepByStep(
+        from1To2: (m, schema) async {
+          await m.recreateAllViews();
+        },
+      ),
+    );
+  }
 
   Selectable<Record> getRecordsWithFilter(
     String collectionName,

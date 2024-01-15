@@ -9702,7 +9702,7 @@ class Bundles extends Table with TableInfo<Bundles, Bundle> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-        {hymnId, hash},
+        {hymnId},
       ];
   @override
   Bundle map(Map<String, dynamic> data, {String? tablePrefix}) {
@@ -9735,7 +9735,7 @@ class Bundles extends Table with TableInfo<Bundles, Bundle> {
   }
 
   @override
-  List<String> get customConstraints => const ['UNIQUE(hymnId, hash)'];
+  List<String> get customConstraints => const ['UNIQUE(hymnId)'];
   @override
   bool get dontWriteConstraints => true;
 }

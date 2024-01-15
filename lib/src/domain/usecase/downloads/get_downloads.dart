@@ -26,9 +26,10 @@ extension HymnDownloadRecordModel on RecordModel {
     final file = getStringValue('file');
     final hash = getStringValue('hash');
     final url = client.getFileUrl(this, file);
-    final hymnRecord = expand['hymn_id']!.first;
-    final hymnTitle = hymnRecord.getStringValue('title');
-    final hymnNumber = hymnRecord.getStringValue('number');
+    final hymnRecordData = expand['hymn_id'] ?? [];
+    final hymnRecord = hymnRecordData.firstOrNull;
+    final hymnTitle = hymnRecord?.getStringValue('title') ?? 'N/A';
+    final hymnNumber = hymnRecord?.getStringValue('number') ?? 'N/A';
     return HymnDownload(
       hymnId: hymnId,
       hymnTitle: hymnTitle,

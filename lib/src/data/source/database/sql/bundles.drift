@@ -11,7 +11,7 @@ CREATE TABLE bundles (
     bytes BLOB,
     created DATETIME NOT NULL,
     updated DATETIME NOT NULL,
-    UNIQUE (hymnId, hash)
+    UNIQUE (hymnId)
 );
 
 -- Indexes

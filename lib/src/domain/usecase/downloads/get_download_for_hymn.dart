@@ -22,8 +22,9 @@ class GetHymnDownloadForHymn {
         .where((e) => e.hymnId == hymnId)
         .toList();
     yield related.firstOrNull;
-    final status =
-        await db.getCollectionSyncedStatus('bundles_$hymnId').getSingleOrNull();
+    final status = await db //
+        .getCollectionSyncedStatus('bundles_$hymnId')
+        .getSingleOrNull();
     final now = DateTime.now();
     const duration = Duration(days: 1);
     var needsUpdate = status == null || related.isEmpty;

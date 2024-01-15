@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
@@ -23,6 +24,7 @@ class DownloadHymn {
     bool check = false,
   }) async* {
     yield 0.1;
+    final existing = await db.getBundlesByHymnId(hymnId).get();
     if (check) {
       //  Check for existing download
       final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
@@ -44,7 +46,23 @@ class DownloadHymn {
       throw Exception('Bundle not found for $hymnId');
     }
     final result = results.items.first;
+    await db.setRecordModel(jsonEncode(result.toJson()), true, false);
+    final hash = result.getStringValue('hash');
     final file = result.getStringValue('file');
+    if (existing.any((e) => e.hash == hash)) {
+      if (existing.length > 1) {
+        await db.transaction(() async {
+          for (final item in existing) {
+            if (item.hash != hash) {
+              await db.deleteBundle(item.id);
+            }
+          }
+        });
+      }
+      yield 1.0;
+      return;
+    }
+    // TODO check hash
     if (file.isEmpty) {
       throw Exception('Bundle file not found for $hymnId');
     }
@@ -61,13 +79,20 @@ class DownloadHymn {
       }
       final bytes = Uint8List.fromList(list);
       await importHymn(bytes);
-      await db.createBundle(
-        hymnId,
-        result.getStringValue('hash'),
-        bytes,
-        DateTime.parse(result.created),
-        DateTime.parse(result.updated),
-      );
+      await db.transaction(() async {
+        if (existing.isNotEmpty) {
+          for (final item in existing) {
+            await db.deleteBundle(item.id);
+          }
+        }
+        await db.createBundle(
+          hymnId,
+          hash,
+          bytes,
+          DateTime.parse(result.created),
+          DateTime.parse(result.updated),
+        );
+      });
     } else {
       throw Exception(
         'Error downloading bundle for $hymnId ${response.statusCode}}',
