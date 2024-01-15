@@ -1,7 +1,7 @@
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
 import '../../../data/utils/retry/future.dart';
-import '../downloads/import_hymn.dart';
+import '../import_hymn.dart';
 
 class DownloadLibrary {
   final HfwDatabase db;

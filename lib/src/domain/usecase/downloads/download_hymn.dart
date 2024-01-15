@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
-import 'import_hymn.dart';
+import '../import_hymn.dart';
 
 class DownloadHymn {
   final HfwDatabase db;
