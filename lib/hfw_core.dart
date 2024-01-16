@@ -24,6 +24,7 @@ export 'src/domain/model/template_options.dart';
 export 'src/domain/model/defaults.dart';
 export 'src/domain/model/collection.dart';
 export 'src/domain/model/playlist_item.dart';
+export 'src/domain/model/top_hymn.dart';
 
 // Use Cases
 export 'src/domain/usecase/export_database.dart';
@@ -49,6 +50,7 @@ export 'src/domain/usecase/library/hymns/get_hymn_bundles.dart';
 export 'src/domain/usecase/library/hymns/get_hymn_archive.dart';
 export 'src/domain/usecase/library/hymns/get_slides_for_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_music_for_hymn.dart';
+export 'src/domain/usecase/library/hymns/get_top_hymns.dart';
 export 'src/domain/usecase/downloads/download_hymn.dart';
 export 'src/domain/usecase/downloads/remove_hymn_download.dart';
 export 'src/domain/usecase/downloads/get_downloads.dart';

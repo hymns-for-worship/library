@@ -25,4 +25,8 @@ class TemplateOptions {
       return throw Exception('Error loading asset: $e');
     }
   }
+
+  static String shortName(String item) {
+    return item.replaceAll('Single Slide Template ', '').replaceAll('(', '').replaceAll(')', '').replaceAll('--', ' ');
+  }
 }

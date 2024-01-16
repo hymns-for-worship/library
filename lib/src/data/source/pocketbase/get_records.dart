@@ -141,6 +141,12 @@ class GetRecords<T, Args> {
                 jsonEncode({
                   ...record.toJson(),
                   '_date': now.toIso8601String(),
+                  'created': record.created.isEmpty
+                      ? DateTime.now().toIso8601String()
+                      : record.created,
+                  'updated': record.updated.isEmpty
+                      ? DateTime.now().toIso8601String()
+                      : record.updated,
                 }),
                 true,
                 false,

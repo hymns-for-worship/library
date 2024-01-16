@@ -40,6 +40,10 @@ LazyDatabase connect(
       file,
       logStatements: logStatements,
       cachePreparedStatements: true,
+      setup: (db) {
+        db.execute('PRAGMA journal_mode=WAL');
+        db.execute('PRAGMA busy_timeout=100');
+      },
     );
   });
 }

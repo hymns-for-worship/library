@@ -30,6 +30,10 @@ LazyDatabase connect(
       sqlite3Uri: sqliteUrl,
       driftWorkerUri: Uri.parse('/drift_worker.js'),
       initializeDatabase: preload,
+      localSetup: (db) {
+        db.execute('PRAGMA journal_mode=WAL');
+        db.execute('PRAGMA busy_timeout=100');
+      },
     );
 
     if (result.missingFeatures.isNotEmpty) {
