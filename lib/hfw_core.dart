@@ -86,3 +86,8 @@ export 'src/domain/usecase/library/collections/get_collection.dart';
 export 'src/domain/usecase/library/collections/get_collection_hymns.dart';
 export 'src/domain/usecase/library/collections/get_collections_for_hymn.dart';
 export 'src/domain/usecase/library/collections/get_collection_details.dart';
+
+// Admin use cases
+export 'src/domain/usecase/library/hymns/download/hymn_bundle.dart';
+export 'src/domain/usecase/library/hymns/download/store_bundle.dart';
+export 'src/domain/usecase/library/hymns/download/force_update.dart';
