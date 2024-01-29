@@ -226,7 +226,7 @@ class ImportHymn {
         await db.createHymnStakeholder(
           results.first.id,
           hymnId,
-          node.attr('type'),
+          node.attr('role'),
           now,
           now,
         );
