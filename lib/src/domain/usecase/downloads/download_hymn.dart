@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
 import '../import_hymn.dart';
+import 'get_downloads.dart';
 
 class DownloadHymn {
   final HfwDatabase db;
@@ -39,16 +40,15 @@ class DownloadHymn {
     }
     int total = 0;
     int current = 0;
-    final col = client.collection('bundles');
-    final results = await col.getList(filter: "hymn_id = '$hymnId'");
+    final col = client.collection(GetHymnDownloads.collection);
+    final results = await col.getList(filter: "id = '$hymnId'");
     yield 0.2;
     if (results.items.isEmpty) {
-      throw Exception('Bundle not found for $hymnId');
+      throw Exception('Hymn not found: $hymnId');
     }
     final result = results.items.first;
     await db.setRecordModel(jsonEncode(result.toJson()), true, false);
-    final hash = result.getStringValue('hash');
-    final file = result.getStringValue('file');
+    final hash = result.getStringValue('download_hash');
     if (existing.any((e) => e.hash == hash)) {
       if (existing.length > 1) {
         await db.transaction(() async {
@@ -62,11 +62,12 @@ class DownloadHymn {
       yield 1.0;
       return;
     }
-    // TODO check hash
-    if (file.isEmpty) {
-      throw Exception('Bundle file not found for $hymnId');
+    final link = result.getStringValue('download_link');
+    if (link.isEmpty) {
+      throw Exception('Link not provided for hymn: $hymnId');
     }
-    final uri = client.getFileUrl(result, file);
+    final uri = Uri.parse(link);
+    // final preflight = await http.send(Request('HEAD', uri));
     final response = await http.send(Request('GET', uri));
     if (response.statusCode == 200) {
       total = response.contentLength ?? 0;
@@ -95,7 +96,7 @@ class DownloadHymn {
       });
     } else {
       throw Exception(
-        'Error downloading bundle for $hymnId ${response.statusCode}}',
+        'Error downloading hymn: $hymnId ${response.statusCode}}',
       );
     }
     yield 1;

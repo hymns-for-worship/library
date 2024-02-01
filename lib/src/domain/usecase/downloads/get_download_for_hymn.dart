@@ -14,7 +14,8 @@ class GetHymnDownloadForHymn {
   GetHymnDownloadForHymn({required this.db, required this.client});
 
   Stream<HymnDownload?> call(String hymnId) async* {
-    final current = await db.getRecordModelsByCollection('bundles').get();
+    final current =
+        await db.getRecordModelsByCollection(GetHymnDownloads.collection).get();
     final related = current
         .where((e) => e.deleted != true)
         .map((e) => RecordModel.fromJson(jsonDecode(e.data)))
@@ -23,7 +24,7 @@ class GetHymnDownloadForHymn {
         .toList();
     yield related.firstOrNull;
     final status = await db //
-        .getCollectionSyncedStatus('bundles_$hymnId')
+        .getCollectionSyncedStatus('${GetHymnDownloads.collection}_$hymnId')
         .getSingleOrNull();
     final now = DateTime.now();
     const duration = Duration(days: 1);
@@ -33,10 +34,9 @@ class GetHymnDownloadForHymn {
     }
     if (needsUpdate) {
       try {
-        final remote = await client.collection('bundles').getFullList(
-              filter: "hymn_id = '$hymnId'",
-              expand: 'hymn_id',
-            );
+        final remote = await client
+            .collection(GetHymnDownloads.collection)
+            .getFullList(filter: "id = '$hymnId'");
         if (remote.isNotEmpty) {
           for (final item in remote) {
             await db.setRecordModel(
@@ -46,7 +46,7 @@ class GetHymnDownloadForHymn {
             );
           }
           await db.setCollectionSyncedStatus(
-            'bundles_$hymnId',
+            '${GetHymnDownloads.collection}_$hymnId',
             true,
             now,
             now,
@@ -54,11 +54,12 @@ class GetHymnDownloadForHymn {
         }
       } catch (e) {
         // ignore: avoid_print
-        print('error updating bundles for $hymnId: $e');
+        print('error updating ${GetHymnDownloads.collection} for $hymnId: $e');
       }
     }
 
-    final stream = db.getRecordModelsByCollection('bundles').watch();
+    final stream =
+        db.getRecordModelsByCollection(GetHymnDownloads.collection).watch();
     await for (final items in stream) {
       yield items
           .where((e) => e.deleted != true)

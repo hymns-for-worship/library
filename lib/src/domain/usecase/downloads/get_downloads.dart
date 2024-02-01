@@ -10,11 +10,12 @@ import '../../model/hymn_download.dart';
 class GetHymnDownloads {
   final HfwDatabase db;
   final HfwStudio client;
+  static String collection = 'hymns';
 
   GetHymnDownloads({required this.db, required this.client});
 
   Stream<List<HymnDownload>> call({void Function(double)? progress}) async* {
-    final current = await db.getRecordModelsByCollection('bundles').get();
+    final current = await db.getRecordModelsByCollection(collection).get();
     final related = current
         .where((e) => e.deleted != true)
         .map((e) => RecordModel.fromJson(jsonDecode(e.data)))
@@ -22,7 +23,7 @@ class GetHymnDownloads {
         .toList();
     yield related;
     final status = await db //
-        .getCollectionSyncedStatus('bundles')
+        .getCollectionSyncedStatus(collection)
         .getSingleOrNull();
     final now = DateTime.now();
     const duration = Duration(days: 1);
@@ -42,10 +43,9 @@ class GetHymnDownloads {
       final stream = client.getFullListWithProgress(
         db,
         client,
-        'bundles',
+        collection,
         filter:
             newest == null ? null : "updated > '${newest.toIso8601String()}'",
-        expand: 'hymn_id',
       );
       await for (final (event, items) in stream) {
         progress?.call(event);
@@ -54,7 +54,7 @@ class GetHymnDownloads {
       progress?.call(1);
     }
 
-    final stream = db.getRecordModelsByCollection('bundles').watch();
+    final stream = db.getRecordModelsByCollection(collection).watch();
     await for (final items in stream) {
       yield items
           .where((e) => e.deleted != true)
@@ -68,22 +68,13 @@ class GetHymnDownloads {
 extension HymnDownloadRecordModel on RecordModel {
   // TODO: Convert to download link for query hymns only
   HymnDownload toHymnDownload(HfwStudio client) {
-    final hymnId = getStringValue('hymn_id');
-    final file = getStringValue('file');
-    var hash = getStringValue('hash');
-    var url = client.getFileUrl(this, file);
-    final hymnRecordData = expand['hymn_id'] ?? [];
-    final hymnRecord = hymnRecordData.firstOrNull;
-    final hymnTitle = hymnRecord?.getStringValue('title') ?? 'N/A';
-    final hymnNumber = hymnRecord?.getStringValue('number') ?? 'N/A';
-    if (hymnRecord != null) {
-      final downloadLink = hymnRecord.getStringValue('download_link');
-      final downloadHash = hymnRecord.getStringValue('download_hash');
-      if (downloadLink.isNotEmpty && downloadHash.isNotEmpty) {
-        url = Uri.parse(downloadLink);
-        hash = downloadHash;
-      }
-    }
+    final hymnId = id;
+    final hymnTitle = getStringValue('title');
+    final hymnNumber = getStringValue('number');
+    final downloadLink = getStringValue('download_link');
+    final downloadHash = getStringValue('download_hash');
+    final url = Uri.parse(downloadLink);
+    final hash = downloadHash;
     return HymnDownload(
       hymnId: hymnId,
       hymnTitle: hymnTitle,
@@ -93,7 +84,6 @@ extension HymnDownloadRecordModel on RecordModel {
       updated: DateTime.parse(updated),
       url: url,
       hash: hash,
-      file: file,
     );
   }
 }

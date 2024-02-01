@@ -12,7 +12,7 @@ class DownloadLibrary {
 
   Stream<double> call({bool Function()? cancel}) async* {
     yield 0;
-    final col = client.collection('bundles');
+    final col = client.collection('hymns');
     var page = 0;
     var pages = 1;
     const perPage = 30;
