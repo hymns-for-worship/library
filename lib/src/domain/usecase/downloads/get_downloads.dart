@@ -66,15 +66,24 @@ class GetHymnDownloads {
 }
 
 extension HymnDownloadRecordModel on RecordModel {
+  // TODO: Convert to download link for query hymns only
   HymnDownload toHymnDownload(HfwStudio client) {
     final hymnId = getStringValue('hymn_id');
     final file = getStringValue('file');
-    final hash = getStringValue('hash');
-    final url = client.getFileUrl(this, file);
+    var hash = getStringValue('hash');
+    var url = client.getFileUrl(this, file);
     final hymnRecordData = expand['hymn_id'] ?? [];
     final hymnRecord = hymnRecordData.firstOrNull;
     final hymnTitle = hymnRecord?.getStringValue('title') ?? 'N/A';
     final hymnNumber = hymnRecord?.getStringValue('number') ?? 'N/A';
+    if (hymnRecord != null) {
+      final downloadLink = hymnRecord.getStringValue('download_link');
+      final downloadHash = hymnRecord.getStringValue('download_hash');
+      if (downloadLink.isNotEmpty && downloadHash.isNotEmpty) {
+        url = Uri.parse(downloadLink);
+        hash = downloadHash;
+      }
+    }
     return HymnDownload(
       hymnId: hymnId,
       hymnTitle: hymnTitle,
