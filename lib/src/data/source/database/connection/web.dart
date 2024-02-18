@@ -25,7 +25,6 @@ LazyDatabase connect(
       );
     }
     final result = await WasmDatabase.open(
-      // prefer to only use valid identifiers here
       databaseName: dbName.replaceAll('.db', ''),
       sqlite3Uri: sqliteUrl,
       driftWorkerUri: Uri.parse('/drift_worker.js'),

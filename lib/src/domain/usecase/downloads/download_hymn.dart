@@ -64,6 +64,7 @@ class DownloadHymn {
     }
     final link = result.getStringValue('download_link');
     if (link.isEmpty) {
+      await db.deleteHymn(hymnId);
       throw Exception('Link not provided for hymn: $hymnId');
     }
     final uri = Uri.parse(link);
