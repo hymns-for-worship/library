@@ -188,3 +188,9 @@ INNER JOIN records AS r
 	ON r.id = records_fts.ROWID
 WHERE records_fts MATCH :query
 ORDER BY rank;
+
+setRecordModelDeleted:
+UPDATE records
+SET deleted = 1
+WHERE id = :id
+AND (collection_id = :collection OR collection_name = :collection);

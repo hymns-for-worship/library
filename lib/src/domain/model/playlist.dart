@@ -44,4 +44,15 @@ extension PlaylistUtils on Playlist {
       'event': event,
     };
   }
+
+  RecordModel toRecordModel() {
+    return RecordModel(
+      collectionId: collectionId,
+      collectionName: collectionName,
+      created: created.toIso8601String(),
+      updated: updated.toIso8601String(),
+      data: toData(),
+      id: id,
+    );
+  }
 }

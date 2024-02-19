@@ -6,12 +6,12 @@ import 'package:http/http.dart';
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
 import '../import_hymn.dart';
-import 'get_downloads.dart';
 
 class DownloadHymn {
   final HfwDatabase db;
   final HfwStudio client;
   final Client http;
+  // TODO: Import hymn links
   late final importHymn = ImportHymn(db);
 
   DownloadHymn({
@@ -40,7 +40,7 @@ class DownloadHymn {
     }
     int total = 0;
     int current = 0;
-    final col = client.collection(GetHymnDownloads.collection);
+    final col = client.collection('hymns');
     final results = await col.getList(filter: "id = '$hymnId'");
     yield 0.2;
     if (results.items.isEmpty) {

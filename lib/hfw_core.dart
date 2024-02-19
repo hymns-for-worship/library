@@ -26,6 +26,9 @@ export 'src/domain/model/collection.dart';
 export 'src/domain/model/playlist_item.dart';
 export 'src/domain/model/top_hymn.dart';
 
+// Services
+export 'src/domain/services/playlists.dart';
+
 // Use Cases
 export 'src/domain/usecase/export_database.dart';
 export 'src/domain/usecase/library/download_library.dart';
@@ -53,8 +56,6 @@ export 'src/domain/usecase/library/hymns/get_music_for_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_top_hymns.dart';
 export 'src/domain/usecase/downloads/download_hymn.dart';
 export 'src/domain/usecase/downloads/remove_hymn_download.dart';
-export 'src/domain/usecase/downloads/get_downloads.dart';
-export 'src/domain/usecase/downloads/get_download_for_hymn.dart';
 export 'src/domain/usecase/user/library/add_to_user_library.dart';
 export 'src/domain/usecase/user/library/remove_from_user_library.dart';
 export 'src/domain/usecase/user/library/get_user_library.dart';
@@ -86,6 +87,7 @@ export 'src/domain/usecase/library/collections/get_collection.dart';
 export 'src/domain/usecase/library/collections/get_collection_hymns.dart';
 export 'src/domain/usecase/library/collections/get_collections_for_hymn.dart';
 export 'src/domain/usecase/library/collections/get_collection_details.dart';
+export 'src/domain/usecase/downloads/get_versions.dart';
 
 // Admin use cases
 export 'src/domain/usecase/library/hymns/download/hymn_bundle.dart';

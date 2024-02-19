@@ -13150,6 +13150,15 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         ));
   }
 
+  Future<int> setRecordModelDeleted(String id, String collection) {
+    return customUpdate(
+      'UPDATE records SET deleted = 1 WHERE id = ?1 AND(collection_id = ?2 OR collection_name = ?2)',
+      variables: [Variable<String>(id), Variable<String>(collection)],
+      updates: {records},
+      updateKind: UpdateKind.update,
+    );
+  }
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
