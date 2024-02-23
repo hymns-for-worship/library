@@ -53,7 +53,17 @@ class GetLibrary {
     //     print('Error fetching hymnal versions: $e $t');
     //   }
     // }
-    final lastCheck = prefs.getInt(_key) ?? 0;
+    var lastCheck = prefs.getInt(_key);
+    if (lastCheck == null) {
+      final hymns = await db.getHymns().get();
+      if (hymns.isEmpty) {
+        lastCheck = 0;
+      } else {
+        lastCheck = hymns
+            .map((e) => e.updated.millisecondsSinceEpoch)
+            .reduce((value, element) => value > element ? value : element);
+      }
+    }
     final now = DateTime.now().millisecondsSinceEpoch;
     final hymns = await pb.collection('hymns').getFullList(
           filter:
