@@ -11508,7 +11508,7 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
 
   Selectable<Hymnal> searchHymnals(String query) {
     return customSelect(
-        'SELECT * FROM hymnals WHERE name LIKE ?1 OR alias LIKE ?1 ORDER BY name ASC',
+        'SELECT * FROM hymnals WHERE(name LIKE ?1 OR alias LIKE ?1)AND id != \'000000000000004\' ORDER BY name ASC',
         variables: [
           Variable<String>(query)
         ],
@@ -11518,19 +11518,12 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   }
 
   Selectable<Hymnal> getHymnals() {
-    return customSelect('SELECT * FROM hymnals ORDER BY name ASC',
+    return customSelect(
+        'SELECT * FROM hymnals WHERE id != \'000000000000004\' ORDER BY name ASC',
         variables: [],
         readsFrom: {
           hymnals,
         }).asyncMap(hymnals.mapFromRow);
-  }
-
-  Selectable<Hymnal> getHymnal(String id) {
-    return customSelect('SELECT * FROM hymnals WHERE id = ?1', variables: [
-      Variable<String>(id)
-    ], readsFrom: {
-      hymnals,
-    }).asyncMap(hymnals.mapFromRow);
   }
 
   Selectable<Hymnal> getHymnalByName(String name) {
