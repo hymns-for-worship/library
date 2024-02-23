@@ -8,53 +8,77 @@
 //         size="3057560" hash="76817138f6eaf8b1100719d8579d944834d088b17cc76d7c4ee6a1972122fe6b"
 //         link="https://hymnsforworship.studio/api/files/epketxbdz4cccoj/zbp7ack6f0irjck/rjsec001_5Ncy526MUi.zip" />
 // </content>
-import 'dart:convert';
 
-import 'package:archive/archive.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../data/source/database/database.dart';
+import '../../../data/source/pocketbase/client.dart';
 import '../import_hymn.dart';
 
 class GetLibrary {
   final SharedPreferences prefs;
+  final HfwStudio pb;
   final HfwDatabase db;
-  GetLibrary(this.prefs, this.db);
+  GetLibrary(this.prefs, this.db, this.pb);
   late final importHymn = ImportHymn(db);
 
-  static const String _key = 'HymnalsXml';
+  static const String _key = 'HymnalsCheck';
   static const url =
       'https://hymns-for-worship.fra1.cdn.digitaloceanspaces.com/assets/hymnals.xml.gz';
 
   Future<void> call() async {
-    final xml = prefs.getString(_key);
-    if (xml != null) {
-      await _parse(xml);
-    } else {
-      final raw = await rootBundle.load('assets/hymnals.xml.gz');
-      final bytes = raw.buffer.asUint8List();
-      final decoder = GZipDecoder();
-      final asset = utf8.decode(decoder.decodeBytes(bytes));
-      await _parse(asset);
-      await _save(asset);
-    }
-    try {
-      final res = await http.get(Uri.parse(url));
-      if (res.statusCode == 200) {
-        final xml = res.bodyBytes;
-        final decoder = GZipDecoder();
-        final asset = utf8.decode(decoder.decodeBytes(xml));
-        await _parse(asset);
-        await _save(asset);
+    // final xml = prefs.getString(_key);
+    // if (xml != null) {
+    //   await _parse(xml);
+    // } else {
+    //   final raw = await rootBundle.load('assets/hymnals.xml.gz');
+    //   final bytes = raw.buffer.asUint8List();
+    //   final decoder = GZipDecoder();
+    //   final asset = utf8.decode(decoder.decodeBytes(bytes));
+    //   await _parse(asset);
+    //   await _save(asset);
+    // }
+    // try {
+    //   final res = await http.get(Uri.parse(url));
+    //   if (res.statusCode == 200) {
+    //     final xml = res.bodyBytes;
+    //     final decoder = GZipDecoder();
+    //     final asset = utf8.decode(decoder.decodeBytes(xml));
+    //     await _parse(asset);
+    //     await _save(asset);
+    //   }
+    // } catch (e, t) {
+    //   if (kDebugMode) {
+    //     print('Error fetching hymnal versions: $e $t');
+    //   }
+    // }
+    final lastCheck = prefs.getInt(_key) ?? 0;
+    final now = DateTime.now().millisecondsSinceEpoch;
+    final hymns = await pb.collection('hymns').getFullList(
+          filter:
+              "updated > '${DateTime.fromMillisecondsSinceEpoch(lastCheck).toIso8601String()}'",
+          fields: 'info',
+        );
+    await db.transaction(() async {
+      var i = 0;
+      for (final hymn in hymns) {
+        try {
+          final info = hymn.getStringValue('info');
+          await importHymn.importInfo(info);
+          if (kDebugMode) {
+            print('imported ${i + 1} of ${hymns.length}');
+          }
+        } catch (e, t) {
+          if (kDebugMode) {
+            print('Error importing hymn: $e $t');
+          }
+        } finally {
+          i++;
+        }
       }
-    } catch (e, t) {
-      if (kDebugMode) {
-        print('Error fetching hymnal versions: $e $t');
-      }
-    }
+    });
+    await prefs.setInt(_key, now);
   }
 
   Future<void> _save(String xml) async {
