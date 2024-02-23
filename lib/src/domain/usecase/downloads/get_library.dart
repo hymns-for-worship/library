@@ -55,7 +55,7 @@ class GetLibrary {
     final lastCheck = prefs.getInt(_key) ?? 0;
     final now = DateTime.now().millisecondsSinceEpoch;
     final hymns = await pb.collection('hymns').getFullList(
-          filter: "updated > '${DateTime.fromMillisecondsSinceEpoch(lastCheck).toIso8601String()}'",
+          filter: "(updated > '${DateTime.fromMillisecondsSinceEpoch(lastCheck).toIso8601String()}') && (hymnal_id != '000000000000004' && (status = 'Purchased' || status = 'Browsable'))",
           fields: 'info',
         );
     await db.transaction(() async {
