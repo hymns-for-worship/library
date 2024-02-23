@@ -1,5 +1,6 @@
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:xml/xml.dart';
 
 import '../../data/source/archive/zip.dart';
@@ -98,9 +99,14 @@ class ImportHymn {
 
     for (final hymnal in hymnals) {
       final hymns = hymnal.findAllElements('hymn');
+      var i = 0;
       for (final hymn in hymns) {
         number = hymn.attr('number');
-
+        if (kDebugMode) {
+          print(
+            'importing $number from ${hymnal.attr('alias')} - ${++i}/${hymns.length}',
+          );
+        }
         {
           // Hymn
           final notation = hymn.findAllElements('songLeaderInfo').first;

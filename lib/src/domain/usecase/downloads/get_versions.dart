@@ -20,7 +20,8 @@ class GetVersions {
   const GetVersions(this.prefs);
 
   static const String _key = 'HymnalVersions';
-  static const url = 'https://hymnsforworship.studio/HymnalVersions.xml';
+  static const url =
+      'https://hymns-for-worship.fra1.cdn.digitaloceanspaces.com/assets/hymnal-versions.xml';
 
   HymnalVersions _parse(String xml) {
     final doc = XmlDocument.parse(xml);

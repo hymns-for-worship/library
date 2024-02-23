@@ -8,6 +8,9 @@
 //         size="3057560" hash="76817138f6eaf8b1100719d8579d944834d088b17cc76d7c4ee6a1972122fe6b"
 //         link="https://hymnsforworship.studio/api/files/epketxbdz4cccoj/zbp7ack6f0irjck/rjsec001_5Ncy526MUi.zip" />
 // </content>
+import 'dart:convert';
+
+import 'package:archive/archive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,16 +34,21 @@ class GetLibrary {
     if (xml != null) {
       await _parse(xml);
     } else {
-      final asset = await rootBundle.loadString('assets/$_key.xml');
+      final raw = await rootBundle.load('assets/hymnals.xml.gz');
+      final bytes = raw.buffer.asUint8List();
+      final decoder = GZipDecoder();
+      final asset = utf8.decode(decoder.decodeBytes(bytes));
       await _parse(asset);
       await _save(asset);
     }
     try {
       final res = await http.get(Uri.parse(url));
       if (res.statusCode == 200) {
-        final xml = res.body;
-        await _parse(xml);
-        await _save(xml);
+        final xml = res.bodyBytes;
+        final decoder = GZipDecoder();
+        final asset = utf8.decode(decoder.decodeBytes(xml));
+        await _parse(asset);
+        await _save(asset);
       }
     } catch (e, t) {
       if (kDebugMode) {
