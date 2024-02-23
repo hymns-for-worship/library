@@ -24,8 +24,7 @@ class GetLibrary {
   late final importHymn = ImportHymn(db);
 
   static const String _key = 'HymnalsCheck';
-  static const url =
-      'https://hymns-for-worship.fra1.cdn.digitaloceanspaces.com/assets/hymnals.xml.gz';
+  static const url = 'https://hymns-for-worship.fra1.cdn.digitaloceanspaces.com/assets/hymnals.xml.gz';
 
   Future<void> call() async {
     // final xml = prefs.getString(_key);
@@ -56,8 +55,7 @@ class GetLibrary {
     final lastCheck = prefs.getInt(_key) ?? 0;
     final now = DateTime.now().millisecondsSinceEpoch;
     final hymns = await pb.collection('hymns').getFullList(
-          filter:
-              "updated > '${DateTime.fromMillisecondsSinceEpoch(lastCheck).toIso8601String()}'",
+          filter: "updated > '${DateTime.fromMillisecondsSinceEpoch(lastCheck).toIso8601String()}'",
           fields: 'info',
         );
     await db.transaction(() async {
@@ -65,9 +63,11 @@ class GetLibrary {
       for (final hymn in hymns) {
         try {
           final info = hymn.getStringValue('info');
-          await importHymn.importInfo(info);
-          if (kDebugMode) {
-            print('imported ${i + 1} of ${hymns.length}');
+          if (info.isNotEmpty) {
+            await importHymn.importInfo(info);
+            if (kDebugMode) {
+              print('imported ${i + 1} of ${hymns.length}');
+            }
           }
         } catch (e, t) {
           if (kDebugMode) {
