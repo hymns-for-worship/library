@@ -11526,6 +11526,17 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(hymnals.mapFromRow);
   }
 
+  Selectable<Hymnal> getHymnal(String id) {
+    return customSelect(
+        'SELECT * FROM hymnals WHERE id = ?1 AND id != \'000000000000004\'',
+        variables: [
+          Variable<String>(id)
+        ],
+        readsFrom: {
+          hymnals,
+        }).asyncMap(hymnals.mapFromRow);
+  }
+
   Selectable<Hymnal> getHymnalByName(String name) {
     return customSelect('SELECT * FROM hymnals WHERE name = ?1', variables: [
       Variable<String>(name)

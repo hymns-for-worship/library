@@ -27,7 +27,7 @@ ORDER BY name ASC;
 
 getHymnal:
 SELECT * FROM hymnals
-WHERE id = :id && id != '000000000000004';
+WHERE id = :id AND id != '000000000000004';
 
 getHymnalByName:
 SELECT * FROM hymnals
