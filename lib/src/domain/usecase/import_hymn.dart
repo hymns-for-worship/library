@@ -93,147 +93,153 @@ class ImportHymn {
       throw Exception('Unsupported version: $version');
     }
     final now = DateTime.now();
-    final hymn = doc.findAllElements('hymn').first;
-    final hymnal = doc.findAllElements('hymnal').first;
-    final number = hymn.attr('number');
-    String hymnId;
+    final hymnals = doc.findAllElements('hymnal');
+    String? hymnId, number;
 
-    {
-      // Hymn
-      final notation = hymn.findAllElements('songLeaderInfo').first;
-      final id = hymn.attr('id');
-      final target = HymnsCompanion.insert(
-        id: id,
-        title: hymn.attr('title'),
-        number: number,
-        tuneName: Value(
-            hymn.findAllElements('tuneName').firstOrNull?.innerText ?? ''),
-        translatedTitle: Value(hymn.attr('translatedTitle')),
-        status: Value(hymn.attr('status')),
-        key: Value(notation.attr('key')),
-        sku: Value(notation.attr('sku')),
-        beatPattern: Value(notation.attr('beatPattern')),
-        startingPitch: Value(notation.attr('startingPitch')),
-        startingBeat: Value(notation.attr('startingBeat')),
-        startingKey: Value(notation.attr('key')),
-        startingPitchDirection: Value(notation.attr('startingPitchDirection')),
-        timeSignature: Value(notation.attr('time')),
-        complexTimeSignature: Value(notation.attr('complexTime')),
-        created: now,
-        updated: now,
-      );
-      await db.insertOrUpdateHymn(target);
-      hymnId = id;
+    for (final hymnal in hymnals) {
+      final hymns = hymnal.findAllElements('hymn');
+      for (final hymn in hymns) {
+        number = hymn.attr('number');
+
+        {
+          // Hymn
+          final notation = hymn.findAllElements('songLeaderInfo').first;
+          final id = hymn.attr('id');
+          final target = HymnsCompanion.insert(
+            id: id,
+            title: hymn.attr('title'),
+            number: number,
+            tuneName: Value(
+                hymn.findAllElements('tuneName').firstOrNull?.innerText ?? ''),
+            translatedTitle: Value(hymn.attr('translatedTitle')),
+            status: Value(hymn.attr('status')),
+            key: Value(notation.attr('key')),
+            sku: Value(notation.attr('sku')),
+            beatPattern: Value(notation.attr('beatPattern')),
+            startingPitch: Value(notation.attr('startingPitch')),
+            startingBeat: Value(notation.attr('startingBeat')),
+            startingKey: Value(notation.attr('key')),
+            startingPitchDirection:
+                Value(notation.attr('startingPitchDirection')),
+            timeSignature: Value(notation.attr('time')),
+            complexTimeSignature: Value(notation.attr('complexTime')),
+            created: now,
+            updated: now,
+          );
+          await db.insertOrUpdateHymn(target);
+          hymnId = id;
+        }
+
+        {
+          // Hymnal
+          final results = await db.createHymnal(
+            hymnal.attr('id'),
+            hymnal.findAllElements('name').first.innerText,
+            hymnal.findAllElements('alias').first.innerText,
+            now,
+            now,
+          );
+          await db.createHymnHymnal(
+            results.first.id,
+            hymnId,
+            now,
+            now,
+          );
+        }
+        {
+          // Topics
+          for (final node in doc.findAllElements('topicalIndex')) {
+            final results = await db.createTopic(
+              node.attr('id'),
+              node.innerText,
+              node.attr('alias'),
+              now,
+              now,
+            );
+            await db.createHymnTopic(
+              results.first.id,
+              hymnId,
+              now,
+              now,
+            );
+          }
+        }
+        {
+          // Category
+          for (final node in doc.findAllElements('category')) {
+            final results = await db.createCategory(
+              node.attr('id'),
+              node.findElements('text').map((e) => e.innerText).join('\n'),
+              node.attr('name'),
+              now,
+              now,
+            );
+            await db.createHymnCategory(
+              results.first.id,
+              hymnId,
+              now,
+              now,
+            );
+          }
+        }
+        {
+          // Scriptures
+          for (final node in doc.findAllElements('scripture')) {
+            final results = await db.createScripture(
+              node.attr('id'),
+              node.innerText,
+              now,
+              now,
+            );
+            await db.createHymnScripture(
+              results.first.id,
+              hymnId,
+              now,
+              now,
+            );
+          }
+        }
+        {
+          // Portions
+          for (final node in doc.findAllElements('hymnPortion')) {
+            final results = await db.createPortion(
+              node.attr('id'),
+              node.attr('portion'),
+              node.findAllElements('text').map((e) => e.innerText).join('\n'),
+              node.attr('hymnPortionId'),
+              now,
+              now,
+            );
+            await db.createHymnPortion(
+              results.first.id,
+              hymnId,
+              now,
+              now,
+            );
+          }
+        }
+        {
+          // Stakeholders
+          for (final node in doc.findAllElements('originator')) {
+            final results = await db.createStakeholder(
+              node.attr('stakeHolderId'),
+              node.attr('name'),
+              now,
+              now,
+            );
+            await db.createHymnStakeholder(
+              results.first.id,
+              hymnId,
+              node.attr('role'),
+              now,
+              now,
+            );
+          }
+        }
+      }
     }
 
-    {
-      // Hymnal
-      final results = await db.createHymnal(
-        hymnal.attr('id'),
-        hymnal.findAllElements('name').first.innerText,
-        hymnal.findAllElements('alias').first.innerText,
-        now,
-        now,
-      );
-      await db.createHymnHymnal(
-        results.first.id,
-        hymnId,
-        now,
-        now,
-      );
-    }
-    {
-      // Topics
-      for (final node in doc.findAllElements('topicalIndex')) {
-        final results = await db.createTopic(
-          node.attr('id'),
-          node.innerText,
-          node.attr('alias'),
-          now,
-          now,
-        );
-        await db.createHymnTopic(
-          results.first.id,
-          hymnId,
-          now,
-          now,
-        );
-      }
-    }
-    {
-      // Category
-      for (final node in doc.findAllElements('category')) {
-        final results = await db.createCategory(
-          node.attr('id'),
-          node.findElements('text').map((e) => e.innerText).join('\n'),
-          node.attr('name'),
-          now,
-          now,
-        );
-        await db.createHymnCategory(
-          results.first.id,
-          hymnId,
-          now,
-          now,
-        );
-      }
-    }
-    {
-      // Scriptures
-      for (final node in doc.findAllElements('scripture')) {
-        final results = await db.createScripture(
-          node.attr('id'),
-          node.innerText,
-          now,
-          now,
-        );
-        await db.createHymnScripture(
-          results.first.id,
-          hymnId,
-          now,
-          now,
-        );
-      }
-    }
-    {
-      // Portions
-      for (final node in doc.findAllElements('hymnPortion')) {
-        final results = await db.createPortion(
-          node.attr('id'),
-          node.attr('portion'),
-          node.findAllElements('text').map((e) => e.innerText).join('\n'),
-          node.attr('hymnPortionId'),
-          now,
-          now,
-        );
-        await db.createHymnPortion(
-          results.first.id,
-          hymnId,
-          now,
-          now,
-        );
-      }
-    }
-    {
-      // Stakeholders
-      for (final node in doc.findAllElements('originator')) {
-        final results = await db.createStakeholder(
-          node.attr('stakeHolderId'),
-          node.attr('name'),
-          now,
-          now,
-        );
-        await db.createHymnStakeholder(
-          results.first.id,
-          hymnId,
-          node.attr('role'),
-          now,
-          now,
-        );
-      }
-    }
-
-    return (hymnId, number);
+    return (hymnId!, number!);
   }
 }
 
