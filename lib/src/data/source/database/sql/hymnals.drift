@@ -15,17 +15,19 @@ CREATE INDEX hymnals_idx_alias ON hymnals (alias);
 -- Queries
 searchHymnals:
 SELECT * FROM hymnals
-WHERE name LIKE :query
-OR alias LIKE :query
+WHERE (name LIKE :query
+OR alias LIKE :query)
+AND id != '000000000000004'
 ORDER BY name ASC;
 
 getHymnals:
 SELECT * FROM hymnals
+WHERE id != '000000000000004'
 ORDER BY name ASC;
 
 getHymnal:
 SELECT * FROM hymnals
-WHERE id = :id;
+WHERE id = :id && id != '000000000000004';
 
 getHymnalByName:
 SELECT * FROM hymnals
