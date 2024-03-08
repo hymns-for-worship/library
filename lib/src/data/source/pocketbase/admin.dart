@@ -1,10 +1,10 @@
-import 'package:pocketbase/pocketbase.dart';
+import 'client.dart';
 
-Future<PocketBase> adminClient({
+Future<HfwStudio> adminClient({
   String username = 'client@hymnsforworship.app',
   String password = 'hingyv-gYrtaq-hutqe8',
 }) async {
-  final pb = PocketBase('https://hymnsforworship.studio');
+  final pb = HfwStudio.admin();
   await pb.admins.authWithPassword(username, password);
   return pb;
 }

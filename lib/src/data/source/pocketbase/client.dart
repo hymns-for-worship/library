@@ -4,10 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_store.dart';
 
 class HfwStudio extends PocketBase {
-  final SharedPreferences prefs;
-
   HfwStudio(
-    this.prefs, {
+    SharedPreferences prefs, {
     String url = 'https://hymnsforworship.studio',
     super.httpClientFactory,
     super.lang,
@@ -17,6 +15,13 @@ class HfwStudio extends PocketBase {
               prefs,
               authKey: authKey,
             ));
+
+  HfwStudio.admin({
+    String url = 'https://hymnsforworship.studio',
+    super.httpClientFactory,
+    super.lang,
+    String authKey = 'app-user-data',
+  }) : super(url);
 
   HfwAuthStore get asyncAuthStore => authStore as HfwAuthStore;
 }
