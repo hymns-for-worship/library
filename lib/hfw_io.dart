@@ -1,1 +1,1 @@
-export 'src/domain//usecase/sync_background_service.dart';
+export 'src/domain/usecase/sync_background_service/service.dart';
