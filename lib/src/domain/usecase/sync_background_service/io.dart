@@ -22,7 +22,7 @@ class SyncBackgroundService extends web.SyncBackgroundService {
   Future<void> close() async {
     await web.SyncBackgroundService.database?.close();
     web.SyncBackgroundService.database = null;
-    active = false;
+    user = null;
   }
 
   @override

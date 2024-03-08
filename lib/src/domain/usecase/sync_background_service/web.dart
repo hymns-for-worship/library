@@ -12,13 +12,13 @@ class SyncBackgroundService {
 
   SyncBackgroundService(this.db);
 
-  bool active = false;
+  String? user;
   bool get dbActive => database != null;
   static HfwDatabase? database;
 
   Future<void> call(String userId) async {
-    if (active) return;
-    active = true;
+    if (user == userId) return;
+    user = userId;
     final pb = await adminClient();
     final staleDate = DateTime.now().subtract(const Duration(days: 30));
     await db.deleteOldRecords(staleDate);
@@ -43,7 +43,7 @@ class SyncBackgroundService {
         ),
       ],
     ];
-    while (active && dbActive) {
+    while (user != null && dbActive) {
       // Sync local with remote
       if (!subscribed) {
         try {
