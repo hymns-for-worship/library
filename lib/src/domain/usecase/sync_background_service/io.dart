@@ -9,20 +9,20 @@ import 'web.dart' as web;
 class SyncBackgroundService extends web.SyncBackgroundService {
   SyncBackgroundService(super.db);
 
-  @override
-  bool get active => _database != null;
-  static HfwDatabase? _database;
-
   Future<HfwDatabase> open() async {
-    if (_database != null) return _database!;
+    if (web.SyncBackgroundService.database != null) {
+      return web.SyncBackgroundService.database!;
+    }
     final connection = await db.serializableConnection();
-    _database = HfwDatabase(await connection.connect());
-    return _database!;
+    web.SyncBackgroundService.database =
+        HfwDatabase(await connection.connect());
+    return web.SyncBackgroundService.database!;
   }
 
   Future<void> close() async {
-    await _database?.close();
-    _database = null;
+    await web.SyncBackgroundService.database?.close();
+    web.SyncBackgroundService.database = null;
+    active = false;
   }
 
   @override
