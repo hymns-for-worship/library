@@ -10,7 +10,7 @@ class HfwStudio extends OfflinePocketBase {
     super.httpClientFactory,
   }) : super('https://hymnsforworship.studio', storage);
 
-  Future<HfwStudio> init(
+  static Future<HfwStudio> init(
     DriftStorage storage, {
     Client Function()? httpClientFactory,
     String lang = "en-US",
