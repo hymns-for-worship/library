@@ -1,27 +1,25 @@
-import 'package:pocketbase/pocketbase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
+import 'package:sqlite_storage_pocketbase/sqlite_storage_pocketbase.dart';
 
-import 'auth_store.dart';
-
-class HfwStudio extends PocketBase {
-  HfwStudio(
-    SharedPreferences prefs, {
-    String url = 'https://hymnsforworship.studio',
-    super.httpClientFactory,
+class HfwStudio extends OfflinePocketBase {
+  HfwStudio({
     super.lang,
-    String authKey = 'app-user-data',
-  }) : super(url,
-            authStore: HfwAuthStore(
-              prefs,
-              authKey: authKey,
-            ));
-
-  HfwStudio.admin({
-    String url = 'https://hymnsforworship.studio',
+    required DriftStorage storage,
+    required super.offlineAuthStore,
     super.httpClientFactory,
-    super.lang,
-    String authKey = 'app-user-data',
-  }) : super(url);
+  }) : super('https://hymnsforworship.studio', storage);
 
-  HfwAuthStore get asyncAuthStore => authStore as HfwAuthStore;
+  Future<HfwStudio> init(
+    DriftStorage storage, {
+    Client Function()? httpClientFactory,
+    String lang = "en-US",
+  }) async {
+    final authStore = await OfflineAuthStore.init(storage);
+    return HfwStudio(
+      storage: storage,
+      lang: lang,
+      offlineAuthStore: authStore,
+    );
+  }
 }
