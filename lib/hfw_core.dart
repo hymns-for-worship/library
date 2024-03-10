@@ -5,7 +5,6 @@ export 'src/data/source/database/database.dart';
 export 'src/data/source/database/connection/connection.dart';
 export 'src/data/source/pptx/presentation.dart';
 export 'src/data/source/pocketbase/client.dart';
-export 'src/data/source/pocketbase/auth_store.dart';
 export 'src/data/source/http/http_offline_queue.dart';
 export 'src/data/source/http/http_get_cache.dart';
 export 'src/data/source/http/store/http_store.dart';
