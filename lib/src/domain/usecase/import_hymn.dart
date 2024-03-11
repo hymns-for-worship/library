@@ -105,7 +105,7 @@ class ImportHymn {
           );
         }
         final id = hymn.attr('id');
-        final hymnDoc = this.db.storage.docs.collection('hymns').doc(id);
+        final hymnDoc = db.storage.docs.collection('hymns').doc(id);
         final snapshot = await hymnDoc.get();
         if (snapshot != null && snapshot.exists) {
           await db.storage.docs.remove(hymnDoc.path, recursive: true);
