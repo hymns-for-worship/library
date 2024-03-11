@@ -5,10 +5,19 @@ class GetHymnBundles {
 
   GetHymnBundles(this.db);
 
-  Stream<List<GetBundlesHashesResult>> call() async* {
-    final stream = db.getBundlesHashes().watch();
-    await for (final result in stream) {
-      yield result;
-    }
+  Stream<List<String>> call() async* {
+    // final stream = db.getBundlesHashes().watch();
+    // await for (final result in stream) {
+    //   yield result;
+    // }
+    yield* db //
+        .storage
+        .io
+        .directory('downloads/bundles')
+        .list()
+        .watch()
+        .map((items) => items
+            .map((e) => e.path.split('/').last.replaceAll('.zip', ''))
+            .toList());
   }
 }

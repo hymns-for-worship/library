@@ -80,20 +80,21 @@ class DownloadHymn {
         list.addAll(event);
       }
       final bytes = Uint8List.fromList(list);
-      await importHymn(bytes);
+      // await importHymn(bytes);
       await db.transaction(() async {
         if (existing.isNotEmpty) {
           for (final item in existing) {
             await db.deleteBundle(item.id);
           }
         }
-        await db.createBundle(
-          hymnId,
-          hash,
-          bytes,
-          DateTime.parse(result.created),
-          DateTime.parse(result.updated),
-        );
+        await importHymn(bytes);
+        // await db.createBundle(
+        //   hymnId,
+        //   hash,
+        //   bytes,
+        //   DateTime.parse(result.created),
+        //   DateTime.parse(result.updated),
+        // );
       });
     } else {
       throw Exception(

@@ -70,7 +70,7 @@ class ImportHymn {
 
       final hymnId = await importInfo(str);
 
-      await db.storage.io.file('hymns/$hymnId.zip').writeAsBytes(bytes);
+      await db.storage.io.file('downloads/bundles/$hymnId.zip').writeAsBytes(bytes);
       // await db.storage.io.file('hymns/$hymnId.hixml').writeAsString(str);
 
       await db.createBundle(
