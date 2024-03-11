@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:http/http.dart';
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
 import '../import_hymn.dart';
+import 'get_versions.dart';
 
 class DownloadHymn {
   final HfwDatabase db;
@@ -20,49 +21,39 @@ class DownloadHymn {
     required this.http,
   });
 
-  Stream<double> call(
-    String hymnId, {
-    bool check = false,
-  }) async* {
+  Stream<double> call(String hymnId, HymnalVersions versions) async* {
     yield 0.1;
-    final existing = await db.getBundlesByHymnId(hymnId).get();
-    if (check) {
-      //  Check for existing download
-      final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
-      if (bundle != null) {
-        yield 0.5;
-        if (bundle.bytes != null) {
-          await importHymn(bundle.bytes!);
-        }
-        yield 1.0;
-        return;
-      }
-    }
+    final existing =
+        await db.storage.io.file('downloads/bundles/$hymnId.zip').metadata();
+    final version = versions.hymns.firstWhereOrNull((e) => e.id == hymnId);
+    // if (check) {
+    //   //  Check for existing download
+    //   final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
+    //   if (bundle != null) {
+    //     yield 0.5;
+    //     if (bundle.bytes != null) {
+    //       await importHymn(bundle.bytes!);
+    //     }
+    //     yield 1.0;
+    //     return;
+    //   }
+    // })
     int total = 0;
     int current = 0;
-    final col = client.collection('hymns');
-    final results = await col.getList(filter: "id = '$hymnId'");
-    yield 0.2;
-    if (results.items.isEmpty) {
-      throw Exception('Hymn not found: $hymnId');
-    }
-    final result = results.items.first;
-    await db.setRecordModel(jsonEncode(result.toJson()), true, false);
-    final hash = result.getStringValue('download_hash');
-    if (existing.any((e) => e.hash == hash)) {
-      if (existing.length > 1) {
-        await db.transaction(() async {
-          for (final item in existing) {
-            if (item.hash != hash) {
-              await db.deleteBundle(item.id);
-            }
-          }
-        });
-      }
+    // final col = client.collection('hymns');
+    // final results = await col.getList(filter: "id = '$hymnId'");
+    // yield 0.2;
+    // if (results.items.isEmpty) {
+    //   throw Exception('Hymn not found: $hymnId');
+    // }
+    // final result = results.items.first;
+    // await db.setRecordModel(jsonEncode(result.toJson()), true, false);
+    // final hash = result.getStringValue('download_hash');
+    if (existing != null && version != null && existing.hash == version.hash) {
       yield 1.0;
       return;
     }
-    final link = result.getStringValue('download_link');
+    final link = version?.link ?? '';
     if (link.isEmpty) {
       await db.deleteHymn(hymnId);
       throw Exception('Link not provided for hymn: $hymnId');
@@ -82,11 +73,11 @@ class DownloadHymn {
       final bytes = Uint8List.fromList(list);
       // await importHymn(bytes);
       await db.transaction(() async {
-        if (existing.isNotEmpty) {
-          for (final item in existing) {
-            await db.deleteBundle(item.id);
-          }
-        }
+        // if (existing.isNotEmpty) {
+        //   for (final item in existing) {
+        //     await db.deleteBundle(item.id);
+        //   }
+        // }
         await importHymn(bytes);
         // await db.createBundle(
         //   hymnId,
