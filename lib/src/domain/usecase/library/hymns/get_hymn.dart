@@ -18,9 +18,14 @@ class GetHymn {
   GetHymn(this.db);
 
   Stream<GetHymnResult> call(String id) async* {
-    final hymn = db //
-        .getHymn(id)
-        .watchSingleOrNull();
+    // final hymn = db //
+    //     .getHymn(id)
+    //     .watchSingleOrNull();
+    final hymn = db.storage.docs
+        .collection('hymns')
+        .doc(id)
+        .watch()
+        .map((e) => Hymn.fromJson(e?.data ?? {}));
     final hymnal = db //
         .getHymnalByHymnId(id)
         .watchSingleOrNull();

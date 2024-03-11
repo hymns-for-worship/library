@@ -1,6 +1,7 @@
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:xml/xml.dart';
 
 import '../../data/source/archive/zip.dart';
@@ -67,7 +68,10 @@ class ImportHymn {
       final infoBytes = infos.first.content as List<int>;
       final str = String.fromCharCodes(infoBytes);
 
-      final (hymnId, _) = await parseHymnInformationFile(db, str);
+      final hymnId = await importInfo(str);
+
+      await db.storage.io.file('hymns/$hymnId.zip').writeAsBytes(bytes);
+      // await db.storage.io.file('hymns/$hymnId.hixml').writeAsString(str);
 
       await db.createBundle(
         hymnId,
@@ -79,14 +83,7 @@ class ImportHymn {
     });
   }
 
-  Future<void> importInfo(String str) async {
-    await parseHymnInformationFile(db, str);
-  }
-
-  Future<(String, String)> parseHymnInformationFile(
-    HfwDatabase db,
-    String str,
-  ) async {
+  Future<String> importInfo(String str) async {
     final doc = XmlDocument.parse(str);
     final content = doc.findAllElements('contents').first;
     final version = int.tryParse(content.attr('version')) ?? 0;
@@ -107,10 +104,15 @@ class ImportHymn {
             'importing $number from ${hymnal.attr('alias')} - ${++i}/${hymns.length}',
           );
         }
+        final id = hymn.attr('id');
+        final hymnDoc = this.db.storage.docs.collection('hymns').doc(id);
+        final snapshot = await hymnDoc.get();
+        if (snapshot != null && snapshot.exists) {
+          await db.storage.docs.remove(hymnDoc.path, recursive: true);
+        }
         {
           // Hymn
           final notation = hymn.findAllElements('songLeaderInfo').first;
-          final id = hymn.attr('id');
           final target = HymnsCompanion.insert(
             id: id,
             title: hymn.attr('title'),
@@ -124,7 +126,7 @@ class ImportHymn {
             beatPattern: Value(notation.attr('beatPattern')),
             startingPitch: Value(notation.attr('startingPitch')),
             startingBeat: Value(notation.attr('startingBeat')),
-            startingKey: Value(notation.attr('key')),
+            startingKey: Value(notation.attr('startingKey')),
             startingPitchDirection:
                 Value(notation.attr('startingPitchDirection')),
             timeSignature: Value(notation.attr('time')),
@@ -132,6 +134,28 @@ class ImportHymn {
             created: now,
             updated: now,
           );
+          // TODO: Delete old doc subcollections as part of transactions
+          // TODO: Add hymn links / recording
+          await hymnDoc.set({
+            'id': id,
+            'title': hymn.attr('title'),
+            'number': number,
+            'tuneName':
+                hymn.findAllElements('tuneName').firstOrNull?.innerText ?? '',
+            'translatedTitle': hymn.attr('translatedTitle'),
+            'status': hymn.attr('status'),
+            'key': notation.attr('key'),
+            'sku': notation.attr('sku'),
+            'beatPattern': notation.attr('beatPattern'),
+            'startingPitch': notation.attr('startingPitch'),
+            'startingBeat': notation.attr('startingBeat'),
+            'startingKey': notation.attr('key'),
+            'startingPitchDirection': notation.attr('startingPitchDirection'),
+            'timeSignature': notation.attr('time'),
+            'complexTimeSignature': notation.attr('complexTime'),
+            'created': now.toIso8601String(),
+            'updated': now.toIso8601String(),
+          });
           await db.insertOrUpdateHymn(target);
           hymnId = id;
         }
@@ -151,6 +175,32 @@ class ImportHymn {
             now,
             now,
           );
+          final _doc = this //
+              .db
+              .storage
+              .docs
+              .collection('hymnals')
+              .doc(hymnal.attr('id'));
+          await _doc.set({
+            'id': hymnal.attr('id'),
+            'name': hymnal.findAllElements('name').first.innerText,
+            'alias': hymnal.findAllElements('alias').first.innerText,
+            'created': now.toIso8601String(),
+            'updated': now.toIso8601String(),
+          });
+          final col = hymnDoc.collection('hymnals');
+          final current = await col.getAll();
+          if (!current.any((e) {
+            final data = e.data ?? {};
+            return data['hymnal_id'] == _doc.id && data['hymn_id'] == hymnId;
+          })) {
+            await col.doc().set({
+              'hymnal_id': _doc.id,
+              'hymn_id': hymnId,
+              'created': now.toIso8601String(),
+              'updated': now.toIso8601String(),
+            });
+          }
         }
         {
           // Topics
@@ -168,6 +218,33 @@ class ImportHymn {
               now,
               now,
             );
+
+            final _doc = this //
+                .db
+                .storage
+                .docs
+                .collection('topics')
+                .doc(node.attr('id'));
+            await _doc.set({
+              'id': node.attr('id'),
+              'name': node.innerText,
+              'alias': node.findAllElements('alias').first.innerText,
+              'created': now.toIso8601String(),
+              'updated': now.toIso8601String(),
+            });
+            final col = hymnDoc.collection('topics');
+            final current = await col.getAll();
+            if (!current.any((e) {
+              final data = e.data ?? {};
+              return data['topic_id'] == _doc.id && data['hymn_id'] == hymnId;
+            })) {
+              await col.doc().set({
+                'topic_id': _doc.id,
+                'hymn_id': hymnId,
+                'created': now.toIso8601String(),
+                'updated': now.toIso8601String(),
+              });
+            }
           }
         }
         {
@@ -186,6 +263,35 @@ class ImportHymn {
               now,
               now,
             );
+
+            final _doc = this //
+                .db
+                .storage
+                .docs
+                .collection('categories')
+                .doc(node.attr('id'));
+            await _doc.set({
+              'id': node.attr('id'),
+              'text':
+                  node.findElements('text').map((e) => e.innerText).join('\n'),
+              'name': node.attr('name'),
+              'created': now.toIso8601String(),
+              'updated': now.toIso8601String(),
+            });
+            final col = hymnDoc.collection('categories');
+            final current = await col.getAll();
+            if (!current.any((e) {
+              final data = e.data ?? {};
+              return data['category_id'] == _doc.id &&
+                  data['hymn_id'] == hymnId;
+            })) {
+              await col.doc().set({
+                'category_id': _doc.id,
+                'hymn_id': hymnId,
+                'created': now.toIso8601String(),
+                'updated': now.toIso8601String(),
+              });
+            }
           }
         }
         {
@@ -203,6 +309,33 @@ class ImportHymn {
               now,
               now,
             );
+
+            final _doc = this //
+                .db
+                .storage
+                .docs
+                .collection('scriptures')
+                .doc(node.attr('id'));
+            await _doc.set({
+              'id': node.attr('id'),
+              'name': node.innerText,
+              'created': now.toIso8601String(),
+              'updated': now.toIso8601String(),
+            });
+            final col = hymnDoc.collection('scriptures');
+            final current = await col.getAll();
+            if (!current.any((e) {
+              final data = e.data ?? {};
+              return data['scripture_id'] == _doc.id &&
+                  data['hymn_id'] == hymnId;
+            })) {
+              await col.doc().set({
+                'scripture_id': _doc.id,
+                'hymn_id': hymnId,
+                'created': now.toIso8601String(),
+                'updated': now.toIso8601String(),
+              });
+            }
           }
         }
         {
@@ -222,6 +355,37 @@ class ImportHymn {
               now,
               now,
             );
+
+            final _doc = this //
+                .db
+                .storage
+                .docs
+                .collection('portions')
+                .doc(node.attr('id'));
+            await _doc.set({
+              'id': node.attr('id'),
+              'portion': node.attr('portion'),
+              'hymnPortionId': node.attr('hymnPortionId'),
+              'text': node
+                  .findAllElements('text')
+                  .map((e) => e.innerText)
+                  .join('\n'),
+              'created': now.toIso8601String(),
+              'updated': now.toIso8601String(),
+            });
+            final col = hymnDoc.collection('portions');
+            final current = await col.getAll();
+            if (!current.any((e) {
+              final data = e.data ?? {};
+              return data['portion_id'] == _doc.id && data['hymn_id'] == hymnId;
+            })) {
+              await col.doc().set({
+                'portion_id': _doc.id,
+                'hymn_id': hymnId,
+                'created': now.toIso8601String(),
+                'updated': now.toIso8601String(),
+              });
+            }
           }
         }
         {
@@ -240,12 +404,42 @@ class ImportHymn {
               now,
               now,
             );
+
+            final _doc = this //
+                .db
+                .storage
+                .docs
+                .collection('stakeholders')
+                .doc(node.attr('id'));
+            await _doc.set({
+              'id': node.attr('id'),
+              'name': node.attr('name'),
+              'stakeHolderId': node.attr('stakeHolderId'),
+              'created': now.toIso8601String(),
+              'updated': now.toIso8601String(),
+            });
+            final col = hymnDoc.collection('stakeholders');
+            final current = await col.getAll();
+            if (!current.any((e) {
+              final data = e.data ?? {};
+              return data['stakeholder_id'] == _doc.id &&
+                  data['hymn_id'] == hymnId &&
+                  data['role'] == node.attr('role');
+            })) {
+              await col.doc().set({
+                'stakeholder_id': _doc.id,
+                'hymn_id': hymnId,
+                'role': node.attr('role'),
+                'created': now.toIso8601String(),
+                'updated': now.toIso8601String(),
+              });
+            }
           }
         }
       }
     }
 
-    return (hymnId!, number!);
+    return hymnId!;
   }
 }
 

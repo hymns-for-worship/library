@@ -27,7 +27,8 @@ class GetLibrary {
   static const url =
       'https://hymns-for-worship.fra1.cdn.digitaloceanspaces.com/assets/hymnals.xml.gz';
 
-  Future<void> call() async {
+  Stream<double> call() async* {
+    yield 0;
     // final xml = prefs.getString(_key);
     // if (xml != null) {
     //   await _parse(xml);
@@ -55,6 +56,7 @@ class GetLibrary {
     // }
     var lastCheck = prefs.getInt(_key);
     if (lastCheck == null) {
+      yield 0.1;
       final hymns = await db.getHymns().get();
       if (hymns.isEmpty) {
         lastCheck = 0;
@@ -63,6 +65,7 @@ class GetLibrary {
             .map((e) => e.updated.millisecondsSinceEpoch)
             .reduce((value, element) => value > element ? value : element);
       }
+      yield 0.2;
     }
     final now = DateTime.now().millisecondsSinceEpoch;
     final hymns = await pb.collection('hymns').getFullList(
@@ -70,32 +73,25 @@ class GetLibrary {
               "updated > '${DateTime.fromMillisecondsSinceEpoch(lastCheck).toIso8601String()}'",
           fields: 'info',
         );
-    await db.transaction(() async {
-      var i = 0;
-      for (final hymn in hymns) {
-        try {
-          final info = hymn.getStringValue('info');
-          await importHymn.importInfo(info);
-          if (kDebugMode) {
-            print('imported ${i + 1} of ${hymns.length}');
-          }
-        } catch (e, t) {
-          if (kDebugMode) {
-            print('Error importing hymn: $e $t');
-          }
-        } finally {
-          i++;
+    var i = 0;
+    yield i / hymns.length;
+    for (final hymn in hymns) {
+      try {
+        final info = hymn.getStringValue('info');
+        await importHymn.importInfo(info);
+        if (kDebugMode) {
+          print('imported ${i + 1} of ${hymns.length}');
         }
+      } catch (e, t) {
+        if (kDebugMode) {
+          print('Error importing hymn: $e $t');
+        }
+      } finally {
+        i++;
+        yield i / hymns.length;
       }
-    });
+    }
     await prefs.setInt(_key, now);
-  }
-
-  Future<void> _save(String xml) async {
-    await prefs.setString(_key, xml);
-  }
-
-  Future<void> _parse(String xml) async {
-    await importHymn.parseHymnInformationFile(db, xml);
+    yield 1;
   }
 }

@@ -10,14 +10,14 @@
 // </content>
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
-class GetVersions {
-  final SharedPreferences prefs;
+import '../../../data/source/database/database.dart';
 
-  const GetVersions(this.prefs);
+class GetVersions {
+  final HfwDatabase db;
+  const GetVersions(this.db);
 
   static const String _key = 'HymnalVersions';
   static const url =
@@ -52,11 +52,34 @@ class GetVersions {
   }
 
   Future<void> _save(String xml) async {
-    await prefs.setString(_key, xml);
+    await db.storage.kv.$string.set(_key, xml);
+    await import(_parse(xml));
+  }
+
+  Future<void> import(HymnalVersions versions) async {
+    return db.transaction(() async {
+      final now = DateTime.now().toIso8601String();
+      for (final item in versions.hymns) {
+        final doc = db.storage.docs.collection('hymns').doc(item.id);
+        final snapshot = await doc.get();
+        if (snapshot != null && snapshot.exists) continue;
+        await doc.set({
+          'id': item.id,
+          'title': item.title,
+          'number': item.number,
+          'sku': item.sku,
+          'download_link': item.link,
+          'download_size': item.size,
+          'download_hash': item.hash,
+          'created': now,
+          'updated': now,
+        });
+      }
+    });
   }
 
   Stream<HymnalVersions> call() async* {
-    final xml = prefs.getString(_key);
+    final xml = await db.storage.kv.$string.get(_key);
     if (xml != null) {
       yield _parse(xml);
     } else {

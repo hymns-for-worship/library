@@ -4,6 +4,7 @@ import 'package:archive/archive.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/extensions/json1.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 
 import '../../../domain/model/playlist_item.dart';
 import '../archive/zip.dart';
@@ -41,7 +42,9 @@ typedef ParseRecord<T> = T Function(Record, Map<String, dynamic>);
   'sql/users.drift',
 })
 class HfwDatabase extends _$HfwDatabase {
-  HfwDatabase(super.connection);
+  HfwDatabase(super.connection, this.storage);
+
+  final DriftStorage storage;
 
   @override
   int get schemaVersion => 2;
