@@ -1,8 +1,9 @@
-import '../../../../data/source/database/database.dart';
+import 'package:hfw_core/hfw_core.dart';
 
 class GetHymns {
   final HfwDatabase db;
-  const GetHymns(this.db);
+  final HymnalVersions versions;
+  const GetHymns(this.db, this.versions);
 
   Stream<List<Hymn>> call() {
     // yield* db.getHymns().watch();

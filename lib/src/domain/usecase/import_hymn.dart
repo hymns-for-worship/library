@@ -1,11 +1,12 @@
-import 'package:crypto/crypto.dart';
-import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
+import 'dart:typed_data';
+
+import 'package:sqlite_storage/sqlite_storage.dart';
 
 import 'package:xml/xml.dart';
 
 import '../../data/source/archive/zip.dart';
-import '../../data/source/database/database.dart';
 
 // <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 // <contents xmlns="http://schema.PresentationCreator.net/HymnalInformation.xsd">
@@ -43,7 +44,7 @@ import '../../data/source/database/database.dart';
 //   </hymnal>
 // </contents>
 class ImportHymn {
-  final HfwDatabase db;
+  final DriftStorage db;
   ImportHymn(this.db);
 
   Future<void> call(Uint8List bytes) async {
@@ -51,13 +52,13 @@ class ImportHymn {
     await db.transaction(() async {
       final archive = await extractZipAsync(bytes);
 
-      final hash = sha256.convert(bytes).toString();
-      final bundle = await db.getBundleByHash(hash).getSingleOrNull();
-      if (bundle != null) {
-        return;
-      }
+      // final hash = sha256.convert(bytes).toString();
+      // final bundle = await db.getBundleByHash(hash).getSingleOrNull();
+      // if (bundle != null) {
+      //   return;
+      // }
 
-      final now = DateTime.now();
+      // final now = DateTime.now();
 
       final infos = archive //
           .files
@@ -68,72 +69,43 @@ class ImportHymn {
       final infoBytes = infos.first.content as List<int>;
       final str = String.fromCharCodes(infoBytes);
 
+      print(('DOWNLOAD_IMPORT', str));
       final hymnId = await importInfo(str);
+      print(('DOWNLOAD_IMPORT_DONE', hymnId));
 
-      await db.storage.io.file('downloads/bundles/$hymnId.zip').writeAsBytes(bytes);
-      // await db.storage.io.file('hymns/$hymnId.hixml').writeAsString(str);
-
-      await db.createBundle(
-        hymnId,
-        hash,
-        bytes,
-        now,
-        now,
-      );
+      final file = db.io.file('downloads/bundles/$hymnId.zip');
+      await file.writeAsBytes(bytes);
+      print(('DOWNLOAD_COMPLETE', bytes.length));
     });
   }
 
   Future<String> importInfo(String str) async {
     final doc = XmlDocument.parse(str);
     final content = doc.findAllElements('contents').first;
-    final version = int.tryParse(content.attr('version')) ?? 0;
+    final version = num.tryParse(content.attr('version')) ?? 0;
     if (version < 2) {
       throw Exception('Unsupported version: $version');
     }
-    final now = DateTime.now();
-    final hymnals = doc.findAllElements('hymnal');
-    String? hymnId, number;
 
+    final hymnals = doc.findAllElements('hymnal');
+    String? hymnId;
     for (final hymnal in hymnals) {
       final hymns = hymnal.findAllElements('hymn');
       var i = 0;
       for (final hymn in hymns) {
-        number = hymn.attr('number');
-        if (kDebugMode) {
-          print(
-            'importing $number from ${hymnal.attr('alias')} - ${++i}/${hymns.length}',
-          );
-        }
-        final id = hymn.attr('id');
-        final hymnDoc = db.storage.docs.collection('hymns').doc(id);
+        final id = hymnId = hymn.attr('id');
+        final number = hymn.attr('number');
+        print(
+          'importing $number from ${hymnal.attr('sku')} - ${++i}/${hymns.length}',
+        );
+        final hymnDoc = db.docs.collection('hymns').doc(id);
         final snapshot = await hymnDoc.get();
         if (snapshot != null && snapshot.exists) {
-          await db.storage.docs.remove(hymnDoc.path, recursive: true);
+          await db.docs.remove(hymnDoc.path, recursive: true);
         }
         {
           // Hymn
           final notation = hymn.findAllElements('songLeaderInfo').first;
-          final target = HymnsCompanion.insert(
-            id: id,
-            title: hymn.attr('title'),
-            number: number,
-            tuneName: Value(
-                hymn.findAllElements('tuneName').firstOrNull?.innerText ?? ''),
-            translatedTitle: Value(hymn.attr('translatedTitle')),
-            status: Value(hymn.attr('status')),
-            key: Value(notation.attr('key')),
-            sku: Value(notation.attr('sku')),
-            beatPattern: Value(notation.attr('beatPattern')),
-            startingPitch: Value(notation.attr('startingPitch')),
-            startingBeat: Value(notation.attr('startingBeat')),
-            startingKey: Value(notation.attr('startingKey')),
-            startingPitchDirection:
-                Value(notation.attr('startingPitchDirection')),
-            timeSignature: Value(notation.attr('time')),
-            complexTimeSignature: Value(notation.attr('complexTime')),
-            created: now,
-            updated: now,
-          );
           // TODO: Delete old doc subcollections as part of transactions
           // TODO: Add hymn links / recording
           await hymnDoc.set({
@@ -153,40 +125,22 @@ class ImportHymn {
             'startingPitchDirection': notation.attr('startingPitchDirection'),
             'timeSignature': notation.attr('time'),
             'complexTimeSignature': notation.attr('complexTime'),
-            'created': now.toIso8601String(),
-            'updated': now.toIso8601String(),
+            'download_link':
+                'https://hymns-for-worship.fra1.cdn.digitaloceanspaces.com/bundles/$id.zip',
           });
-          await db.insertOrUpdateHymn(target);
-          hymnId = id;
         }
 
         {
           // Hymnal
-          final results = await db.createHymnal(
-            hymnal.attr('id'),
-            hymnal.findAllElements('name').first.innerText,
-            hymnal.findAllElements('alias').first.innerText,
-            now,
-            now,
-          );
-          await db.createHymnHymnal(
-            results.first.id,
-            hymnId,
-            now,
-            now,
-          );
-          final _doc = this //
-              .db
-              .storage
+          final _doc = db //
               .docs
               .collection('hymnals')
               .doc(hymnal.attr('id'));
           await _doc.set({
             'id': hymnal.attr('id'),
+            'sku': hymnal.attr('sku'),
             'name': hymnal.findAllElements('name').first.innerText,
             'alias': hymnal.findAllElements('alias').first.innerText,
-            'created': now.toIso8601String(),
-            'updated': now.toIso8601String(),
           });
           final col = hymnDoc.collection('hymnals');
           final current = await col.getAll();
@@ -197,40 +151,17 @@ class ImportHymn {
             await col.doc().set({
               'hymnal_id': _doc.id,
               'hymn_id': hymnId,
-              'created': now.toIso8601String(),
-              'updated': now.toIso8601String(),
             });
           }
         }
         {
           // Topics
           for (final node in doc.findAllElements('topicalIndex')) {
-            final results = await db.createTopic(
-              node.attr('id'),
-              node.innerText,
-              node.attr('alias'),
-              now,
-              now,
-            );
-            await db.createHymnTopic(
-              results.first.id,
-              hymnId,
-              now,
-              now,
-            );
-
-            final _doc = this //
-                .db
-                .storage
-                .docs
-                .collection('topics')
-                .doc(node.attr('id'));
+            final _doc = db.docs.collection('topics').doc(node.attr('id'));
             await _doc.set({
               'id': node.attr('id'),
               'name': node.innerText,
-              'alias': node.findAllElements('alias').first.innerText,
-              'created': now.toIso8601String(),
-              'updated': now.toIso8601String(),
+              'alias': node.attr('alias'),
             });
             final col = hymnDoc.collection('topics');
             final current = await col.getAll();
@@ -241,8 +172,6 @@ class ImportHymn {
               await col.doc().set({
                 'topic_id': _doc.id,
                 'hymn_id': hymnId,
-                'created': now.toIso8601String(),
-                'updated': now.toIso8601String(),
               });
             }
           }
@@ -250,33 +179,12 @@ class ImportHymn {
         {
           // Category
           for (final node in doc.findAllElements('category')) {
-            final results = await db.createCategory(
-              node.attr('id'),
-              node.findElements('text').map((e) => e.innerText).join('\n'),
-              node.attr('name'),
-              now,
-              now,
-            );
-            await db.createHymnCategory(
-              results.first.id,
-              hymnId,
-              now,
-              now,
-            );
-
-            final _doc = this //
-                .db
-                .storage
-                .docs
-                .collection('categories')
-                .doc(node.attr('id'));
+            final _doc = db.docs.collection('categories').doc(node.attr('id'));
             await _doc.set({
               'id': node.attr('id'),
               'text':
                   node.findElements('text').map((e) => e.innerText).join('\n'),
               'name': node.attr('name'),
-              'created': now.toIso8601String(),
-              'updated': now.toIso8601String(),
             });
             final col = hymnDoc.collection('categories');
             final current = await col.getAll();
@@ -288,8 +196,6 @@ class ImportHymn {
               await col.doc().set({
                 'category_id': _doc.id,
                 'hymn_id': hymnId,
-                'created': now.toIso8601String(),
-                'updated': now.toIso8601String(),
               });
             }
           }
@@ -297,30 +203,10 @@ class ImportHymn {
         {
           // Scriptures
           for (final node in doc.findAllElements('scripture')) {
-            final results = await db.createScripture(
-              node.attr('id'),
-              node.innerText,
-              now,
-              now,
-            );
-            await db.createHymnScripture(
-              results.first.id,
-              hymnId,
-              now,
-              now,
-            );
-
-            final _doc = this //
-                .db
-                .storage
-                .docs
-                .collection('scriptures')
-                .doc(node.attr('id'));
+            final _doc = db.docs.collection('scriptures').doc(node.attr('id'));
             await _doc.set({
               'id': node.attr('id'),
               'name': node.innerText,
-              'created': now.toIso8601String(),
-              'updated': now.toIso8601String(),
             });
             final col = hymnDoc.collection('scriptures');
             final current = await col.getAll();
@@ -332,8 +218,6 @@ class ImportHymn {
               await col.doc().set({
                 'scripture_id': _doc.id,
                 'hymn_id': hymnId,
-                'created': now.toIso8601String(),
-                'updated': now.toIso8601String(),
               });
             }
           }
@@ -341,27 +225,7 @@ class ImportHymn {
         {
           // Portions
           for (final node in doc.findAllElements('hymnPortion')) {
-            final results = await db.createPortion(
-              node.attr('id'),
-              node.attr('portion'),
-              node.findAllElements('text').map((e) => e.innerText).join('\n'),
-              node.attr('hymnPortionId'),
-              now,
-              now,
-            );
-            await db.createHymnPortion(
-              results.first.id,
-              hymnId,
-              now,
-              now,
-            );
-
-            final _doc = this //
-                .db
-                .storage
-                .docs
-                .collection('portions')
-                .doc(node.attr('id'));
+            final _doc = db.docs.collection('portions').doc(node.attr('id'));
             await _doc.set({
               'id': node.attr('id'),
               'portion': node.attr('portion'),
@@ -370,8 +234,6 @@ class ImportHymn {
                   .findAllElements('text')
                   .map((e) => e.innerText)
                   .join('\n'),
-              'created': now.toIso8601String(),
-              'updated': now.toIso8601String(),
             });
             final col = hymnDoc.collection('portions');
             final current = await col.getAll();
@@ -382,8 +244,29 @@ class ImportHymn {
               await col.doc().set({
                 'portion_id': _doc.id,
                 'hymn_id': hymnId,
-                'created': now.toIso8601String(),
-                'updated': now.toIso8601String(),
+              });
+            }
+          }
+        }
+        {
+          // Hymn Links
+          for (final node in doc.findAllElements('hymnLink')) {
+            final _doc = db.docs.collection('links').doc(node.attr('id'));
+            await _doc.set({
+              'id': node.attr('id'),
+              'url': node.attr('url'),
+              'title': node.attr('title'),
+              'description': node.attr('description'),
+            });
+            final col = hymnDoc.collection('links');
+            final current = await col.getAll();
+            if (!current.any((e) {
+              final data = e.data ?? {};
+              return data['link_id'] == _doc.id && data['hymn_id'] == hymnId;
+            })) {
+              await col.doc().set({
+                'link_id': _doc.id,
+                'hymn_id': hymnId,
               });
             }
           }
@@ -391,32 +274,12 @@ class ImportHymn {
         {
           // Stakeholders
           for (final node in doc.findAllElements('originator')) {
-            final results = await db.createStakeholder(
-              node.attr('stakeHolderId'),
-              node.attr('name'),
-              now,
-              now,
-            );
-            await db.createHymnStakeholder(
-              results.first.id,
-              hymnId,
-              node.attr('role'),
-              now,
-              now,
-            );
-
-            final _doc = this //
-                .db
-                .storage
-                .docs
-                .collection('stakeholders')
-                .doc(node.attr('id'));
+            final _doc =
+                db.docs.collection('stakeholders').doc(node.attr('id'));
             await _doc.set({
               'id': node.attr('id'),
               'name': node.attr('name'),
               'stakeHolderId': node.attr('stakeHolderId'),
-              'created': now.toIso8601String(),
-              'updated': now.toIso8601String(),
             });
             final col = hymnDoc.collection('stakeholders');
             final current = await col.getAll();
@@ -430,8 +293,6 @@ class ImportHymn {
                 'stakeholder_id': _doc.id,
                 'hymn_id': hymnId,
                 'role': node.attr('role'),
-                'created': now.toIso8601String(),
-                'updated': now.toIso8601String(),
               });
             }
           }

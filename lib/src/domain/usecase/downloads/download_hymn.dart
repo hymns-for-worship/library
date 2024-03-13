@@ -13,7 +13,7 @@ class DownloadHymn {
   final HfwStudio client;
   final Client http;
   // TODO: Import hymn links
-  late final importHymn = ImportHymn(db);
+  late final importHymn = ImportHymn(db.storage);
 
   DownloadHymn({
     required this.db,
@@ -23,8 +23,8 @@ class DownloadHymn {
 
   Stream<double> call(String hymnId, HymnalVersions versions) async* {
     yield 0.1;
-    final existing =
-        await db.storage.io.file('downloads/bundles/$hymnId.zip').metadata();
+    final file = db.storage.io.file('downloads/bundles/$hymnId.zip');
+    final existing = await file.metadata();
     final version = versions.hymns.firstWhereOrNull((e) => e.id == hymnId);
     // if (check) {
     //   //  Check for existing download
@@ -49,6 +49,7 @@ class DownloadHymn {
     // final result = results.items.first;
     // await db.setRecordModel(jsonEncode(result.toJson()), true, false);
     // final hash = result.getStringValue('download_hash');
+    print(('DOWNLOAD', existing, version));
     if (existing != null && version != null && existing.hash == version.hash) {
       yield 1.0;
       return;
@@ -72,21 +73,8 @@ class DownloadHymn {
       }
       final bytes = Uint8List.fromList(list);
       // await importHymn(bytes);
-      await db.transaction(() async {
-        // if (existing.isNotEmpty) {
-        //   for (final item in existing) {
-        //     await db.deleteBundle(item.id);
-        //   }
-        // }
-        await importHymn(bytes);
-        // await db.createBundle(
-        //   hymnId,
-        //   hash,
-        //   bytes,
-        //   DateTime.parse(result.created),
-        //   DateTime.parse(result.updated),
-        // );
-      });
+      await importHymn(bytes);
+      await file.writeAsBytes(bytes);
     } else {
       throw Exception(
         'Error downloading hymn: $hymnId ${response.statusCode}}',

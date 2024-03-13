@@ -21,7 +21,7 @@ class GetLibrary {
   final HfwStudio pb;
   final HfwDatabase db;
   GetLibrary(this.prefs, this.db, this.pb);
-  late final importHymn = ImportHymn(db);
+  late final importHymn = ImportHymn(db.storage);
 
   static const String _key = 'HymnalsCheck';
   static const url =
