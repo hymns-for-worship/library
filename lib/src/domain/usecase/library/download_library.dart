@@ -6,7 +6,7 @@ import '../import_hymn.dart';
 class DownloadLibrary {
   final HfwDatabase db;
   final HfwStudio client;
-  late final importHymn = ImportHymn(db.storage);
+  late final importHymn = ImportHymn(db);
 
   DownloadLibrary(this.db, this.client);
 

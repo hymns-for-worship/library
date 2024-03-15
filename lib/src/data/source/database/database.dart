@@ -7,7 +7,7 @@ import 'package:drift/extensions/json1.dart';
 import 'package:sqlite_storage/sqlite_storage.dart';
 
 import '../../../domain/model/playlist_item.dart';
-import '../archive/zip.flutter.dart';
+import '../archive/zip.dart';
 import 'schema_versions.dart';
 export 'extension.dart';
 export 'sql/converters.dart';
@@ -169,7 +169,7 @@ class HfwDatabase extends _$HfwDatabase {
 extension BundleUtils on Bundle {
   Archive? toArchive() {
     if (bytes == null) return null;
-    return extractZipSync(bytes!);
+    return extractZip(bytes!);
   }
 
   Future<Archive?> toArchiveAsync() async {
