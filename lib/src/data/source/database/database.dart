@@ -43,7 +43,7 @@ class HfwDatabase extends _$HfwDatabase {
   HfwDatabase(super.connection);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
