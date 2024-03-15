@@ -14,10 +14,8 @@ class SyncBackgroundService extends web.SyncBackgroundService {
       return web.SyncBackgroundService.database!;
     }
     final connection = await db.serializableConnection();
-    web.SyncBackgroundService.database = HfwDatabase(
-      await connection.connect(),
-      db.storage,
-    );
+    web.SyncBackgroundService.database =
+        HfwDatabase(await connection.connect());
     return web.SyncBackgroundService.database!;
   }
 

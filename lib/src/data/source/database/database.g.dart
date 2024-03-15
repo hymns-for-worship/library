@@ -3291,6 +3291,392 @@ class UserPlaylistLibrary
   Set<String> get readTables => const {'records'};
 }
 
+class Links extends Table with TableInfo<Links, Link> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Links(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'PRIMARY KEY NOT NULL');
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+      'url', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _hymnIdMeta = const VerificationMeta('hymnId');
+  late final GeneratedColumn<String> hymnId = GeneratedColumn<String>(
+      'hymnId', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _createdMeta =
+      const VerificationMeta('created');
+  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
+      'created', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _updatedMeta =
+      const VerificationMeta('updated');
+  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
+      'updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, title, description, url, hymnId, created, updated];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'links';
+  @override
+  VerificationContext validateIntegrity(Insertable<Link> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('hymnId')) {
+      context.handle(_hymnIdMeta,
+          hymnId.isAcceptableOrUnknown(data['hymnId']!, _hymnIdMeta));
+    } else if (isInserting) {
+      context.missing(_hymnIdMeta);
+    }
+    if (data.containsKey('created')) {
+      context.handle(_createdMeta,
+          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
+    } else if (isInserting) {
+      context.missing(_createdMeta);
+    }
+    if (data.containsKey('updated')) {
+      context.handle(_updatedMeta,
+          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
+    } else if (isInserting) {
+      context.missing(_updatedMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {url, hymnId},
+      ];
+  @override
+  Link map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Link(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      url: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}url'])!,
+      hymnId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}hymnId'])!,
+      created: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
+      updated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
+    );
+  }
+
+  @override
+  Links createAlias(String alias) {
+    return Links(attachedDatabase, alias);
+  }
+
+  @override
+  List<String> get customConstraints => const ['UNIQUE(url, hymnId)'];
+  @override
+  bool get dontWriteConstraints => true;
+}
+
+class Link extends DataClass implements Insertable<Link> {
+  String id;
+  String title;
+  String description;
+  String url;
+  String hymnId;
+  DateTime created;
+  DateTime updated;
+  Link(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.url,
+      required this.hymnId,
+      required this.created,
+      required this.updated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    map['description'] = Variable<String>(description);
+    map['url'] = Variable<String>(url);
+    map['hymnId'] = Variable<String>(hymnId);
+    map['created'] = Variable<DateTime>(created);
+    map['updated'] = Variable<DateTime>(updated);
+    return map;
+  }
+
+  LinksCompanion toCompanion(bool nullToAbsent) {
+    return LinksCompanion(
+      id: Value(id),
+      title: Value(title),
+      description: Value(description),
+      url: Value(url),
+      hymnId: Value(hymnId),
+      created: Value(created),
+      updated: Value(updated),
+    );
+  }
+
+  factory Link.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Link(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      description: serializer.fromJson<String>(json['description']),
+      url: serializer.fromJson<String>(json['url']),
+      hymnId: serializer.fromJson<String>(json['hymnId']),
+      created: serializer.fromJson<DateTime>(json['created']),
+      updated: serializer.fromJson<DateTime>(json['updated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'description': serializer.toJson<String>(description),
+      'url': serializer.toJson<String>(url),
+      'hymnId': serializer.toJson<String>(hymnId),
+      'created': serializer.toJson<DateTime>(created),
+      'updated': serializer.toJson<DateTime>(updated),
+    };
+  }
+
+  Link copyWith(
+          {String? id,
+          String? title,
+          String? description,
+          String? url,
+          String? hymnId,
+          DateTime? created,
+          DateTime? updated}) =>
+      Link(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        url: url ?? this.url,
+        hymnId: hymnId ?? this.hymnId,
+        created: created ?? this.created,
+        updated: updated ?? this.updated,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Link(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('url: $url, ')
+          ..write('hymnId: $hymnId, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, title, description, url, hymnId, created, updated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Link &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.description == this.description &&
+          other.url == this.url &&
+          other.hymnId == this.hymnId &&
+          other.created == this.created &&
+          other.updated == this.updated);
+}
+
+class LinksCompanion extends UpdateCompanion<Link> {
+  Value<String> id;
+  Value<String> title;
+  Value<String> description;
+  Value<String> url;
+  Value<String> hymnId;
+  Value<DateTime> created;
+  Value<DateTime> updated;
+  Value<int> rowid;
+  LinksCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.description = const Value.absent(),
+    this.url = const Value.absent(),
+    this.hymnId = const Value.absent(),
+    this.created = const Value.absent(),
+    this.updated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LinksCompanion.insert({
+    required String id,
+    required String title,
+    required String description,
+    required String url,
+    required String hymnId,
+    required DateTime created,
+    required DateTime updated,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        title = Value(title),
+        description = Value(description),
+        url = Value(url),
+        hymnId = Value(hymnId),
+        created = Value(created),
+        updated = Value(updated);
+  static Insertable<Link> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<String>? description,
+    Expression<String>? url,
+    Expression<String>? hymnId,
+    Expression<DateTime>? created,
+    Expression<DateTime>? updated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      if (url != null) 'url': url,
+      if (hymnId != null) 'hymnId': hymnId,
+      if (created != null) 'created': created,
+      if (updated != null) 'updated': updated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LinksCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? title,
+      Value<String>? description,
+      Value<String>? url,
+      Value<String>? hymnId,
+      Value<DateTime>? created,
+      Value<DateTime>? updated,
+      Value<int>? rowid}) {
+    return LinksCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      url: url ?? this.url,
+      hymnId: hymnId ?? this.hymnId,
+      created: created ?? this.created,
+      updated: updated ?? this.updated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (hymnId.present) {
+      map['hymnId'] = Variable<String>(hymnId.value);
+    }
+    if (created.present) {
+      map['created'] = Variable<DateTime>(created.value);
+    }
+    if (updated.present) {
+      map['updated'] = Variable<DateTime>(updated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LinksCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('description: $description, ')
+          ..write('url: $url, ')
+          ..write('hymnId: $hymnId, ')
+          ..write('created: $created, ')
+          ..write('updated: $updated, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class LocalPlaylist extends DataClass {
   String data;
   String id;
@@ -9573,453 +9959,6 @@ class HymnsFtsCompanion extends UpdateCompanion<HymnsFt> {
   }
 }
 
-class Bundles extends Table with TableInfo<Bundles, Bundle> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  Bundles(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  static const VerificationMeta _hymnIdMeta = const VerificationMeta('hymnId');
-  late final GeneratedColumn<String> hymnId = GeneratedColumn<String>(
-      'hymnId', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _hymnTitleMeta =
-      const VerificationMeta('hymnTitle');
-  late final GeneratedColumn<String> hymnTitle = GeneratedColumn<String>(
-      'hymn_title', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _hymnNumberMeta =
-      const VerificationMeta('hymnNumber');
-  late final GeneratedColumn<String> hymnNumber = GeneratedColumn<String>(
-      'hymn_number', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _hashMeta = const VerificationMeta('hash');
-  late final GeneratedColumn<String> hash = GeneratedColumn<String>(
-      'hash', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _fileMeta = const VerificationMeta('file');
-  late final GeneratedColumn<String> file = GeneratedColumn<String>(
-      'file', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _bytesMeta = const VerificationMeta('bytes');
-  late final GeneratedColumn<Uint8List> bytes = GeneratedColumn<Uint8List>(
-      'bytes', aliasedName, true,
-      type: DriftSqlType.blob,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  static const VerificationMeta _createdMeta =
-      const VerificationMeta('created');
-  late final GeneratedColumn<DateTime> created = GeneratedColumn<DateTime>(
-      'created', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  static const VerificationMeta _updatedMeta =
-      const VerificationMeta('updated');
-  late final GeneratedColumn<DateTime> updated = GeneratedColumn<DateTime>(
-      'updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, hymnId, hymnTitle, hymnNumber, hash, file, bytes, created, updated];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'bundles';
-  @override
-  VerificationContext validateIntegrity(Insertable<Bundle> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('hymnId')) {
-      context.handle(_hymnIdMeta,
-          hymnId.isAcceptableOrUnknown(data['hymnId']!, _hymnIdMeta));
-    } else if (isInserting) {
-      context.missing(_hymnIdMeta);
-    }
-    if (data.containsKey('hymn_title')) {
-      context.handle(_hymnTitleMeta,
-          hymnTitle.isAcceptableOrUnknown(data['hymn_title']!, _hymnTitleMeta));
-    }
-    if (data.containsKey('hymn_number')) {
-      context.handle(
-          _hymnNumberMeta,
-          hymnNumber.isAcceptableOrUnknown(
-              data['hymn_number']!, _hymnNumberMeta));
-    }
-    if (data.containsKey('hash')) {
-      context.handle(
-          _hashMeta, hash.isAcceptableOrUnknown(data['hash']!, _hashMeta));
-    } else if (isInserting) {
-      context.missing(_hashMeta);
-    }
-    if (data.containsKey('file')) {
-      context.handle(
-          _fileMeta, file.isAcceptableOrUnknown(data['file']!, _fileMeta));
-    }
-    if (data.containsKey('bytes')) {
-      context.handle(
-          _bytesMeta, bytes.isAcceptableOrUnknown(data['bytes']!, _bytesMeta));
-    }
-    if (data.containsKey('created')) {
-      context.handle(_createdMeta,
-          created.isAcceptableOrUnknown(data['created']!, _createdMeta));
-    } else if (isInserting) {
-      context.missing(_createdMeta);
-    }
-    if (data.containsKey('updated')) {
-      context.handle(_updatedMeta,
-          updated.isAcceptableOrUnknown(data['updated']!, _updatedMeta));
-    } else if (isInserting) {
-      context.missing(_updatedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  List<Set<GeneratedColumn>> get uniqueKeys => [
-        {hymnId},
-      ];
-  @override
-  Bundle map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Bundle(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      hymnId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}hymnId'])!,
-      hymnTitle: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}hymn_title']),
-      hymnNumber: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}hymn_number']),
-      hash: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}hash'])!,
-      file: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}file']),
-      bytes: attachedDatabase.typeMapping
-          .read(DriftSqlType.blob, data['${effectivePrefix}bytes']),
-      created: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created'])!,
-      updated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated'])!,
-    );
-  }
-
-  @override
-  Bundles createAlias(String alias) {
-    return Bundles(attachedDatabase, alias);
-  }
-
-  @override
-  List<String> get customConstraints => const ['UNIQUE(hymnId)'];
-  @override
-  bool get dontWriteConstraints => true;
-}
-
-class Bundle extends DataClass implements Insertable<Bundle> {
-  int id;
-  String hymnId;
-  String? hymnTitle;
-  String? hymnNumber;
-  String hash;
-  String? file;
-  Uint8List? bytes;
-  DateTime created;
-  DateTime updated;
-  Bundle(
-      {required this.id,
-      required this.hymnId,
-      this.hymnTitle,
-      this.hymnNumber,
-      required this.hash,
-      this.file,
-      this.bytes,
-      required this.created,
-      required this.updated});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['hymnId'] = Variable<String>(hymnId);
-    if (!nullToAbsent || hymnTitle != null) {
-      map['hymn_title'] = Variable<String>(hymnTitle);
-    }
-    if (!nullToAbsent || hymnNumber != null) {
-      map['hymn_number'] = Variable<String>(hymnNumber);
-    }
-    map['hash'] = Variable<String>(hash);
-    if (!nullToAbsent || file != null) {
-      map['file'] = Variable<String>(file);
-    }
-    if (!nullToAbsent || bytes != null) {
-      map['bytes'] = Variable<Uint8List>(bytes);
-    }
-    map['created'] = Variable<DateTime>(created);
-    map['updated'] = Variable<DateTime>(updated);
-    return map;
-  }
-
-  BundlesCompanion toCompanion(bool nullToAbsent) {
-    return BundlesCompanion(
-      id: Value(id),
-      hymnId: Value(hymnId),
-      hymnTitle: hymnTitle == null && nullToAbsent
-          ? const Value.absent()
-          : Value(hymnTitle),
-      hymnNumber: hymnNumber == null && nullToAbsent
-          ? const Value.absent()
-          : Value(hymnNumber),
-      hash: Value(hash),
-      file: file == null && nullToAbsent ? const Value.absent() : Value(file),
-      bytes:
-          bytes == null && nullToAbsent ? const Value.absent() : Value(bytes),
-      created: Value(created),
-      updated: Value(updated),
-    );
-  }
-
-  factory Bundle.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Bundle(
-      id: serializer.fromJson<int>(json['id']),
-      hymnId: serializer.fromJson<String>(json['hymnId']),
-      hymnTitle: serializer.fromJson<String?>(json['hymn_title']),
-      hymnNumber: serializer.fromJson<String?>(json['hymn_number']),
-      hash: serializer.fromJson<String>(json['hash']),
-      file: serializer.fromJson<String?>(json['file']),
-      bytes: serializer.fromJson<Uint8List?>(json['bytes']),
-      created: serializer.fromJson<DateTime>(json['created']),
-      updated: serializer.fromJson<DateTime>(json['updated']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'hymnId': serializer.toJson<String>(hymnId),
-      'hymn_title': serializer.toJson<String?>(hymnTitle),
-      'hymn_number': serializer.toJson<String?>(hymnNumber),
-      'hash': serializer.toJson<String>(hash),
-      'file': serializer.toJson<String?>(file),
-      'bytes': serializer.toJson<Uint8List?>(bytes),
-      'created': serializer.toJson<DateTime>(created),
-      'updated': serializer.toJson<DateTime>(updated),
-    };
-  }
-
-  Bundle copyWith(
-          {int? id,
-          String? hymnId,
-          Value<String?> hymnTitle = const Value.absent(),
-          Value<String?> hymnNumber = const Value.absent(),
-          String? hash,
-          Value<String?> file = const Value.absent(),
-          Value<Uint8List?> bytes = const Value.absent(),
-          DateTime? created,
-          DateTime? updated}) =>
-      Bundle(
-        id: id ?? this.id,
-        hymnId: hymnId ?? this.hymnId,
-        hymnTitle: hymnTitle.present ? hymnTitle.value : this.hymnTitle,
-        hymnNumber: hymnNumber.present ? hymnNumber.value : this.hymnNumber,
-        hash: hash ?? this.hash,
-        file: file.present ? file.value : this.file,
-        bytes: bytes.present ? bytes.value : this.bytes,
-        created: created ?? this.created,
-        updated: updated ?? this.updated,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('Bundle(')
-          ..write('id: $id, ')
-          ..write('hymnId: $hymnId, ')
-          ..write('hymnTitle: $hymnTitle, ')
-          ..write('hymnNumber: $hymnNumber, ')
-          ..write('hash: $hash, ')
-          ..write('file: $file, ')
-          ..write('bytes: $bytes, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, hymnId, hymnTitle, hymnNumber, hash, file,
-      $driftBlobEquality.hash(bytes), created, updated);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Bundle &&
-          other.id == this.id &&
-          other.hymnId == this.hymnId &&
-          other.hymnTitle == this.hymnTitle &&
-          other.hymnNumber == this.hymnNumber &&
-          other.hash == this.hash &&
-          other.file == this.file &&
-          $driftBlobEquality.equals(other.bytes, this.bytes) &&
-          other.created == this.created &&
-          other.updated == this.updated);
-}
-
-class BundlesCompanion extends UpdateCompanion<Bundle> {
-  Value<int> id;
-  Value<String> hymnId;
-  Value<String?> hymnTitle;
-  Value<String?> hymnNumber;
-  Value<String> hash;
-  Value<String?> file;
-  Value<Uint8List?> bytes;
-  Value<DateTime> created;
-  Value<DateTime> updated;
-  BundlesCompanion({
-    this.id = const Value.absent(),
-    this.hymnId = const Value.absent(),
-    this.hymnTitle = const Value.absent(),
-    this.hymnNumber = const Value.absent(),
-    this.hash = const Value.absent(),
-    this.file = const Value.absent(),
-    this.bytes = const Value.absent(),
-    this.created = const Value.absent(),
-    this.updated = const Value.absent(),
-  });
-  BundlesCompanion.insert({
-    this.id = const Value.absent(),
-    required String hymnId,
-    this.hymnTitle = const Value.absent(),
-    this.hymnNumber = const Value.absent(),
-    required String hash,
-    this.file = const Value.absent(),
-    this.bytes = const Value.absent(),
-    required DateTime created,
-    required DateTime updated,
-  })  : hymnId = Value(hymnId),
-        hash = Value(hash),
-        created = Value(created),
-        updated = Value(updated);
-  static Insertable<Bundle> custom({
-    Expression<int>? id,
-    Expression<String>? hymnId,
-    Expression<String>? hymnTitle,
-    Expression<String>? hymnNumber,
-    Expression<String>? hash,
-    Expression<String>? file,
-    Expression<Uint8List>? bytes,
-    Expression<DateTime>? created,
-    Expression<DateTime>? updated,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (hymnId != null) 'hymnId': hymnId,
-      if (hymnTitle != null) 'hymn_title': hymnTitle,
-      if (hymnNumber != null) 'hymn_number': hymnNumber,
-      if (hash != null) 'hash': hash,
-      if (file != null) 'file': file,
-      if (bytes != null) 'bytes': bytes,
-      if (created != null) 'created': created,
-      if (updated != null) 'updated': updated,
-    });
-  }
-
-  BundlesCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? hymnId,
-      Value<String?>? hymnTitle,
-      Value<String?>? hymnNumber,
-      Value<String>? hash,
-      Value<String?>? file,
-      Value<Uint8List?>? bytes,
-      Value<DateTime>? created,
-      Value<DateTime>? updated}) {
-    return BundlesCompanion(
-      id: id ?? this.id,
-      hymnId: hymnId ?? this.hymnId,
-      hymnTitle: hymnTitle ?? this.hymnTitle,
-      hymnNumber: hymnNumber ?? this.hymnNumber,
-      hash: hash ?? this.hash,
-      file: file ?? this.file,
-      bytes: bytes ?? this.bytes,
-      created: created ?? this.created,
-      updated: updated ?? this.updated,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (hymnId.present) {
-      map['hymnId'] = Variable<String>(hymnId.value);
-    }
-    if (hymnTitle.present) {
-      map['hymn_title'] = Variable<String>(hymnTitle.value);
-    }
-    if (hymnNumber.present) {
-      map['hymn_number'] = Variable<String>(hymnNumber.value);
-    }
-    if (hash.present) {
-      map['hash'] = Variable<String>(hash.value);
-    }
-    if (file.present) {
-      map['file'] = Variable<String>(file.value);
-    }
-    if (bytes.present) {
-      map['bytes'] = Variable<Uint8List>(bytes.value);
-    }
-    if (created.present) {
-      map['created'] = Variable<DateTime>(created.value);
-    }
-    if (updated.present) {
-      map['updated'] = Variable<DateTime>(updated.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('BundlesCompanion(')
-          ..write('id: $id, ')
-          ..write('hymnId: $hymnId, ')
-          ..write('hymnTitle: $hymnTitle, ')
-          ..write('hymnNumber: $hymnNumber, ')
-          ..write('hash: $hash, ')
-          ..write('file: $file, ')
-          ..write('bytes: $bytes, ')
-          ..write('created: $created, ')
-          ..write('updated: $updated')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class RecordsCache extends Table
     with TableInfo<RecordsCache, RecordsCacheData> {
   @override
@@ -10497,6 +10436,11 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final UserLibrary userLibrary = UserLibrary(this);
   late final UserPlaylistLibrary userPlaylistLibrary =
       UserPlaylistLibrary(this);
+  late final Links links = Links(this);
+  late final Index linksIdxUrl =
+      Index('links_idx_url', 'CREATE INDEX links_idx_url ON links (url)');
+  late final Index linksIdxHymnId = Index(
+      'links_idx_hymnId', 'CREATE INDEX links_idx_hymnId ON links (hymnId)');
   late final LocalPlaylists localPlaylists = LocalPlaylists(this);
   late final Playlists playlists = Playlists(this);
   late final PublicPlaylists publicPlaylists = PublicPlaylists(this);
@@ -10619,12 +10563,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
   late final Trigger hymnsFtsDelete = Trigger(
       'CREATE TRIGGER hymns_fts_delete AFTER DELETE ON hymns BEGIN INSERT INTO hymns_fts (hymns_fts, "rowid", title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature) VALUES (\'delete\', old."ROWID", old.title, old.number, old.tuneName, old.startingKey, old.beatPattern, old.startingPitch, old.startingBeat, old.startingPitchDirection, old.timeSignature, old.complexTimeSignature);END',
       'hymns_fts_delete');
-  late final Bundles bundles = Bundles(this);
-  late final Index bundlesIdxHymnId = Index('bundles_idx_hymnId',
-      'CREATE INDEX bundles_idx_hymnId ON bundles (hymnId)');
-  late final Trigger bundlesDeleteHymn = Trigger(
-      'CREATE TRIGGER bundles_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM bundles WHERE hymnId = old.id;END',
-      'bundles_delete_hymn');
   late final Trigger userRecordsUsersDeleteTrigger = Trigger(
       'CREATE TRIGGER user_records_users_delete_trigger AFTER DELETE ON users BEGIN DELETE FROM user_records WHERE user = OLD.id;END',
       'user_records_users_delete_trigger');
@@ -11084,6 +11022,102 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         readsFrom: {
           records,
         }).asyncMap(userPlaylistLibrary.mapFromRow);
+  }
+
+  Selectable<Link> searchLinks(String query) {
+    return customSelect(
+        'SELECT * FROM links WHERE(title LIKE ?1 OR description LIKE ?1)ORDER BY title ASC',
+        variables: [
+          Variable<String>(query)
+        ],
+        readsFrom: {
+          links,
+        }).asyncMap(links.mapFromRow);
+  }
+
+  Selectable<Link> getLinks() {
+    return customSelect('SELECT * FROM links ORDER BY title ASC',
+        variables: [],
+        readsFrom: {
+          links,
+        }).asyncMap(links.mapFromRow);
+  }
+
+  Selectable<Link> getLink(String id) {
+    return customSelect('SELECT * FROM links WHERE id = ?1', variables: [
+      Variable<String>(id)
+    ], readsFrom: {
+      links,
+    }).asyncMap(links.mapFromRow);
+  }
+
+  Selectable<Link> getLinkByHymn(String hymnId) {
+    return customSelect('SELECT * FROM links WHERE hymnId = ?1', variables: [
+      Variable<String>(hymnId)
+    ], readsFrom: {
+      links,
+    }).asyncMap(links.mapFromRow);
+  }
+
+  Future<List<Link>> createLink(String id, String title, String description,
+      String url, String hymnId, DateTime created, DateTime updated) {
+    return customWriteReturning(
+        'INSERT OR REPLACE INTO links (id, title, description, url, hymnId, created, updated) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7) RETURNING *',
+        variables: [
+          Variable<String>(id),
+          Variable<String>(title),
+          Variable<String>(description),
+          Variable<String>(url),
+          Variable<String>(hymnId),
+          Variable<DateTime>(created),
+          Variable<DateTime>(updated)
+        ],
+        updates: {
+          links
+        }).then((rows) => Future.wait(rows.map(links.mapFromRow)));
+  }
+
+  Future<int> updateLink(String title, String description, String hymnId,
+      DateTime updated, String id) {
+    return customUpdate(
+      'UPDATE links SET title = ?1, description = ?2, hymnId = ?3, updated = ?4 WHERE id = ?5',
+      variables: [
+        Variable<String>(title),
+        Variable<String>(description),
+        Variable<String>(hymnId),
+        Variable<DateTime>(updated),
+        Variable<String>(id)
+      ],
+      updates: {links},
+      updateKind: UpdateKind.update,
+    );
+  }
+
+  Future<int> deleteLink(String id) {
+    return customUpdate(
+      'DELETE FROM links WHERE id = ?1',
+      variables: [Variable<String>(id)],
+      updates: {links},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteLinkByHymn(String hymnId) {
+    return customUpdate(
+      'DELETE FROM links WHERE hymnId = ?1',
+      variables: [Variable<String>(hymnId)],
+      updates: {links},
+      updateKind: UpdateKind.delete,
+    );
+  }
+
+  Future<int> deleteLinks() {
+    return customUpdate(
+      'DELETE FROM links',
+      variables: [],
+      updates: {links},
+      updateKind: UpdateKind.delete,
+    );
   }
 
   Selectable<Playlist> getPlaylists(String? user) {
@@ -12767,129 +12801,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         ));
   }
 
-  Selectable<Bundle> getBundles() {
-    return customSelect('SELECT * FROM bundles', variables: [], readsFrom: {
-      bundles,
-    }).asyncMap(bundles.mapFromRow);
-  }
-
-  Selectable<GetBundlesHashesResult> getBundlesHashes() {
-    return customSelect(
-        'SELECT b.id AS bundle_id, b.hash AS bundle_hash, b.created AS bundle_created, b.updated AS bundle_updated,"hymn"."id" AS "nested_0.id", "hymn"."title" AS "nested_0.title", "hymn"."translatedTitle" AS "nested_0.translatedTitle", "hymn"."number" AS "nested_0.number", "hymn"."startingKey" AS "nested_0.startingKey", "hymn"."beatPattern" AS "nested_0.beatPattern", "hymn"."startingPitch" AS "nested_0.startingPitch", "hymn"."startingBeat" AS "nested_0.startingBeat", "hymn"."startingPitchDirection" AS "nested_0.startingPitchDirection", "hymn"."timeSignature" AS "nested_0.timeSignature", "hymn"."complexTimeSignature" AS "nested_0.complexTimeSignature", "hymn"."status" AS "nested_0.status", "hymn"."key" AS "nested_0.key", "hymn"."sku" AS "nested_0.sku", "hymn"."electronicVersion" AS "nested_0.electronicVersion", "hymn"."tuneName" AS "nested_0.tuneName", "hymn"."arrangement" AS "nested_0.arrangement", "hymn"."language" AS "nested_0.language", "hymn"."copyright" AS "nested_0.copyright", "hymn"."created" AS "nested_0.created", "hymn"."updated" AS "nested_0.updated", CASE WHEN b.bytes IS NOT NULL THEN 1 ELSE 0 END AS downloaded FROM hymns AS hymn LEFT JOIN bundles AS b ON hymn.id = b.hymnId',
-        variables: [],
-        readsFrom: {
-          bundles,
-          hymns,
-        }).asyncMap((QueryRow row) async => GetBundlesHashesResult(
-          bundleId: row.readNullable<int>('bundle_id'),
-          bundleHash: row.readNullable<String>('bundle_hash'),
-          bundleCreated: row.readNullable<DateTime>('bundle_created'),
-          bundleUpdated: row.readNullable<DateTime>('bundle_updated'),
-          hymn: await hymns.mapFromRow(row, tablePrefix: 'nested_0'),
-          downloaded: row.read<int>('downloaded'),
-        ));
-  }
-
-  Selectable<Bundle> getBundle(int id) {
-    return customSelect('SELECT * FROM bundles WHERE id = ?1', variables: [
-      Variable<int>(id)
-    ], readsFrom: {
-      bundles,
-    }).asyncMap(bundles.mapFromRow);
-  }
-
-  Selectable<Bundle> getBundlesByHymnId(String hymnId) {
-    return customSelect('SELECT * FROM bundles WHERE hymnId = ?1', variables: [
-      Variable<String>(hymnId)
-    ], readsFrom: {
-      bundles,
-    }).asyncMap(bundles.mapFromRow);
-  }
-
-  Selectable<Bundle> getBundleByHash(String hash) {
-    return customSelect('SELECT * FROM bundles WHERE hash = ?1', variables: [
-      Variable<String>(hash)
-    ], readsFrom: {
-      bundles,
-    }).asyncMap(bundles.mapFromRow);
-  }
-
-  Future<List<Bundle>> createBundle(String hymnId, String hash,
-      Uint8List? bytes, DateTime created, DateTime updated) {
-    return customWriteReturning(
-        'INSERT OR REPLACE INTO bundles (hymnId, hash, bytes, created, updated) VALUES (?1, ?2, ?3, ?4, ?5) RETURNING *',
-        variables: [
-          Variable<String>(hymnId),
-          Variable<String>(hash),
-          Variable<Uint8List>(bytes),
-          Variable<DateTime>(created),
-          Variable<DateTime>(updated)
-        ],
-        updates: {
-          bundles
-        }).then((rows) => Future.wait(rows.map(bundles.mapFromRow)));
-  }
-
-  Future<List<Bundle>> createNamedBundle(
-      String hymnId,
-      String hash,
-      String? file,
-      String? hymnTitle,
-      String? hymnNumber,
-      Uint8List? bytes,
-      DateTime created,
-      DateTime updated) {
-    return customWriteReturning(
-        'INSERT OR REPLACE INTO bundles (hymnId, hash, file, hymn_title, hymn_number, bytes, created, updated) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8) RETURNING *',
-        variables: [
-          Variable<String>(hymnId),
-          Variable<String>(hash),
-          Variable<String>(file),
-          Variable<String>(hymnTitle),
-          Variable<String>(hymnNumber),
-          Variable<Uint8List>(bytes),
-          Variable<DateTime>(created),
-          Variable<DateTime>(updated)
-        ],
-        updates: {
-          bundles
-        }).then((rows) => Future.wait(rows.map(bundles.mapFromRow)));
-  }
-
-  Future<int> updateBundle(
-      String hymnId, String hash, Uint8List? bytes, DateTime updated, int id) {
-    return customUpdate(
-      'UPDATE bundles SET hymnId = ?1, hash = ?2, bytes = ?3, updated = ?4 WHERE id = ?5',
-      variables: [
-        Variable<String>(hymnId),
-        Variable<String>(hash),
-        Variable<Uint8List>(bytes),
-        Variable<DateTime>(updated),
-        Variable<int>(id)
-      ],
-      updates: {bundles},
-      updateKind: UpdateKind.update,
-    );
-  }
-
-  Future<int> deleteBundle(int id) {
-    return customUpdate(
-      'DELETE FROM bundles WHERE id = ?1',
-      variables: [Variable<int>(id)],
-      updates: {bundles},
-      updateKind: UpdateKind.delete,
-    );
-  }
-
-  Future<int> removeAllDownloads() {
-    return customUpdate(
-      'UPDATE bundles SET bytes = NULL WHERE bytes IS NOT NULL',
-      variables: [],
-      updates: {bundles},
-      updateKind: UpdateKind.update,
-    );
-  }
-
   Selectable<Record> getRecordModels() {
     return customSelect('SELECT * FROM records', variables: [], readsFrom: {
       records,
@@ -13181,6 +13092,9 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         userPurchases,
         userLibrary,
         userPlaylistLibrary,
+        links,
+        linksIdxUrl,
+        linksIdxHymnId,
         localPlaylists,
         playlists,
         publicPlaylists,
@@ -13239,9 +13153,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         hymnsFtsInsert,
         hymnsFtsUpdate,
         hymnsFtsDelete,
-        bundles,
-        bundlesIdxHymnId,
-        bundlesDeleteHymn,
         userRecordsUsersDeleteTrigger,
         recordsCache,
         recordsFts,
@@ -13370,13 +13281,6 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('hymns_fts', kind: UpdateKind.insert),
-            ],
-          ),
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('hymns',
-                limitUpdateKind: UpdateKind.delete),
-            result: [
-              TableUpdate('bundles', kind: UpdateKind.delete),
             ],
           ),
           WritePropagation(
@@ -13633,23 +13537,6 @@ class GetHymnRowsResult {
     this.scriptures,
     this.portions,
     this.hymnals,
-  });
-}
-
-class GetBundlesHashesResult {
-  int? bundleId;
-  String? bundleHash;
-  DateTime? bundleCreated;
-  DateTime? bundleUpdated;
-  Hymn hymn;
-  int downloaded;
-  GetBundlesHashesResult({
-    this.bundleId,
-    this.bundleHash,
-    this.bundleCreated,
-    this.bundleUpdated,
-    required this.hymn,
-    required this.downloaded,
   });
 }
 

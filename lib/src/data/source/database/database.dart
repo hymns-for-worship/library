@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:archive/archive.dart';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/extensions/json1.dart';
-import 'package:sqlite_storage/sqlite_storage.dart';
 
 import '../../../domain/model/playlist_item.dart';
-import '../archive/zip.dart';
 import 'schema_versions.dart';
 export 'extension.dart';
 export 'sql/converters.dart';
@@ -18,7 +15,7 @@ typedef ParseRecord<T> = T Function(Record, Map<String, dynamic>);
 
 @DriftDatabase(include: {
   'sql/records.drift',
-  'sql/bundles.drift',
+  // 'sql/bundles.drift',
   'sql/hymns.drift',
   'sql/topics.drift',
   'sql/hymn_topics.drift',
@@ -34,6 +31,7 @@ typedef ParseRecord<T> = T Function(Record, Map<String, dynamic>);
   'sql/hymn_portions.drift',
   'sql/playlists.drift',
   // 'sql/playlist_items.drift',
+  'sql/hymn_links.drift',
   'sql/user_library.drift',
   'sql/user_purchases.drift',
   'sql/analytics.drift',
@@ -42,9 +40,7 @@ typedef ParseRecord<T> = T Function(Record, Map<String, dynamic>);
   'sql/users.drift',
 })
 class HfwDatabase extends _$HfwDatabase {
-  HfwDatabase(super.connection, this.storage);
-
-  final DriftStorage storage;
+  HfwDatabase(super.connection);
 
   @override
   int get schemaVersion => 2;
@@ -163,17 +159,5 @@ class HfwDatabase extends _$HfwDatabase {
   Stream<PlaylistItem?> getPlaylistItem(String playlistId, String id) {
     final items = getPlaylistItemsForPlaylist(playlistId);
     return items.map((e) => e.firstWhereOrNull((e) => e.id == id));
-  }
-}
-
-extension BundleUtils on Bundle {
-  Archive? toArchive() {
-    if (bytes == null) return null;
-    return extractZip(bytes!);
-  }
-
-  Future<Archive?> toArchiveAsync() async {
-    if (bytes == null) return null;
-    return extractZipAsync(bytes!);
   }
 }

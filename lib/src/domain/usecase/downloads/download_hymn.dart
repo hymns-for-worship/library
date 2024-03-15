@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:http/http.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
 import '../import_hymn.dart';
@@ -10,21 +11,23 @@ import 'get_versions.dart';
 
 class DownloadHymn {
   final HfwDatabase db;
+  final DriftStorage storage;
   final HfwStudio client;
   final Client http;
   // TODO: Import hymn links
-  late final importHymn = ImportHymn(db);
+  late final importHymn = ImportHymn(db, storage);
 
   DownloadHymn({
     required this.db,
+    required this.storage,
     required this.client,
     required this.http,
   });
 
   Stream<double> call(String hymnId, HymnalVersions versions) async* {
     yield 0.1;
-    final existing =
-        await db.storage.io.file('downloads/bundles/$hymnId.zip').metadata();
+    final file = storage.io.file('downloads/bundles/$hymnId.zip');
+    final existing = await file.metadata();
     final version = versions.hymns.firstWhereOrNull((e) => e.id == hymnId);
     // if (check) {
     //   //  Check for existing download
@@ -70,6 +73,7 @@ class DownloadHymn {
         yield current / total * 0.6 + 0.3;
         list.addAll(event);
       }
+
       final bytes = Uint8List.fromList(list);
       // await importHymn(bytes);
       await db.transaction(() async {
@@ -78,7 +82,9 @@ class DownloadHymn {
         //     await db.deleteBundle(item.id);
         //   }
         // }
-        await importHymn(bytes);
+        if (bytes.isNotEmpty) {
+          await importHymn(bytes);
+        }
         // await db.createBundle(
         //   hymnId,
         //   hash,

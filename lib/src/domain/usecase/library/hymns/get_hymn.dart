@@ -1,4 +1,6 @@
+import 'package:archive/archive.dart';
 import 'package:hfw_core/hfw_core.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 typedef GetHymnResult = ({
@@ -7,6 +9,7 @@ typedef GetHymnResult = ({
   List<Topic> topics,
   List<Scripture> scriptures,
   List<Portion> portions,
+  List<Link> links,
   List<GetStakeholdersWithRelationshipForHymnIdResult> stakeholders,
   Category? category,
   HymnArchive? archive,
@@ -14,18 +17,14 @@ typedef GetHymnResult = ({
 
 class GetHymn {
   final HfwDatabase db;
+  final DriftStorage storage;
 
-  GetHymn(this.db);
+  GetHymn(this.db, this.storage);
 
   Stream<GetHymnResult> call(String id) async* {
-    // final hymn = db //
-    //     .getHymn(id)
-    //     .watchSingleOrNull();
-    final hymn = db.storage.docs
-        .collection('hymns')
-        .doc(id)
-        .watch()
-        .map((e) => Hymn.fromJson(e?.data ?? {}));
+    final hymn = db //
+        .getHymn(id)
+        .watchSingleOrNull();
     final hymnal = db //
         .getHymnalByHymnId(id)
         .watchSingleOrNull();
@@ -41,10 +40,18 @@ class GetHymn {
     final stakeholders = db //
         .getStakeholdersWithRelationshipForHymnId(id)
         .watch();
+    final links = db //
+        .getLinkByHymn(id)
+        .watch();
     final category = db //
         .getCategoriesByHymnId(id)
         .watchSingleOrNull();
-    final bundle = db.getBundlesByHymnId(id).watchSingleOrNull();
+    final file = storage.io.file('downloads/bundles/$id.zip');
+    final bundle = file
+        .watchAsBytes()
+        .map((bytes) => bytes == null ? null : ZipDecoder().decodeBytes(bytes))
+        .map((archive) =>
+            archive == null ? null : HymnArchive(archive: archive, hymnId: id));
     // Combine streams of different types
     final first = hymn.cast<Object?>();
     final others = [
@@ -54,6 +61,7 @@ class GetHymn {
       portions,
       stakeholders,
       category,
+      links,
       bundle,
     ];
     final latest = first.combineLatestAll(others);
@@ -67,9 +75,8 @@ class GetHymn {
       final stakeholders =
           stream[5] as List<GetStakeholdersWithRelationshipForHymnIdResult>;
       final category = stream[6] as Category?;
-      final bundle = stream[7] as Bundle?;
-      final archive = await bundle?.toArchiveAsync().then((value) =>
-          value == null ? null : HymnArchive(archive: value, hymnId: id));
+      final links = stream[7] as List<Link>;
+      final archive = stream[8] as HymnArchive?;
       yield (
         hymn: hymn,
         hymnal: hymnal,
@@ -79,7 +86,17 @@ class GetHymn {
         stakeholders: stakeholders,
         archive: archive,
         category: category,
+        links: links,
       );
     }
   }
+}
+
+Stream<List<Object?>> combineAll(List<Stream<Object?>> streams) {
+  if (streams.isEmpty) return const Stream.empty();
+  if (streams.length == 1) {
+    return streams.first.map((e) => [e]);
+  }
+  final [first, ...rest] = streams;
+  return first.combineLatestAll(rest);
 }

@@ -1,25 +1,12 @@
 import 'package:sqlite_storage/sqlite_storage.dart';
 
-import '../../../../data/source/database/database.dart';
-
 class GetHymnBundles {
-  final HfwDatabase db;
+  final DriftStorage storage;
 
-  GetHymnBundles(this.db);
+  GetHymnBundles(this.storage);
 
-  Stream<List<(String, FileData)>> call() async* {
-    // final stream = db.getBundlesHashes().watch();
-    // await for (final result in stream) {
-    //   yield result;
-    // }
-    yield* db //
-        .storage
-        .io
-        .directory('downloads/bundles')
-        .list()
-        .watch()
-        .map((items) => items
-            .map((e) => (e.path.split('/').last.replaceAll('.zip', ''), e))
-            .toList());
+  Stream<List<FileData>> call() {
+    final dir = storage.io.directory('downloads/bundles/');
+    return dir.list().watch();
   }
 }

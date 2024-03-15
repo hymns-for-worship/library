@@ -1,3 +1,5 @@
+import 'package:sqlite_storage/sqlite_storage.dart';
+
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
 import '../../../data/utils/retry/future.dart';
@@ -5,10 +7,11 @@ import '../import_hymn.dart';
 
 class DownloadLibrary {
   final HfwDatabase db;
+  final DriftStorage storage;
   final HfwStudio client;
-  late final importHymn = ImportHymn(db);
+  late final importHymn = ImportHymn(db, storage);
 
-  DownloadLibrary(this.db, this.client);
+  DownloadLibrary(this.db, this.storage, this.client);
 
   Stream<double> call({bool Function()? cancel}) async* {
     yield 0;

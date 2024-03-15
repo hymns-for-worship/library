@@ -1,0 +1,55 @@
+-- Tables
+CREATE TABLE links (
+    id TEXT PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    url TEXT NOT NULL,
+    hymnId TEXT NOT NULL,
+    created DATETIME NOT NULL,
+    updated DATETIME NOT NULL,
+    UNIQUE (url, hymnId)
+);
+
+-- Indexes
+CREATE INDEX links_idx_url ON links (url);
+CREATE INDEX links_idx_hymnId ON links (hymnId);
+
+-- Queries
+searchLinks:
+SELECT * FROM links
+WHERE (title LIKE :query
+OR description LIKE :query)
+ORDER BY title ASC;
+
+getLinks:
+SELECT * FROM links
+ORDER BY title ASC;
+
+getLink:
+SELECT * FROM links
+WHERE id = :id;
+
+getLinkByHymn:
+SELECT * FROM links
+WHERE hymnId = :hymnId;
+
+createLink:
+INSERT OR REPLACE INTO links (id, title, description, url, hymnId, created, updated)
+VALUES (:id, :title, :description, :url, :hymnId, :created, :updated)
+RETURNING *;
+
+updateLink:
+UPDATE links
+SET title = :title, description = :description, hymnId = :hymnId, updated = :updated
+WHERE id = :id;
+
+deleteLink:
+DELETE FROM links
+WHERE id = :id;
+
+deleteLinkByHymn:
+DELETE FROM links
+WHERE hymnId = :hymnId;
+
+deleteLinks:
+DELETE FROM links;

@@ -38,13 +38,15 @@ dependencies:
     git:
       url: https://github.com/rodydavis/sqlite_storage
       path: packages/sqlite_storage
+  dart_mappable: ^4.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
   drift_dev: ^2.14.0
-  build_runner: ^2.4.7
+  build_runner: ^2.4.8
+  dart_mappable_builder: ^4.2.1
 
 flutter:
 

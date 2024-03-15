@@ -11,13 +11,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:sqlite_storage/sqlite_storage.dart';
 import 'package:xml/xml.dart';
 
-import '../../../data/source/database/database.dart';
-
 class GetVersions {
-  final HfwDatabase db;
-  const GetVersions(this.db);
+  // final HfwDatabase db;
+  final DriftStorage storage;
+  const GetVersions(this.storage);
 
   static const String _key = 'HymnalVersions';
   static const url =
@@ -52,15 +52,15 @@ class GetVersions {
   }
 
   Future<void> _save(String xml) async {
-    await db.storage.kv.$string.set(_key, xml);
+    await storage.kv.$string.set(_key, xml);
     await import(_parse(xml));
   }
 
   Future<void> import(HymnalVersions versions) async {
-    return db.transaction(() async {
+    return storage.transaction(() async {
       final now = DateTime.now().toIso8601String();
       for (final item in versions.hymns) {
-        final doc = db.storage.docs.collection('hymns').doc(item.id);
+        final doc = storage.docs.collection('hymns').doc(item.id);
         final snapshot = await doc.get();
         if (snapshot != null && snapshot.exists) continue;
         await doc.set({
@@ -79,7 +79,7 @@ class GetVersions {
   }
 
   Stream<HymnalVersions> call() async* {
-    final xml = await db.storage.kv.$string.get(_key);
+    final xml = await storage.kv.$string.get(_key);
     if (xml != null) {
       yield _parse(xml);
     } else {

@@ -1,16 +1,14 @@
 import 'dart:async';
 
-import '../../../data/source/database/database.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 
 class RemoveHymnDownload {
-  final HfwDatabase db;
+  final DriftStorage storage;
 
-  RemoveHymnDownload(this.db);
+  RemoveHymnDownload(this.storage);
 
   Future<void> call(String hymnId) async {
-    // Check for existing download
-    final bundle = await db.getBundlesByHymnId(hymnId).getSingleOrNull();
-    if (bundle == null) return;
-    await db.deleteBundle(bundle.id);
+    final file = storage.io.file('downloads/bundles/$hymnId.zip');
+    await file.delete();
   }
 }

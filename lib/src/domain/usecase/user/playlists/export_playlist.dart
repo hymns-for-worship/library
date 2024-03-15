@@ -1,17 +1,21 @@
 import 'dart:typed_data';
 
+import 'package:archive/archive.dart';
 import 'package:hfw_core/src/domain/model/defaults.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pptx/presentation.dart';
+import '../../../model/hymn_archive.dart';
 import '../../../model/playlist_item.dart';
 import '../../../model/template_options.dart';
 
 class ExportPlaylist {
   final HfwDatabase db;
+  final DriftStorage storage;
   final TemplateOptions options;
 
-  ExportPlaylist(this.db, this.options);
+  ExportPlaylist(this.db, this.storage, this.options);
 
   Future<List<PresentationSlide>> call(
     List<PlaylistItem> items, {
@@ -39,11 +43,18 @@ class ExportPlaylist {
       } else if (item.hymnId.valid) {
         final hymn = await db.getHymn(item.hymnId!).getSingleOrNull();
         if (hymn == null) continue;
-        final bundle = await db.getBundlesByHymnId(hymn.id).getSingleOrNull();
-        if (bundle == null || bundle.bytes == null) continue;
-        final archive = await bundle.toArchiveAsync();
-        if (archive == null) continue;
-        final images = archive.files.where((e) => e.name.endsWith('.png'));
+        final bytes = await storage.io
+            .file('downloads/bundles/${hymn.id}.zip')
+            .readAsBytes();
+        if (bytes == null) continue;
+        final hymnArchive = HymnArchive(
+          archive: ZipDecoder().decodeBytes(bytes),
+          hymnId: hymn.id,
+        );
+        final images = hymnArchive //
+            .archive
+            .files
+            .where((e) => e.name.endsWith('.png'));
         var parts = item.parts;
         if (parts.isEmpty) {
           final portions = await db.getPortionsByHymnId(item.hymnId!).get();

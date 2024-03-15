@@ -11,6 +11,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 
 import '../../../data/source/database/database.dart';
 import '../../../data/source/pocketbase/client.dart';
@@ -19,9 +20,10 @@ import '../import_hymn.dart';
 class GetLibrary {
   final SharedPreferences prefs;
   final HfwStudio pb;
+  final DriftStorage storage;
   final HfwDatabase db;
-  GetLibrary(this.prefs, this.db, this.pb);
-  late final importHymn = ImportHymn(db);
+  GetLibrary(this.prefs, this.db, this.storage, this.pb);
+  late final importHymn = ImportHymn(db, storage);
 
   static const String _key = 'HymnalsCheck';
   static const url =

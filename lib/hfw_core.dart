@@ -49,7 +49,6 @@ export 'src/domain/usecase/library/portions/get_portions.dart';
 export 'src/domain/usecase/import_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_hymn_rows.dart';
 export 'src/domain/usecase/library/hymns/get_hymn_bundles.dart';
-export 'src/domain/usecase/library/hymns/get_hymn_archive.dart';
 export 'src/domain/usecase/library/hymns/get_slides_for_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_music_for_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_top_hymns.dart';

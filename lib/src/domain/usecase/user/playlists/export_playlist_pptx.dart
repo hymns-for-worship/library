@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:file_saver/file_saver.dart';
+import 'package:sqlite_storage/sqlite_storage.dart';
 
 import '../../../../data/source/database/database.dart';
 import '../../../../data/source/pptx/presentation.dart';
@@ -9,10 +10,11 @@ import 'export_playlist.dart';
 
 class ExportPlaylistPptx {
   final HfwDatabase db;
+  final DriftStorage storage;
   final TemplateOptions options;
 
-  late final exporter = ExportPlaylist(db, options);
-  ExportPlaylistPptx(this.db, this.options);
+  late final exporter = ExportPlaylist(db, storage, options);
+  ExportPlaylistPptx(this.db, this.storage, this.options);
 
   Future<void> call(
     String userId,
