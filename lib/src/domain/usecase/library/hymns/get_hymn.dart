@@ -49,9 +49,15 @@ class GetHymn {
     final file = storage.io.file('downloads/bundles/$id.zip');
     final bundle = file
         .watchAsBytes()
-        .map((bytes) => bytes == null ? null : ZipDecoder().decodeBytes(bytes))
-        .map((archive) =>
-            archive == null ? null : HymnArchive(archive: archive, hymnId: id));
+        .map((bytes) =>
+            bytes == null ? null : (bytes, ZipDecoder().decodeBytes(bytes)))
+        .map((archive) => archive == null
+            ? null
+            : HymnArchive(
+                archive: archive.$2,
+                bytes: archive.$1,
+                hymnId: id,
+              ));
     // Combine streams of different types
     final first = hymn.cast<Object?>();
     final others = [

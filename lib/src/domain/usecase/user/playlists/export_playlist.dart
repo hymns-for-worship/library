@@ -48,6 +48,7 @@ class ExportPlaylist {
             .readAsBytes();
         if (bytes == null) continue;
         final hymnArchive = HymnArchive(
+          bytes: bytes,
           archive: ZipDecoder().decodeBytes(bytes),
           hymnId: hymn.id,
         );

@@ -5,11 +5,13 @@ import 'package:archive/archive.dart';
 import 'bundle_file.dart';
 
 class HymnArchive {
+  final Uint8List bytes;
   final Archive archive;
   final String hymnId;
 
   HymnArchive({
     required this.archive,
+    required this.bytes,
     required this.hymnId,
   });
 
