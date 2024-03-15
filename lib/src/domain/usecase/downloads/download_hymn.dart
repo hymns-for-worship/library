@@ -73,30 +73,13 @@ class DownloadHymn {
         yield current / total * 0.6 + 0.3;
         list.addAll(event);
       }
-
-      final bytes = Uint8List.fromList(list);
-      // await importHymn(bytes);
-      await db.transaction(() async {
-        // if (existing.isNotEmpty) {
-        //   for (final item in existing) {
-        //     await db.deleteBundle(item.id);
-        //   }
-        // }
-        if (bytes.isNotEmpty) {
-          await importHymn(bytes);
-
-          await storage.io
-              .file('downloads/bundles/$hymnId.zip')
-              .writeAsBytes(bytes);
-        }
-        // await db.createBundle(
-        //   hymnId,
-        //   hash,
-        //   bytes,
-        //   DateTime.parse(result.created),
-        //   DateTime.parse(result.updated),
-        // );
-      });
+      if (list.isNotEmpty) {
+        final bytes = Uint8List.fromList(list);
+        await db.transaction(() async => await importHymn(bytes));
+        await storage.io
+            .file('downloads/bundles/$hymnId.zip')
+            .writeAsBytes(bytes);
+      }
     } else {
       throw Exception(
         'Error downloading hymn: $hymnId ${response.statusCode}}',
