@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:sqlite_storage/sqlite_storage.dart';
 
 import 'package:xml/xml.dart';
@@ -47,17 +47,19 @@ class ImportHymn {
   final DriftStorage storage;
   ImportHymn(this.db, this.storage);
 
-  Future<void> call(Uint8List bytes) async {
+  Future<void> call(Uint8List bytes) {
     // TODO: Need to create bundle record model for database to render in list
-    await db.transaction(() async {
-      final archive = await extractZipAsync(bytes);
+    return db.transaction(() async {
+      final archive = extractZip(bytes);
 
       final infos = archive //
           .files
           .where((e) => e.name.endsWith('Information.hixml'));
+
       if (infos.isEmpty) {
         throw Exception('No information.hixml file found');
       }
+
       final infoBytes = infos.first.content as List<int>;
       final str = String.fromCharCodes(infoBytes);
 
@@ -66,7 +68,6 @@ class ImportHymn {
       await storage.io
           .file('downloads/bundles/$hymnId.zip')
           .writeAsBytes(bytes);
-      // await db.storage.io.file('hymns/$hymnId.hixml').writeAsString(str);
     });
   }
 
@@ -86,11 +87,9 @@ class ImportHymn {
       var i = 0;
       for (final hymn in hymns) {
         number = hymn.attr('number');
-        if (kDebugMode) {
-          print(
-            'importing $number from ${hymnal.attr('alias')} - ${++i}/${hymns.length}',
-          );
-        }
+        print(
+          'importing $number from ${hymnal.attr('alias')} - ${++i}/${hymns.length}',
+        );
         final id = hymn.attr('id');
         {
           // Hymn
