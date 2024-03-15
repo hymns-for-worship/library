@@ -84,6 +84,10 @@ class DownloadHymn {
         // }
         if (bytes.isNotEmpty) {
           await importHymn(bytes);
+
+          await storage.io
+              .file('downloads/bundles/$hymnId.zip')
+              .writeAsBytes(bytes);
         }
         // await db.createBundle(
         //   hymnId,
