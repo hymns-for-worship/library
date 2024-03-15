@@ -75,10 +75,10 @@ class DownloadHymn {
       }
       if (list.isNotEmpty) {
         final bytes = Uint8List.fromList(list);
-        await db.transaction(() async => await importHymn(bytes));
         await storage.io
             .file('downloads/bundles/$hymnId.zip')
             .writeAsBytes(bytes);
+        await db.transaction(() async => await importHymn(bytes));
       }
     } else {
       throw Exception(

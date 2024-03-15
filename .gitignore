@@ -87,3 +87,5 @@ local/
 pubspec.lock
 macos/fastlane/report.xml
 static/
+
+assets/
