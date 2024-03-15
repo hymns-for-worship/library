@@ -1774,8 +1774,866 @@ class Shape25 extends i0.VersionedVirtualTable {
 i1.GeneratedColumn<String> _column_107(String aliasedName) =>
     i1.GeneratedColumn<String>('data', aliasedName, false,
         type: i1.DriftSqlType.string, $customConstraints: '');
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    users,
+    requestCache,
+    requestCacheIdxUrl,
+    offlineQueue,
+    offlineQueueFiles,
+    offlineQueueDeleteTrigger,
+    offlineQueueUsersDeleteTrigger,
+    records,
+    userRecords,
+    analytics,
+    userPurchases,
+    userLibrary,
+    userPlaylistLibrary,
+    links,
+    linksIdxUrl,
+    linksIdxHymnId,
+    localPlaylists,
+    playlists,
+    publicPlaylists,
+    hymnPortions,
+    hymnPortionsIdxHymnId,
+    hymnPortionsIdxPortionId,
+    hymns,
+    hymnPortionsDeleteHymn,
+    portions,
+    hymnPortionsDeletePortion,
+    portionsIdxName,
+    portionsIdxLyrics,
+    portionsIdxHymnPortionId,
+    hymnHymnals,
+    hymnHymnalsIdxHymnId,
+    hymnHymnalsIdxHymnalId,
+    hymnHymnalsDeleteHymn,
+    hymnals,
+    hymnHymnalsDeleteHymnal,
+    hymnalsIdxName,
+    hymnalsIdxAlias,
+    hymnCategories,
+    hymnCategoriesIdxHymnId,
+    hymnCategoriesIdxCategoryId,
+    hymnCategoriesDeleteHymn,
+    categories,
+    hymnCategoriesDeleteCategory,
+    categoriesIdxName,
+    categoriesIdxDescription,
+    hymnScriptures,
+    hymnScripturesIdxHymnId,
+    hymnScripturesIdxScriptureId,
+    hymnScripturesDeleteHymn,
+    scriptures,
+    hymnScripturesDeleteScripture,
+    scripturesIdxName,
+    hymnStakeholders,
+    hymnStakeholdersIdxHymnId,
+    hymnStakeholdersIdxStakeholderId,
+    hymnStakeholdersIdxRelationship,
+    hymnStakeholdersDeleteHymn,
+    stakeholders,
+    hymnStakeholdersDeleteStakeholder,
+    stakeholdersIdxName,
+    hymnTopics,
+    hymnTopicsIdxHymnId,
+    hymnTopicsIdxTopicId,
+    hymnTopicsDeleteHymn,
+    topics,
+    hymnTopicsDeleteTopic,
+    topicsIdxName,
+    topicsIdxAlias,
+    hymnsIdxTitle,
+    hymnsIdxNumber,
+    hymnsFts,
+    hymnsFtsInsert,
+    hymnsFtsUpdate,
+    hymnsFtsDelete,
+    userRecordsUsersDeleteTrigger,
+    recordsCache,
+    recordsFts,
+    recordsFtsInsert,
+    recordsFtsUpdate,
+    recordsFtsDelete,
+    recordsIdxData,
+  ];
+  late final Shape0 users = Shape0(
+      source: i0.VersionedTable(
+        entityName: 'users',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(id, email, uid)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_2,
+          _column_3,
+          _column_4,
+          _column_5,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape1 requestCache = Shape1(
+      source: i0.VersionedTable(
+        entityName: 'request_cache',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(url, headers)',
+        ],
+        columns: [
+          _column_8,
+          _column_9,
+          _column_10,
+          _column_11,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index requestCacheIdxUrl = i1.Index('request_cache_idx_url',
+      'CREATE INDEX request_cache_idx_url ON request_cache (url)');
+  late final Shape2 offlineQueue = Shape2(
+      source: i0.VersionedTable(
+        entityName: 'offline_queue',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [],
+        columns: [
+          _column_12,
+          _column_9,
+          _column_13,
+          _column_14,
+          _column_10,
+          _column_15,
+          _column_16,
+          _column_17,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape3 offlineQueueFiles = Shape3(
+      source: i0.VersionedTable(
+        entityName: 'offline_queue_files',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [],
+        columns: [
+          _column_12,
+          _column_18,
+          _column_19,
+          _column_20,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger offlineQueueDeleteTrigger = i1.Trigger(
+      'CREATE TRIGGER offline_queue_delete_trigger AFTER DELETE ON offline_queue BEGIN DELETE FROM offline_queue_files WHERE offline_queue_id = OLD.id;END',
+      'offline_queue_delete_trigger');
+  final i1.Trigger offlineQueueUsersDeleteTrigger = i1.Trigger(
+      'CREATE TRIGGER offline_queue_users_delete_trigger AFTER DELETE ON users BEGIN DELETE FROM offline_queue WHERE user = OLD.id;END',
+      'offline_queue_users_delete_trigger');
+  late final Shape4 records = Shape4(
+      source: i0.VersionedTable(
+        entityName: 'records',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(id, collection_name)',
+        ],
+        columns: [
+          _column_21,
+          _column_22,
+          _column_23,
+          _column_24,
+          _column_25,
+          _column_26,
+          _column_27,
+          _column_28,
+          _column_29,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape5 userRecords = Shape5(
+      source: i0.VersionedView(
+        entityName: 'user_records',
+        createViewStmt:
+            'CREATE VIEW user_records AS SELECT *, CASE WHEN json_extract(data, \'\$.user\') IS NOT NULL THEN CAST(json_extract(data, \'\$.user\') AS TEXT) ELSE NULL END AS user, CASE WHEN json_extract(data, \'\$.uid\') IS NOT NULL THEN CAST(json_extract(data, \'\$.uid\') AS TEXT) ELSE NULL END AS uid FROM records;',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape6 analytics = Shape6(
+      source: i0.VersionedView(
+        entityName: 'analytics',
+        createViewStmt:
+            'CREATE VIEW analytics AS SELECT *, CAST(json_extract(data, \'\$.type\') AS TEXT) AS type, CASE WHEN json_extract(data, \'\$.metadata\') IS NOT NULL THEN CAST(json_extract(data, \'\$.metadata\') AS TEXT) ELSE NULL END AS metadata, CASE WHEN json_extract(data, \'\$.version\') IS NOT NULL THEN CAST(json_extract(data, \'\$.version\') AS TEXT) ELSE NULL END AS version, CASE WHEN json_extract(data, \'\$.platform\') IS NOT NULL THEN CAST(json_extract(data, \'\$.platform\') AS TEXT) ELSE NULL END AS platform FROM user_records WHERE collection_name = \'analytics\';',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_41,
+          _column_42,
+          _column_43,
+          _column_44,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape7 userPurchases = Shape7(
+      source: i0.VersionedView(
+        entityName: 'user_purchases',
+        createViewStmt:
+            'CREATE VIEW user_purchases AS SELECT *, CAST(json_extract(data, \'\$.product_id\') AS TEXT) AS product_id, CASE WHEN json_extract(data, \'\$.platform\') IS NOT NULL THEN CAST(json_extract(data, \'\$.platform\') AS TEXT) ELSE NULL END AS platform, CASE WHEN json_extract(data, \'\$.amount\') IS NOT NULL THEN CAST(json_extract(data, \'\$.amount\') AS REAL) ELSE NULL END AS amount, CASE WHEN json_extract(data, \'\$.purchase_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.purchase_id\') AS TEXT) ELSE NULL END AS purchase_id FROM user_records WHERE collection_name = \'user_purchases\';',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_45,
+          _column_44,
+          _column_46,
+          _column_47,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape8 userLibrary = Shape8(
+      source: i0.VersionedView(
+        entityName: 'user_library',
+        createViewStmt:
+            'CREATE VIEW user_library AS SELECT *, CASE WHEN json_extract(data, \'\$.hymn_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.hymn_id\') AS TEXT) ELSE NULL END AS hymn_id, CASE WHEN json_extract(data, \'\$.playlist_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.playlist_id\') AS TEXT) ELSE NULL END AS playlist_id, CASE WHEN json_extract(data, \'\$.topic_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.topic_id\') AS TEXT) ELSE NULL END AS topic_id, CASE WHEN json_extract(data, \'\$.stakeholder_id\') IS NOT NULL THEN CAST(json_extract(data, \'\$.stakeholder_id\') AS TEXT) ELSE NULL END AS stakeholder_id FROM user_records WHERE collection_name = \'user_library\';',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_48,
+          _column_49,
+          _column_50,
+          _column_51,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape9 userPlaylistLibrary = Shape9(
+      source: i0.VersionedView(
+        entityName: 'user_playlist_library',
+        createViewStmt:
+            'CREATE VIEW user_playlist_library AS SELECT *, CAST(json_extract(data, \'\$.playlist_id\') AS TEXT) AS playlist_id FROM user_records WHERE collection_name = \'user_library\' AND json_extract(data, \'\$.playlist_id\') IS NOT NULL;',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_52,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape26 links = Shape26(
+      source: i0.VersionedTable(
+        entityName: 'links',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(url, hymnId)',
+        ],
+        columns: [
+          _column_0,
+          _column_61,
+          _column_84,
+          _column_9,
+          _column_60,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index linksIdxUrl =
+      i1.Index('links_idx_url', 'CREATE INDEX links_idx_url ON links (url)');
+  final i1.Index linksIdxHymnId = i1.Index(
+      'links_idx_hymnId', 'CREATE INDEX links_idx_hymnId ON links (hymnId)');
+  late final Shape10 localPlaylists = Shape10(
+      source: i0.VersionedView(
+        entityName: 'local_playlists',
+        createViewStmt:
+            'CREATE VIEW local_playlists AS SELECT *, CAST(json_extract(data, \'\$.name\') AS TEXT) AS name, CASE WHEN json_extract(data, \'\$.description\') IS NOT NULL THEN CAST(json_extract(data, \'\$.description\') AS TEXT) ELSE NULL END AS description, CASE WHEN json_extract(data, \'\$.public\') IS NOT NULL THEN CAST(json_extract(data, \'\$.public\') AS INT) ELSE NULL END AS public, CASE WHEN json_extract(data, \'\$.medly\') IS NOT NULL THEN CAST(json_extract(data, \'\$.medly\') AS INT) ELSE NULL END AS medly, CASE WHEN json_extract(data, \'\$.supplement\') IS NOT NULL THEN CAST(json_extract(data, \'\$.supplement\') AS INT) ELSE NULL END AS supplement, CASE WHEN json_extract(data, \'\$.event\') IS NOT NULL THEN CAST(json_extract(data, \'\$.event\') AS TEXT) ELSE NULL END AS event FROM user_records WHERE collection_name = \'public_playlists\' OR collection_name = \'playlists\';',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_53,
+          _column_54,
+          _column_55,
+          _column_56,
+          _column_57,
+          _column_58,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape10 playlists = Shape10(
+      source: i0.VersionedView(
+        entityName: 'playlists',
+        createViewStmt:
+            'CREATE VIEW playlists AS SELECT * FROM local_playlists WHERE collection_name = \'playlists\';',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_53,
+          _column_54,
+          _column_55,
+          _column_56,
+          _column_57,
+          _column_58,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape10 publicPlaylists = Shape10(
+      source: i0.VersionedView(
+        entityName: 'public_playlists',
+        createViewStmt:
+            'CREATE VIEW public_playlists AS SELECT * FROM local_playlists WHERE collection_name = \'public_playlists\' OR(collection_name = \'playlists\' AND public = 1);',
+        columns: [
+          _column_30,
+          _column_31,
+          _column_32,
+          _column_33,
+          _column_34,
+          _column_35,
+          _column_36,
+          _column_37,
+          _column_38,
+          _column_39,
+          _column_40,
+          _column_53,
+          _column_54,
+          _column_55,
+          _column_56,
+          _column_57,
+          _column_58,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape11 hymnPortions = Shape11(
+      source: i0.VersionedTable(
+        entityName: 'hymn_portions',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(portionId, hymnId)',
+        ],
+        columns: [
+          _column_12,
+          _column_59,
+          _column_60,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index hymnPortionsIdxHymnId = i1.Index('hymn_portions_idx_hymnId',
+      'CREATE INDEX hymn_portions_idx_hymnId ON hymn_portions (hymnId)');
+  final i1.Index hymnPortionsIdxPortionId = i1.Index(
+      'hymn_portions_idx_portionId',
+      'CREATE INDEX hymn_portions_idx_portionId ON hymn_portions (portionId)');
+  late final Shape12 hymns = Shape12(
+      source: i0.VersionedTable(
+        entityName: 'hymns',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(title, number)',
+        ],
+        columns: [
+          _column_0,
+          _column_61,
+          _column_62,
+          _column_63,
+          _column_64,
+          _column_65,
+          _column_66,
+          _column_67,
+          _column_68,
+          _column_69,
+          _column_70,
+          _column_71,
+          _column_72,
+          _column_73,
+          _column_74,
+          _column_75,
+          _column_76,
+          _column_77,
+          _column_78,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnPortionsDeleteHymn = i1.Trigger(
+      'CREATE TRIGGER hymn_portions_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_portions WHERE hymnId = old.id;END',
+      'hymn_portions_delete_hymn');
+  late final Shape13 portions = Shape13(
+      source: i0.VersionedTable(
+        entityName: 'portions',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(name, lyrics, hymnPortionId)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_79,
+          _column_80,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnPortionsDeletePortion = i1.Trigger(
+      'CREATE TRIGGER hymn_portions_delete_portion AFTER DELETE ON portions BEGIN DELETE FROM hymn_portions WHERE portionId = old.id;END',
+      'hymn_portions_delete_portion');
+  final i1.Index portionsIdxName = i1.Index(
+      'portions_idx_name', 'CREATE INDEX portions_idx_name ON portions (name)');
+  final i1.Index portionsIdxLyrics = i1.Index('portions_idx_lyrics',
+      'CREATE INDEX portions_idx_lyrics ON portions (lyrics)');
+  final i1.Index portionsIdxHymnPortionId = i1.Index(
+      'portions_idx_hymnPortionId',
+      'CREATE INDEX portions_idx_hymnPortionId ON portions (hymnPortionId)');
+  late final Shape14 hymnHymnals = Shape14(
+      source: i0.VersionedTable(
+        entityName: 'hymn_hymnals',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(hymnalId, hymnId)',
+        ],
+        columns: [
+          _column_12,
+          _column_81,
+          _column_60,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index hymnHymnalsIdxHymnId = i1.Index('hymn_hymnals_idx_hymnId',
+      'CREATE INDEX hymn_hymnals_idx_hymnId ON hymn_hymnals (hymnId)');
+  final i1.Index hymnHymnalsIdxHymnalId = i1.Index('hymn_hymnals_idx_hymnalId',
+      'CREATE INDEX hymn_hymnals_idx_hymnalId ON hymn_hymnals (hymnalId)');
+  final i1.Trigger hymnHymnalsDeleteHymn = i1.Trigger(
+      'CREATE TRIGGER hymn_hymnals_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_hymnals WHERE hymnId = old.id;END',
+      'hymn_hymnals_delete_hymn');
+  late final Shape15 hymnals = Shape15(
+      source: i0.VersionedTable(
+        entityName: 'hymnals',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(name, alias)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_82,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnHymnalsDeleteHymnal = i1.Trigger(
+      'CREATE TRIGGER hymn_hymnals_delete_hymnal AFTER DELETE ON hymnals BEGIN DELETE FROM hymn_hymnals WHERE hymnalId = old.id;END',
+      'hymn_hymnals_delete_hymnal');
+  final i1.Index hymnalsIdxName = i1.Index(
+      'hymnals_idx_name', 'CREATE INDEX hymnals_idx_name ON hymnals (name)');
+  final i1.Index hymnalsIdxAlias = i1.Index(
+      'hymnals_idx_alias', 'CREATE INDEX hymnals_idx_alias ON hymnals (alias)');
+  late final Shape16 hymnCategories = Shape16(
+      source: i0.VersionedTable(
+        entityName: 'hymn_categories',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(categoryId, hymnId)',
+        ],
+        columns: [
+          _column_12,
+          _column_83,
+          _column_60,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index hymnCategoriesIdxHymnId = i1.Index(
+      'hymn_categories_idx_hymnId',
+      'CREATE INDEX hymn_categories_idx_hymnId ON hymn_categories (hymnId)');
+  final i1.Index hymnCategoriesIdxCategoryId = i1.Index(
+      'hymn_categories_idx_categoryId',
+      'CREATE INDEX hymn_categories_idx_categoryId ON hymn_categories (categoryId)');
+  final i1.Trigger hymnCategoriesDeleteHymn = i1.Trigger(
+      'CREATE TRIGGER hymn_categories_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_categories WHERE hymnId = old.id;END',
+      'hymn_categories_delete_hymn');
+  late final Shape17 categories = Shape17(
+      source: i0.VersionedTable(
+        entityName: 'categories',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(name)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_84,
+          _column_85,
+          _column_86,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnCategoriesDeleteCategory = i1.Trigger(
+      'CREATE TRIGGER hymn_categories_delete_category AFTER DELETE ON categories BEGIN DELETE FROM hymn_categories WHERE categoryId = old.id;END',
+      'hymn_categories_delete_category');
+  final i1.Index categoriesIdxName = i1.Index('categories_idx_name',
+      'CREATE INDEX categories_idx_name ON categories (name)');
+  final i1.Index categoriesIdxDescription = i1.Index(
+      'categories_idx_description',
+      'CREATE INDEX categories_idx_description ON categories (description)');
+  late final Shape18 hymnScriptures = Shape18(
+      source: i0.VersionedTable(
+        entityName: 'hymn_scriptures',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(scriptureId, hymnId)',
+        ],
+        columns: [
+          _column_12,
+          _column_87,
+          _column_60,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index hymnScripturesIdxHymnId = i1.Index(
+      'hymn_scriptures_idx_hymnId',
+      'CREATE INDEX hymn_scriptures_idx_hymnId ON hymn_scriptures (hymnId)');
+  final i1.Index hymnScripturesIdxScriptureId = i1.Index(
+      'hymn_scriptures_idx_scriptureId',
+      'CREATE INDEX hymn_scriptures_idx_scriptureId ON hymn_scriptures (scriptureId)');
+  final i1.Trigger hymnScripturesDeleteHymn = i1.Trigger(
+      'CREATE TRIGGER hymn_scriptures_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_scriptures WHERE hymnId = old.id;END',
+      'hymn_scriptures_delete_hymn');
+  late final Shape19 scriptures = Shape19(
+      source: i0.VersionedTable(
+        entityName: 'scriptures',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(name)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnScripturesDeleteScripture = i1.Trigger(
+      'CREATE TRIGGER hymn_scriptures_delete_scripture AFTER DELETE ON scriptures BEGIN DELETE FROM hymn_scriptures WHERE scriptureId = old.id;END',
+      'hymn_scriptures_delete_scripture');
+  final i1.Index scripturesIdxName = i1.Index('scriptures_idx_name',
+      'CREATE INDEX scriptures_idx_name ON scriptures (name)');
+  late final Shape20 hymnStakeholders = Shape20(
+      source: i0.VersionedTable(
+        entityName: 'hymn_stakeholders',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(stakeholderId, hymnId, relationship)',
+        ],
+        columns: [
+          _column_12,
+          _column_88,
+          _column_60,
+          _column_89,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index hymnStakeholdersIdxHymnId = i1.Index(
+      'hymn_stakeholders_idx_hymnId',
+      'CREATE INDEX hymn_stakeholders_idx_hymnId ON hymn_stakeholders (hymnId)');
+  final i1.Index hymnStakeholdersIdxStakeholderId = i1.Index(
+      'hymn_stakeholders_idx_stakeholderId',
+      'CREATE INDEX hymn_stakeholders_idx_stakeholderId ON hymn_stakeholders (stakeholderId)');
+  final i1.Index hymnStakeholdersIdxRelationship = i1.Index(
+      'hymn_stakeholders_idx_relationship',
+      'CREATE INDEX hymn_stakeholders_idx_relationship ON hymn_stakeholders (relationship)');
+  final i1.Trigger hymnStakeholdersDeleteHymn = i1.Trigger(
+      'CREATE TRIGGER hymn_stakeholders_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_stakeholders WHERE hymnId = old.id;END',
+      'hymn_stakeholders_delete_hymn');
+  late final Shape19 stakeholders = Shape19(
+      source: i0.VersionedTable(
+        entityName: 'stakeholders',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(name)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnStakeholdersDeleteStakeholder = i1.Trigger(
+      'CREATE TRIGGER hymn_stakeholders_delete_stakeholder AFTER DELETE ON stakeholders BEGIN DELETE FROM hymn_stakeholders WHERE stakeholderId = old.id;END',
+      'hymn_stakeholders_delete_stakeholder');
+  final i1.Index stakeholdersIdxName = i1.Index('stakeholders_idx_name',
+      'CREATE INDEX stakeholders_idx_name ON stakeholders (name)');
+  late final Shape21 hymnTopics = Shape21(
+      source: i0.VersionedTable(
+        entityName: 'hymn_topics',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(topicId, hymnId)',
+        ],
+        columns: [
+          _column_12,
+          _column_90,
+          _column_60,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Index hymnTopicsIdxHymnId = i1.Index('hymn_topics_idx_hymnId',
+      'CREATE INDEX hymn_topics_idx_hymnId ON hymn_topics (hymnId)');
+  final i1.Index hymnTopicsIdxTopicId = i1.Index('hymn_topics_idx_topicId',
+      'CREATE INDEX hymn_topics_idx_topicId ON hymn_topics (topicId)');
+  final i1.Trigger hymnTopicsDeleteHymn = i1.Trigger(
+      'CREATE TRIGGER hymn_topics_delete_hymn AFTER DELETE ON hymns BEGIN DELETE FROM hymn_topics WHERE hymnId = old.id;END',
+      'hymn_topics_delete_hymn');
+  late final Shape15 topics = Shape15(
+      source: i0.VersionedTable(
+        entityName: 'topics',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(name)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_82,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnTopicsDeleteTopic = i1.Trigger(
+      'CREATE TRIGGER hymn_topics_delete_topic AFTER DELETE ON topics BEGIN DELETE FROM hymn_topics WHERE topicId = old.id;END',
+      'hymn_topics_delete_topic');
+  final i1.Index topicsIdxName = i1.Index(
+      'topics_idx_name', 'CREATE INDEX topics_idx_name ON topics (name)');
+  final i1.Index topicsIdxAlias = i1.Index(
+      'topics_idx_alias', 'CREATE INDEX topics_idx_alias ON topics (alias)');
+  final i1.Index hymnsIdxTitle = i1.Index(
+      'hymns_idx_title', 'CREATE INDEX hymns_idx_title ON hymns (title)');
+  final i1.Index hymnsIdxNumber = i1.Index(
+      'hymns_idx_number', 'CREATE INDEX hymns_idx_number ON hymns (number)');
+  late final Shape22 hymnsFts = Shape22(
+      source: i0.VersionedVirtualTable(
+        entityName: 'hymns_fts',
+        moduleAndArgs:
+            'fts5(title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature, content=hymns, content_rowid=id)',
+        columns: [
+          _column_91,
+          _column_92,
+          _column_93,
+          _column_94,
+          _column_95,
+          _column_96,
+          _column_97,
+          _column_98,
+          _column_99,
+          _column_100,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger hymnsFtsInsert = i1.Trigger(
+      'CREATE TRIGGER hymns_fts_insert AFTER INSERT ON hymns BEGIN INSERT INTO hymns_fts ("rowid", title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature) VALUES (new."ROWID", new.title, new.number, new.tuneName, new.startingKey, new.beatPattern, new.startingPitch, new.startingBeat, new.startingPitchDirection, new.timeSignature, new.complexTimeSignature);END',
+      'hymns_fts_insert');
+  final i1.Trigger hymnsFtsUpdate = i1.Trigger(
+      'CREATE TRIGGER hymns_fts_update AFTER UPDATE ON hymns BEGIN UPDATE hymns_fts SET title = new.title, number = new.number, tuneName = new.tuneName, startingKey = new.startingKey, beatPattern = new.beatPattern, startingPitch = new.startingPitch, startingBeat = new.startingBeat, startingPitchDirection = new.startingPitchDirection, timeSignature = new.timeSignature, complexTimeSignature = new.complexTimeSignature WHERE "rowid" = old."ROWID";END',
+      'hymns_fts_update');
+  final i1.Trigger hymnsFtsDelete = i1.Trigger(
+      'CREATE TRIGGER hymns_fts_delete AFTER DELETE ON hymns BEGIN INSERT INTO hymns_fts (hymns_fts, "rowid", title, number, tuneName, startingKey, beatPattern, startingPitch, startingBeat, startingPitchDirection, timeSignature, complexTimeSignature) VALUES (\'delete\', old."ROWID", old.title, old.number, old.tuneName, old.startingKey, old.beatPattern, old.startingPitch, old.startingBeat, old.startingPitchDirection, old.timeSignature, old.complexTimeSignature);END',
+      'hymns_fts_delete');
+  final i1.Trigger userRecordsUsersDeleteTrigger = i1.Trigger(
+      'CREATE TRIGGER user_records_users_delete_trigger AFTER DELETE ON users BEGIN DELETE FROM user_records WHERE user = OLD.id;END',
+      'user_records_users_delete_trigger');
+  late final Shape24 recordsCache = Shape24(
+      source: i0.VersionedTable(
+        entityName: 'records_cache',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(collection)',
+        ],
+        columns: [
+          _column_12,
+          _column_106,
+          _column_28,
+          _column_6,
+          _column_7,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape25 recordsFts = Shape25(
+      source: i0.VersionedVirtualTable(
+        entityName: 'records_fts',
+        moduleAndArgs: 'fts5(data, content=records, content_rowid=id)',
+        columns: [
+          _column_107,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  final i1.Trigger recordsFtsInsert = i1.Trigger(
+      'CREATE TRIGGER records_fts_insert AFTER INSERT ON records BEGIN INSERT INTO records_fts ("rowid", data) VALUES (new."ROWID", new.data);END',
+      'records_fts_insert');
+  final i1.Trigger recordsFtsUpdate = i1.Trigger(
+      'CREATE TRIGGER records_fts_update AFTER UPDATE ON records BEGIN UPDATE records_fts SET data = new.data WHERE "rowid" = old."ROWID";END',
+      'records_fts_update');
+  final i1.Trigger recordsFtsDelete = i1.Trigger(
+      'CREATE TRIGGER records_fts_delete AFTER DELETE ON records BEGIN INSERT INTO records_fts (records_fts, "rowid", data) VALUES (\'delete\', old."ROWID", old.data);END',
+      'records_fts_delete');
+  final i1.Index recordsIdxData = i1.Index(
+      'records_idx_data', 'CREATE INDEX records_idx_data ON records (data)');
+}
+
+class Shape26 extends i0.VersionedTable {
+  Shape26({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get title =>
+      columnsByName['title']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get description =>
+      columnsByName['description']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get url =>
+      columnsByName['url']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get hymnId =>
+      columnsByName['hymnId']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<DateTime> get created =>
+      columnsByName['created']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get updated =>
+      columnsByName['updated']! as i1.GeneratedColumn<DateTime>;
+}
+
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -1784,6 +2642,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -1792,8 +2655,10 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) =>
     i0.VersionedSchema.stepByStepHelper(
         step: migrationSteps(
       from1To2: from1To2,
+      from2To3: from2To3,
     ));

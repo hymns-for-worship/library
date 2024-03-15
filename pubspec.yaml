@@ -52,4 +52,6 @@ flutter:
 
 scripts:
   build: dart pub run build_runner build
-  db_migration: dart run drift_dev schema dump lib/src/data/source/database/database.dart drift_schemas/
+  db_migration:
+    - dart run drift_dev schema dump lib/src/data/source/database/database.dart drift_schemas/
+    - dart run drift_dev schema steps drift_schemas/ lib/src/data/source/database/schema_versions.dart

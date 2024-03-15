@@ -55,6 +55,9 @@ class HfwDatabase extends _$HfwDatabase {
         from1To2: (m, schema) async {
           await m.recreateAllViews();
         },
+        from2To3: (m, schema) async {
+          await m.recreateAllViews();
+        },
       ),
     );
   }
