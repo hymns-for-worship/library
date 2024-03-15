@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
+import 'package:crypto/crypto.dart';
 
 import 'bundle_file.dart';
 
@@ -8,6 +9,7 @@ class HymnArchive {
   final Uint8List bytes;
   final Archive archive;
   final String hymnId;
+  late final String hash = sha256.convert(bytes).toString();
 
   HymnArchive({
     required this.archive,
