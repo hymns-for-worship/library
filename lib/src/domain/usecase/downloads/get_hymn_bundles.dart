@@ -5,7 +5,7 @@ class GetHymnBundles {
 
   GetHymnBundles(this.storage);
 
-  Stream<List<FileData>> call() {
+  Stream<List<Metadata>> call() {
     final dir = storage.io.directory('downloads/bundles');
     return dir.list().watch();
   }
