@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:file_saver/file_saver.dart';
 
-import '../../../../../data/source/pocketbase/client.dart';
+import '../../../data/source/pocketbase/client.dart';
 
 class DownloadStoreBundle {
   final HfwStudio client;

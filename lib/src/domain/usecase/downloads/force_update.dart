@@ -1,4 +1,4 @@
-import '../../../../../data/source/pocketbase/client.dart';
+import '../../../data/source/pocketbase/client.dart';
 
 class ForceUpdateHymn {
   final HfwStudio client;

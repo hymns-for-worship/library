@@ -48,7 +48,7 @@ export 'src/domain/usecase/library/topics/get_topics_with_hymn_id.dart';
 export 'src/domain/usecase/library/portions/get_portions.dart';
 export 'src/domain/usecase/import_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_hymn_rows.dart';
-export 'src/domain/usecase/library/hymns/get_hymn_bundles.dart';
+export 'src/domain/usecase/downloads/get_hymn_bundles.dart';
 export 'src/domain/usecase/library/hymns/get_slides_for_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_music_for_hymn.dart';
 export 'src/domain/usecase/library/hymns/get_top_hymns.dart';
@@ -89,6 +89,6 @@ export 'src/domain/usecase/downloads/get_versions.dart';
 export 'src/domain/usecase/downloads/get_library.dart';
 
 // Admin use cases
-export 'src/domain/usecase/library/hymns/download/hymn_bundle.dart';
-export 'src/domain/usecase/library/hymns/download/store_bundle.dart';
-export 'src/domain/usecase/library/hymns/download/force_update.dart';
+export 'src/domain/usecase/downloads/hymn_bundle.dart';
+export 'src/domain/usecase/downloads/store_bundle.dart';
+export 'src/domain/usecase/downloads/force_update.dart';
