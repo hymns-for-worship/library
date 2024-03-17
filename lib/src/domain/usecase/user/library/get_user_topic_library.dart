@@ -7,14 +7,14 @@ class GetUserTopicLibrary {
 
   GetUserTopicLibrary(this.db);
 
-  Stream<List<Topic>> call(String user) {
+  Stream<List<GetTopicsResult>> call(String user) {
     final library = db.getUserTopicLibrary(user).watch();
-    final hymns = db.getTopics().watch();
-    return library.combineLatest(hymns, (library, hymns) {
-      final results = <Topic>[];
-      for (final hymn in hymns) {
-        if (library.any((s) => s.topicId == hymn.id)) {
-          results.add(hymn);
+    final items = db.getTopics().watch();
+    return library.combineLatest(items, (library, items) {
+      final results = <GetTopicsResult>[];
+      for (final item in items) {
+        if (library.any((s) => s.topicId == item.topic.id)) {
+          results.add(item);
         }
       }
       return results;

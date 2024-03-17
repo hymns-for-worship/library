@@ -4,7 +4,7 @@ class GetStakeholders {
   final HfwDatabase db;
   const GetStakeholders(this.db);
 
-  Stream<List<Stakeholder>> call() async* {
+  Stream<List<GetStakeholdersResult>> call() async* {
     yield* db.getStakeholders().watch();
   }
 }

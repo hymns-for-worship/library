@@ -1,3 +1,5 @@
+import 'hymn_topics.drift';
+
 -- Tables
 CREATE TABLE topics (
     id TEXT PRIMARY KEY NOT NULL,
@@ -20,7 +22,10 @@ OR alias LIKE :query
 ORDER BY name ASC;
 
 getTopics:
-SELECT * FROM topics
+SELECT topic.**,
+    (SELECT Count(*) FROM hymn_topics ht WHERE ht.topicId = topic.id) as hymns_count
+    FROM topics topic
+WHERE hymns_count > 0
 ORDER BY name ASC;
 
 getTopic:

@@ -1,3 +1,5 @@
+import 'hymn_stakeholders.drift';
+
 -- Tables
 CREATE TABLE stakeholders (
     id TEXT PRIMARY KEY NOT NULL,
@@ -17,7 +19,10 @@ WHERE name LIKE :query
 ORDER BY name ASC;
 
 getStakeholders:
-SELECT * FROM stakeholders
+SELECT stakeholder.**,
+    (SELECT Count(*) FROM hymn_stakeholders hs WHERE hs.stakeholderId = stakeholder.id) as hymns_count
+    FROM stakeholders stakeholder
+WHERE hymns_count > 0
 ORDER BY name ASC;
 
 getStakeholder:

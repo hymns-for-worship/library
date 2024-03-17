@@ -7,14 +7,14 @@ class GetUserStakeholderLibrary {
 
   GetUserStakeholderLibrary(this.db);
 
-  Stream<List<Stakeholder>> call(String user) {
+  Stream<List<GetStakeholdersResult>> call(String user) {
     final library = db.getUserStakeholderLibrary(user).watch();
-    final hymns = db.getStakeholders().watch();
-    return library.combineLatest(hymns, (library, hymns) {
-      final results = <Stakeholder>[];
-      for (final hymn in hymns) {
-        if (library.any((s) => s.stakeholderId == hymn.id)) {
-          results.add(hymn);
+    final items = db.getStakeholders().watch();
+    return library.combineLatest(items, (library, items) {
+      final results = <GetStakeholdersResult>[];
+      for (final item in items) {
+        if (library.any((s) => s.stakeholderId == item.stakeholder.id)) {
+          results.add(item);
         }
       }
       return results;

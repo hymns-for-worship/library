@@ -12259,12 +12259,18 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(stakeholders.mapFromRow);
   }
 
-  Selectable<Stakeholder> getStakeholders() {
-    return customSelect('SELECT * FROM stakeholders ORDER BY name ASC',
+  Selectable<GetStakeholdersResult> getStakeholders() {
+    return customSelect(
+        'SELECT"stakeholder"."id" AS "nested_0.id", "stakeholder"."name" AS "nested_0.name", "stakeholder"."created" AS "nested_0.created", "stakeholder"."updated" AS "nested_0.updated", (SELECT Count(*) FROM hymn_stakeholders AS hs WHERE hs.stakeholderId = stakeholder.id) AS hymns_count FROM stakeholders AS stakeholder WHERE hymns_count > 0 ORDER BY name ASC',
         variables: [],
         readsFrom: {
+          hymnStakeholders,
           stakeholders,
-        }).asyncMap(stakeholders.mapFromRow);
+        }).asyncMap((QueryRow row) async => GetStakeholdersResult(
+          stakeholder:
+              await stakeholders.mapFromRow(row, tablePrefix: 'nested_0'),
+          hymnsCount: row.read<int>('hymns_count'),
+        ));
   }
 
   Selectable<Stakeholder> getStakeholder(String id) {
@@ -12474,12 +12480,17 @@ abstract class _$HfwDatabase extends GeneratedDatabase {
         }).asyncMap(topics.mapFromRow);
   }
 
-  Selectable<Topic> getTopics() {
-    return customSelect('SELECT * FROM topics ORDER BY name ASC',
+  Selectable<GetTopicsResult> getTopics() {
+    return customSelect(
+        'SELECT"topic"."id" AS "nested_0.id", "topic"."name" AS "nested_0.name", "topic"."alias" AS "nested_0.alias", "topic"."created" AS "nested_0.created", "topic"."updated" AS "nested_0.updated", (SELECT Count(*) FROM hymn_topics AS ht WHERE ht.topicId = topic.id) AS hymns_count FROM topics AS topic WHERE hymns_count > 0 ORDER BY name ASC',
         variables: [],
         readsFrom: {
+          hymnTopics,
           topics,
-        }).asyncMap(topics.mapFromRow);
+        }).asyncMap((QueryRow row) async => GetTopicsResult(
+          topic: await topics.mapFromRow(row, tablePrefix: 'nested_0'),
+          hymnsCount: row.read<int>('hymns_count'),
+        ));
   }
 
   Selectable<Topic> getTopic(String id) {
@@ -13413,6 +13424,15 @@ class GetStakeholdersWithRelationshipForHymnIdResult {
   });
 }
 
+class GetStakeholdersResult {
+  Stakeholder stakeholder;
+  int hymnsCount;
+  GetStakeholdersResult({
+    required this.stakeholder,
+    required this.hymnsCount,
+  });
+}
+
 class GetTopicsWithHymnIdResult {
   String id;
   String name;
@@ -13427,6 +13447,15 @@ class GetTopicsWithHymnIdResult {
     required this.created,
     required this.updated,
     required this.hymnId,
+  });
+}
+
+class GetTopicsResult {
+  Topic topic;
+  int hymnsCount;
+  GetTopicsResult({
+    required this.topic,
+    required this.hymnsCount,
   });
 }
 
